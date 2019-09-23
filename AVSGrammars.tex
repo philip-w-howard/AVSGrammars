@@ -100,7 +100,7 @@ float=thbp,
 
 \newcommand{\code}[1] {\lstinline[breaklines=yes,breakatwhitespace=yes]{#1}}
 
-\newcommand{\cfgprod}[2] {\texttt{#1} $\rightarrow$ \texttt{#2}}
+\newcommand{\cfgprod}[2] {\ttfamily{#1} $\rightarrow$ \ttfamily{#2}}
 
 %\usepackage[T1]{fontenc}  % access \textquotedbl
 %\usepackage{textcomp}     % access \textquotesingle
@@ -162,22 +162,18 @@ float=thbp,
 \begin{document}
 
 \frontmatter
-\title{A Very Simple Compiler Book}
+\title{A Very Simple Grammars Book}
 \author{Philip W. Howard}
 \date{\today}
 \maketitle
 \tableofcontents
 \listoffigures
 \chapter{Preface}
-I've been teaching Introduction to Grammars (aka Computer Theory) and Compiler Methods at Oregon Institute of Technology for several years. There is a Computer Theory text that I really like, but it has become criminally expensive (as I'm writing this, Amazon would be glad to sell you a new paperback edition for over \$300). Although there are good compiler books available, none of them seem to approach the subject they way I do. I have no visions of preparing the next generation of compiler masters. There are plenty of reasons to study compilers even if you're never going to write one. My course focuses on those reasons.
+I've been teaching Introduction to Grammars (aka Computer Theory) at Oregon Institute of Technology (OIT) for several years. OIT offers a very hands-on program, so why include a theory course?
 
-So, why not write my own? Lot's of reasons that I won't enumerate, but obviously I've attempted to get past those and actually write the book. As I've written this, I've wandered between ``Should it be a grammars book?'' and ``Should it be a compilers book?'' and ``Should it be both?''. 
+There is a Computer Theory text that I really like, but it has become criminally expensive (as I'm writing this, Amazon would be glad to sell you a new paperback edition for over \$300). So, why not write my own? Lot's of reasons that I won't enumerate, but obviously I've attempted to get past those and actually write the book. 
 
-It is possible to write a good grammars book without dealing with compiler issues. The best books I've seen on this subject do this. But the program at OIT is a very hands-on, so my students always want an answer to ``Why do we study this?''. Compilers is certainly part of the answer (though I do my best to convince my students that there are other reasons as well). So my grammars book should mention some of the compiler issues.
-
-I can't imagine a good compiler book that doesn't touch on some of the concepts normally covered in a grammars book. Where would a modern compiler be without regular expressions and context free grammars?
-
-So I'm attempting to write a book that will be useful in both classes. The first part of the book deals with the theoretic issues: The Theory of Computation (aka Formal Languages). This section is structured in such a way that the parts that are necessary for a compiler course can be easily segmented out. The later parts, the compiler parts, contain references back to the relevant sections of the theory part.
+\needswork
 
 I hope that this book proves useful to my students, and if it is discovered by others, that it is useful to them as well.
 
@@ -189,7 +185,7 @@ Phil Howard
 \setlength{\parskip}{12pt plus 2pt minus 2pt}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\part{Computer Theory aka Formal Languages}
+\part{Introduction}
 My grammars students often wonder why we include a theory course in an otherwise very hands-on program. My answer, ``Because grammars is fun!'' doesn't seem to carry much weight, so I offer the following list of benefits to studying this topic:
 
 \begin{enumerate}
@@ -202,6 +198,7 @@ My grammars students often wonder why we include a theory course in an otherwise
 
 \chapter{Introduction}
 \section{Historical Background}
+\needswork
 \section{Formal Languages}
 Computer theory deals with what is known as ``formal languages''. They aren't formal in the sense that you use them when talking to important people (as opposed to the informality that you allow when shooting the breeze with friends). They are formal in the sense that the conform to a specific (usually mathematical) form. In particular, given a statement, it is always possible to answer the question, ``Is that statement a valid statement in this formal language?'' English does not meet this definition. Consider all the red ink used by English teachers while grading freshmen compositions. The writers thought their statements were valid English, the but teachers disagreed.
 
@@ -365,6 +362,7 @@ If the language is a set of strings, then the recursive rules always extend or c
 Recursive definitions provide a mechanism to construct formal languages. A recursive definition consists of base cases and recursive rules that are used to extend the language. The mechanism we presented here isn't very mathematically rigorous, so we can't prove many properties about the languages that are generated by these definitions (a short-coming that won't be found in the next several chapters). One thing we can say about languages generated by recursive definitions is that they are always infinte. That is, they always contain an infinite number of words. This is true because there is not limit on how many times a recursive rule can be invoked, and each invocation produces a new word in the language.
 \needsproblems{}
 
+\part{Regular Languages}
 \chapter{Regular Expressions}
 Many programmers are familiar with regular expressions from non-compiler contexts. Examples include using an asterisk (*) as a wildcard in a file name, or specifying patterns for the \code{grep} utility. Different programs use different syntax for specifying regular expressions. In this chapter a minimalist syntax for all regular expressions is presented. Most programs that interpret regular expressions enhance this syntax in various ways to make writing regular expressions easier, but the added syntax does not add extra capabilities. In this chapter, we are not interested in programs that make use of regular expressions, so we don't need the syntactic sugar that many of the add. Instead, we are interested in the formal languages that can be specified using regular expressions.
 
@@ -402,9 +400,9 @@ The following exercises can be used to practice writing regular expressions. You
 \textbf{Exercises}
 
 \begin{enumerate}
-\item Write a regular expression for a string containing any odd number of the letter \texttt{a}.
-\item Write a regular expression for C (or Java) variable names. Valid characters include upper and lower case letters, digits, and the underscore (\texttt{\_}).
-\item Write a regular expression for a string containing any number (including zero) of a positive even number of \texttt{a}'s followed by an add number of \texttt{b}'s. The following are valid strings: \texttt{aaaabbb}, \texttt{aabaabaabbb}, \texttt{aaaaaabbbbbaabaabaab}. The following are not valid strings: \texttt{aaab}, \texttt{aaaabbbaa}, \texttt{bbbaab}.
+\item Write a regular expression for a string containing any odd number of the letter \code{a}.
+\item Write a regular expression for C (or Java) variable names. Valid characters include upper and lower case letters, digits, and the underscore (\code{\_}).
+\item Write a regular expression for a string containing any number (including zero) of a positive even number of \code{a}'s followed by an add number of \code{b}'s. The following are valid strings: \code{aaaabbb}, \code{aabaabaabbb}, \code{aaaaaabbbbbaabaabaab}. The following are not valid strings: \code{aaab}, \code{aaaabbbaa}, \code{bbbaab}.
 \item For the previous question, state why each of the non-valid strings are non-valid.
 \item Write a regular expression for a floating-point constant. The following rules apply: 
 \begin{enumerate}
@@ -573,7 +571,7 @@ Current State & a & b \\
 \label{T.FA.2}
 \end{figure}
 
-\subsection{Non-deterministic Finite Automata}
+\section{Non-deterministic Finite Automata}
 
 The FA illustrated in Figure~\ref{F.FA_1} is a Deterministic Finite Automaton (DFA). It is deterministic in the sense that for each character that is processed, the FA has exactly one choice on what to do. There is another class of FA's known as Non-deterministic Finite Automata (NFA's). With NFA's, for a given input, there is the potential for multiple choices on what to do. The choices can take two forms:
 \begin{enumerate}
@@ -709,7 +707,7 @@ If two FA's each have a single start state and a single final state, and if the 
 
 The trick to using Thompson's construction is to NOT be creative. Each FA built with Thompson's has a single start and a single final state. The diagram can be dropped as-is directly into the next step in the construction. Nodes never need to be erased, and each composition should be drawn exactly as shown in Figure~\ref{F.Thompsons}.
 
-Let's illustrate by doing several constructions. First, let's construct an NFA for \texttt{a (b | c)}. It's best to start with the inner most operation (in this case \texttt{(b | c)}) and work out. So first draw the alternation diagram as shown below:
+Let's illustrate by doing several constructions. First, let's construct an NFA for \code{a (b | c)}. It's best to start with the inner most operation (in this case \code{(b | c)}) and work out. So first draw the alternation diagram as shown below:
 
 \begin{center}
 \scalebox{.7}{
@@ -731,7 +729,7 @@ Let's illustrate by doing several constructions. First, let's construct an NFA f
 \fatransition{c1}{c2}{c};
 \fatransition{c2}{y}{$\Lambda$};
 
-\node at (5,-2) {\texttt{(b | c)}};
+\node at (5,-2) {\code{(b | c)}};
 \node at (5,-3) {};
 \end{tikzpicture}
 } % end scaled box
@@ -765,13 +763,13 @@ The resulting diagram gets dropped into the \code{FA 2} position of the concaten
 \fatransition{c1}{c2}{c};
 \fatransition{c2}{y}{$\Lambda$};
 
-\node at (7,-2) {\texttt{a (b | c)}};
+\node at (7,-2) {\code{a (b | c)}};
 \node at (7,-3) {};
 \end{tikzpicture}
 } % end scalebox
 \end{center}
 
-As a second example, let's construct an NFA for \texttt{a (b | c)*}. This is the same as the previous example, except that the alternation is wrapped in Kleene Closure. The alternation is, again, the innermost operation, and it is the same as in the previous example:
+As a second example, let's construct an NFA for \code{a (b | c)*}. This is the same as the previous example, except that the alternation is wrapped in Kleene Closure. The alternation is, again, the innermost operation, and it is the same as in the previous example:
 
 \begin{center}
 \scalebox{.7}{
@@ -793,7 +791,7 @@ As a second example, let's construct an NFA for \texttt{a (b | c)*}. This is the
 \fatransition{c1}{c2}{c};
 \fatransition{c2}{y}{$\Lambda$};
 
-\node at (5,-2) {\texttt{(b | c)}};
+\node at (5,-2) {\code{(b | c)}};
 %\node at (5,-3) {};
 \end{tikzpicture}
 } % end scaled box
@@ -829,7 +827,7 @@ This is now dropped into the Kleene Closure construction:
 \faarctransition {t}{u}{$\Lambda$}{315}{225};
 \faarctransition {y}{x}{$\Lambda$}{105}{75};
 
-\node at (7,-3) {\texttt{(b | c)*}};
+\node at (7,-3) {\code{(b | c)*}};
 \end{tikzpicture}
 } % end scaled box
 \end{center}
@@ -865,12 +863,12 @@ Finally, we drop this into the concatenation construction:
 \faarctransition {t}{u}{$\Lambda$}{315}{225};
 \faarctransition {y}{x}{$\Lambda$}{105}{75};
 
-\node at (8,-3) {\texttt{a (b | c)*}};
+\node at (8,-3) {\code{a (b | c)*}};
 \end{tikzpicture}
 } % end scaled box
 \end{center}
 
-As a third example, \texttt{a* (b | c)}, includes a concatenation of two complex item (\texttt{a*} and \texttt{(b | c)} ). To construct this, first construct \texttt{a*}, then construct \texttt{(b | c)} and then use the concatenation construction to combine them. Here are the results:
+As a third example, \code{a* (b | c)}, includes a concatenation of two complex item (\code{a*} and \code{(b | c)} ). To construct this, first construct \code{a*}, then construct \code{(b | c)} and then use the concatenation construction to combine them. Here are the results:
 
 \begin{center}
 \scalebox{.7}{
@@ -904,7 +902,7 @@ As a third example, \texttt{a* (b | c)}, includes a concatenation of two complex
 \fatransition{c1}{c2}{c};
 \fatransition{c2}{y}{$\Lambda$};
 
-\node at (8,-2) {\texttt{a* (b | c)}};
+\node at (8,-2) {\code{a* (b | c)}};
 %\node at (5,-3) {};
 \end{tikzpicture}
 } % end scaled box
@@ -914,7 +912,7 @@ It should be clear that Thompson's construction creates lots of $\Lambda$ transi
 
 \section{Subset Construction}\label{S.Subset.Construction}
 
-To illustrate how an NFA could be processed, let's consider again the NFA for \texttt{a* (b | c)} presented in the last section, but presented again in Figure~\ref{F.subsetNFA}. In this figure, each node is labeled so they can be explicitly referred to. For each state, we can ask the question, ``What states could I wind up in if I encounter a particular letter in the input?''. For example, suppose we haven't consumed any input yet, what states could we be in? Clearly we could be in State~$1$, the start state, but because of the $\Lambda$ transitions, we could also be in states $2, 4, 5, 6, 8$. This set of states ($=\{1, 2, 4, 5, 6, 8\}$)\footnote{When specifying sets of characters,  it is often easier to read the list of items if each item is separated with a comma. This works unless the set included a comma (as sets of characters for a compiler often do). I will generally included commas for readability unless the set of characters includes punctuation (commas or other punctuation marks). I hope this will improve readability.}
+To illustrate how an NFA could be processed, let's consider again the NFA for \code{a* (b | c)} presented in the last section, but presented again in Figure~\ref{F.subsetNFA}. In this figure, each node is labeled so they can be explicitly referred to. For each state, we can ask the question, ``What states could I wind up in if I encounter a particular letter in the input?''. For example, suppose we haven't consumed any input yet, what states could we be in? Clearly we could be in State~$1$, the start state, but because of the $\Lambda$ transitions, we could also be in states $2, 4, 5, 6, 8$. This set of states ($=\{1, 2, 4, 5, 6, 8\}$)\footnote{When specifying sets of characters,  it is often easier to read the list of items if each item is separated with a comma. This works unless the set included a comma (as sets of characters for a compiler often do). I will generally included commas for readability unless the set of characters includes punctuation (commas or other punctuation marks). I hope this will improve readability.}
 forms a meta-state (let's call it $A$). From the meta-state~$A$, where could we wind up if we read an $a$. Since the meta-state~$A$ includes state~$2$, we can follow the $a$ to state~$3$. From there we can follow $\Lambda$s to $2, 4, 5, 6, 8$. This gives another meta-state. Let's call it $B = \{2, 3, 4, 5, 6, 8\}$. 
 
 \begin{figure}[hbt]
@@ -952,7 +950,7 @@ forms a meta-state (let's call it $A$). From the meta-state~$A$, where could we 
 
 \end{tikzpicture}
 } % end scaled box
-\caption[NFA produced by Thompson's]{This is the NFA produced by Thompson's for the regular expression \texttt{a* (b | c)}}
+\caption[NFA produced by Thompson's]{This is the NFA produced by Thompson's for the regular expression \code{a* (b | c)}}
   \label{F.subsetNFA}
 \end{figure}
 
@@ -1295,228 +1293,12 @@ Does the subset construction always result in a DFA, or might it result in anoth
 \end{enumerate}
 The consequence is that the resulting FA has no non-determinism and is therefore a DFA.
 
+\chapter{Theory}
+\needswork
 zzz
+\part{Context Free Grammars}
 \chapter{Context Free Grammars}
 \needswork{}
-\chapter{Beyond Context Free Languages}
-\label{C.Beyond.Context.Free}
-\needswork{}
-
-\part{Overview}
-\chapter{Introduction}
-\section{Why?}
-The first question that many prospective compiler students have is, ``Why should I study compilers?'' The following answers come to mind:
-
-\begin{enumerate}
-\item They're cool. Why wouldn't you want to study compilers?
-\item It gives you a chance to understand what your primary tool does. It would seem strange for a carpenter to not know what a hammer does, or to not know the trade-offs between a hammer and a nail gun. Granted, a carpenter doesn't need to know the physics of how these tools work, but they should have a general idea. 
-
-Many software developers never consider their compilers. They have this large blob of software known as an ``IDE''. They type specialized text into their IDE and click various buttons, and if they are luck, they get a working program. My claim is that better programmers have a better understanding of their tools. This allows them to make better use of these tools, and thus better use of their time, and thus (sometimes) more of their employer's money.
-
-\item It gives you a chance to manage a large code base. I've heard of undergraduate computer science students who graduate having never managed anything bigger than a two week lab. In my ten week compiler course, students write an entire compiler composed of tens of source files and thousands of lines of code. Design and implementation decisions made early have strong consequences later in the term. This is a valuable experience that every developer should have before they step into a job claiming they know what they're doing.
-
-Another advantage of the large project is that it allows the introduction of testing techniques that are harder to make ``real'' in smaller environments.
-
-\item Applied data structures. A compiler has a lot of data that needs to be managed. Many data structures present ``clean'' data structures, but real-life data-problems often aren't so clean. How about a cyclic tree that contains links to a stack of hash tables that in turn has links back to nodes of the tree? OK, if your tree is cyclic, you probably have a bug, but most data structures classes don't give you the opportunity to make (and then fix) such bugs. Having the opportunity to get buried in data is good for you.
-
-\item Applied algorithms. I started to learn calculus in high school. I continued my learning of calculus in college. But I didn't really understand what a $dx$ was until I encountered them in my calculus based physics class. They were no longer merely symbols on a paper, they were now applied, and that's how I finally grasped what they really were. In the same sense, a compiler allows you to apply quite a number of algorithms (and data structures). In doing so, they should be more ``real''.
-
-\item Performance considerations. Computers have gotten so fast, we rarely have to worry about performance (time or memory) considerations. Most compiler runs are also fast enough that the compiler's performance doesn't much matter. But given a compiler, you can compile something very big like the Linux Kernel. Performance now matters. Because of this, a compiler class gives the right to talk about performance considerations in a practical sense.
-
-\end{enumerate}
-
-\section{What is a compiler?}
-Perhaps before asking, ``Why study compilers?'' it would have been best to establish what a compiler is. But most students, by the time they get to a compiler course, have already used compilers so they have some sense of what they are: The software that translates my source code into executable code. We need to be a bit more formal as well as a bit broader in our definition.
-
-In the broadest sense, a compiler takes code as input and outputs an improved version of that code. For the compiler to be valid, it must follow two guiding principles:
-\begin{enumerate}
-\item The compiler must preserve the meaning of the original program.
-\item The compiler must improve the code in some discernible way.
-\end{enumerate}
-
-%----------------------------------------------------------
-\begin{figure}[hbt]
-\centering
-\begin{tikzpicture}
-\node (a) at (-5,0) {};
-\node (b) at (0,0) [shape=rectangle, draw] {Compiler};
-\node (c) at (5,0) {};
-
-\draw [->] (a) -- (b) node [midway, above] {code} ;
-\draw [->] (b) -- (c) node [midway, above] {improved code} ;
-%\draw [->] (b) -- (c) node [midway, above, text width=3cm, align=center] {improved\\code} ;
-\end{tikzpicture}
- \caption[What is a Compiler]{A compiler is a program that takes code as input and outputs an improved version of that code.}
-  \label{F.whatiscompiler}
-\end{figure}
-%----------------------------------------------------------
-
-To illustrate the first principle, if you had a program that output the numbers from $1..10$ and the compiler transformed it so that it output one of e.e. cummings's poems, then clearly the compiler did not preserve the meaning of the original program.
-
-The second principle is a bit less clear. If the code is a program, and you want to execute your program, then transforming your source code into an executable program would be an improvement. But suppose your source was a C program and the output was an equivalent Java program. Would that be an improvement?
-
-This definition of a compiler is deliberately broad. The preprocessor for a C compiler (often a separate program from the C compiler) is considered a compiler. \LaTeX, which was used to typeset this book, is a compiler. Indeed, any converter program can be considered a compiler given this definition. For the sake of this book (and most compiler courses), we will primarily restrict ourselves to compilers where the input is a programming language. The output, however, does not need to be executable code. It can be any form of ``improved'' code.
-
-\chapter{Compiler Structure}
-Compilers are typically broken into two broad pieces: the front-end and the back-end. The frond-end deals with language specific issues. The back-end deals with target machine specifics.
-
-A C compiler would need a very different front-end compared with a Haskell compiler because the syntax of the languages is very different. One way to view the front-end of the compiler is that it answers the question, ``Is this a valid program?'' If you feed a Scheme program into an R compiler, the answer would certainly by ``No''. If a Java program that was missing a semicolon was fed into a Java compiler, the answer would also be, ``No'', but for very different reasons.
-
-The back-end of a compiler deals with target specific issues. The back-end for a compiler that targets the Java Virtual Machine (JVM) would be different than the back-end for a compiler that targets and ARM processor. Both of those would be different from a C preprocessor that simply outputs text.
-
-Separating the front-end from the back-end makes sense because they are logically quite different, but it also makes sense because if they are properly designed, you can mix and match different front-ends and back-ends. Suppose you had a really good C compiler, but you wanted to port it to target a different machine. There would be no reason to rewrite the front-end. The C language is the same no matter what machine you are targeting. So if you wrote a new back-end and attached it to your existing front-end, you would now have a new compiler. Mixing can go the other way as well. Starting with the same really good C compiler, suppose you wanted a compiler for a different language (such as Go). There is no reason to rewrite the back-end, simply create a front-end for the new language and attach it to your existing back-end, and you have a new compiler.
-
-For this mixing and matching to work seamlessly, there needs to be a common interface between the front-ends and the back-ends. This interface is typically called an Intermediate Representation (IR) --- see Chapter~\ref{chapter.IR}. The front-end translates the language into the IR, and the back-end translates the IR to the target representation. This is illustrated in Figure~\ref{figure.compiler_structure}
-
-%----------------------------------------------------------
-\begin{figure}[hbt]
-\centering
-\begin{tikzpicture}
-\node (a) at (-5,1.5) [shape=rectangle, draw]{C front-end};
-\node (b) at (-5,0) [shape=rectangle, draw] {Go front-end};
-\node (c) at (-5,-1.5) [shape=rectangle, draw]{FORTRAN fron-end};
-\node (d) at (0,0)  [shape=circle, draw]{IR};
-\node (e) at (5,1.5) [shape=rectangle, draw]{x86 back-end};
-\node (f) at (5,0) [shape=rectangle, draw] {ARM back-end};
-\node (g) at (5,-1.5) [shape=rectangle, draw]{JVM back-end};
-
-\draw [->] (a) -- (d)  ;
-\draw [->] (b) -- (d)  ;
-\draw [->] (c) -- (d)  ;
-\draw [->] (d) -- (e)  ;
-\draw [->] (d) -- (f)  ;
-\draw [->] (d) -- (g)  ;
-\end{tikzpicture}
- \caption[Compiler Structure]{A properly structured compiler allows you to have multiple language-specific front-ends joined to multiple target-specific back-ends. The two a joined using an intermediate representation.}
-  \label{figure.compiler_structure}
-\end{figure}
-%----------------------------------------------------------
-
-Compiler front-ends typically contain two components: A scanner (aka tokenizer or lexer), and a parser. Scanners are discussed in detail in Part~\ref{part.scanner} and parsers are discussed in Part~\ref{part.parser}.
-
-Most computer program source code comes in the form of a stream of characters (a text file). The scanner turns the stream of characters into a stream of tokens. For example, it the scanner read the characters ``\code{some_variable_name}'', it would output the single token \code{IDENTIFIER}. For a longer example, the string ``\code{int main() \{ printf("hello world"\\n); \}}'' would be converted to the tokens ``\code{TYPE IDENTIFIER ( ) \{ IDENTIFIER ( STRING_LIT ) ; \}}''.
-
-Note: Programmers normally format their code to make it ``pretty''. The code in the above examples was not formatted to emphasize that to a compiler, code is just a stream of characters.
-
-The parser takes a stream of tokens and decides whether that stream of tokens makes up a valid program (more specifically a ``compilation unit'') in the language. The parser only looks at the syntax of the language. As a result, ``valid program'' only means ``a program that is syntactically correct''. It does not mean ``a bug free program''.
-
-\chapter{Intermediate Representations} \label{chapter.IR}
-
-\part{Scanning} \label{part.scanner}
-
-\chapter[Creating a Scanner]{Creating a Scanner from Regular Expressions}
-
-To specify a scanner for a compiler, a developer could specify a regular expression for each token type. But how do you go from that specification to code that can actually process the input? This chapter discusses the algorithms used to convert regular expressions into a scanner. The general process is to convert the regular expression into a finite automaton. The finite automaton can then be evaluated using a simple table look-up on each character.
-
-
-zzz
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Chapter %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Scanner Code}
-The previous chapter presented algorithms for converting an arbitrary regular express into a transition table for a deterministic finite automata. The next question is, what do we do with that table? This chapter answers that question.
-
-\section{Processing Transition Tables}\label{S.ScannerCode}
-A DFA is a state diagram, and the transition table can be used as a lookup table for performing state transitions. Before showing the code for processing the lookup table, let's make one more modification to the table presented in Figure~\ref{F.transitionTable}. Instead of one row for each state-input combination, we will present the table as one row per state, and one column for each input possibility. Here is the result:
-
-\begin{center}
-\small
-\begin{tabular}{l|c|c|c}
-\hline
-\textbf{State} & \textbf{a} & \textbf{b} & \textbf{c} \\
-\hline
-A & B & - & - \\
-B & C & D & C \\
-C & B & - & F \\
-D & G & - & F \\
-E & C & - & - \\
-G & C & C & - \\
-\hline
-\end{tabular}
-\end{center}
-
-This table can be represented as a 2D array. The left-most column does not need to be stored as it simply gives the row index (converting from letters to suitable numbers). The current state is used as the row index and the just-read character is used as the column index. This results in the code in Listing~\ref{L.transitionTable}.
-\begin{lstlisting}[caption={Pseudo-code for processing a transition table.},label=L.transitionTable]
-state = 0;
-while (more_input_available)
-{
-   input = next_character();
-	 state = table[state][input];
-}
-if (state == final_state) 
-   return found;
-else
-   return not_found;
-\end{lstlisting}
-
-This code makes some problematic simplifying assumptions. First of all, how should the code deal with non-existent transitions (all the dashes in the table)? A simply solution is to add an error state to the table. All the dashes get changed to that error state, and all the columns for that error state return back to the same state: once you're in the error state, you're stuck there.
-
-The second problem is that the table only has three columns one each for the three input characters. How do you convert from the character read (probably a number in ASCII or Unicode). There are several possible solutions. If the compiled language is defined over ASCII characters (particularly if it is 7-bit ASCII) then the table can be extended to have a row for each possible input character. 
-
-With Unicode, this is less workable. For UTF-8 a similar scheme could be used, but the table would need additional rows to handle multi-byte characters. For UTF-16 or larger, the transition table would be so large, it would likely be unworkable. It would be possible to convert the UTF-16 to UTF-8 (they both encode the complete Unicode character set) and then use a 256 column wide table. This would cost the compiler time at the expense of a potentially smaller table.
-
-Since this is A Very Simple compiler book, I will not delve into character conversions. Instead I'll assume the compiled language can use (or convert to) a reasonable sized character set.
-
-\subsection{Replacing the table with code}
-
-There are many space/speed trade-offs in computer algorithms (such as executing code to convert from UTF-16 to UTF-8 to have a narrower transition table). There are also trade-offs between code size and data size. The code presented in Listing~\ref{L.transitionTable} was very compact, but it required a potentially large data table. There is an alternative implementation that requires very little data, but a large amount of code. This is illustrated in Listing~\ref{L.switchStatement}.
-
-\begin{lstlisting}[caption={Alternative pseudo-code for processing a transition table. This just a sample to illustrate the form of the code. The actual \code{switch} statements would be determined based on the transition table.},label=L.switchStatement]
-state_0:
-input = next_character();
-switch (input)
-{
-   case 'a': goto state_1;
-   case 'b': goto state_2;
-   case 'c': goto state_done;
-   default:  goto state_error;
-}
-
-state_1:
-input = next_character();
-switch (input)
-{
-   case 'x': goto state_0;
-   case 'b': goto state_5;
-   case EOF: goto state_done;
-   default:  goto state_error;
-}
-...
-\end{lstlisting}
-
-This version of the code uses \code{switch} statements to move from state to state. Essentially, each row of the transition table is encoded into a \code{switch} statement. \code{goto} statements\footnote{Normally, \code{goto} statements are considered an unforgivable evil in code. This is one of the few instances were they are useful, and not evil} are used to jump to the block of code that handles the new state.
-
-One advantage of this implementation is that the code (and data) is not affected by large character sets. Each \code{switch} statement only has branches for characters that matter. Any unused characters in the character set will not appear in the code. The flip side of this is that if there are states that can handle a large number of characters (for example, the regular expression for an identifier in a UNICODE language could include any of a very large number of characters) would require a large number of \code{case} branches.
-
-\subsection{Performance considerations}\label{S.scannerperformance}
-So, which of these two implementations is better. The short answer is: that depends.
-
-The first consideration is how efficiently the implementation language implements a \code{switch} statement. If the \code{switch} statements are translated to an equivalent \code{if elsif else} statement, then there is likely little advantage to the \code{switch} form of implementation. For the following discussion, we'll assume an efficient \code{switch} implementation.
-
-\subsubsection{Implementation size}\label{S.scannersize}
-If we consider the memory size required by the implementation, the following observations can be made:
-\begin{enumerate}
-\item The code for the transition table version is quite small. The size of the code does not change with the complexity of the language being scanned: the same code can process any transition table.
-\item The data table for the transition table version can be quite large. Its size depends on the number of characters in the character set for the language being compiled, and on the number of states that are required to implement the scanner.
-\item The code for the \code{switch} implementation can be very large. It depends on the number of states that are required to implement the scanner and also on the number of valid characters in each state.
-\item The data required for the \code{switch} implementation is small: a single integer to store the current character.
-\end{enumerate}
-
-If the transition table is sparse (few valid characters in each row), then the \code{switch} implementation may require less memory because the \code{switch} statements only include code for the necessary characters whereas the transition table version must store the entire table--even the cells for transitions that are invalid. However, if the table is dense (many valid characters in each (or many) rows, then the transition table version is likely to require less memory. Each valid entry in the table requires more code in the \code{switch} version, however the table size doesn't change with density in the transition table implementation.
-
-\subsubsection{Locality of Reference}\label{S.scannerlocality}
-
-\needswork{}
-
-
-\section{Processing multiple regular expressions}\label{S.MultiScanner}
-Algorithm for multiple RE's
-\needswork{}
-\chapter{Automatically Generated Scanners}
-here is a description of flex.
-\needswork{}
-
-\part{Parsing} \label{part.parser}
-The scanner converts the input stream from a stream of characters into a stream of tokens. The parser tries to make sense of the stream of tokens. In particular, it answers the question, ``Does this sequence of tokens for a valid program?''
 
 \chapter{Context Free Grammars}
 Regular expressions are used to define the tokens a compiler processes. We also need a mechanism to define the syntax of the language a compiler processes. Context Free Grammars are used for this purpose.
@@ -1616,143 +1398,12 @@ if (expr)
 3   if ( expr ) { assignment_stmt assignment_stmt }
 \end{derivation}
 
-zzz
-
-\chapter {Top-down recursive-descent parsers}
+\chapter{Pushdown Automata}
 \needswork{}
 
-\chapter {Bottom-up parsers}
+\part{Beyond Context Free Languages}
+\label{C.Beyond.Context.Free}
 \needswork{}
-
-\chapter {Automatically generated parsers}
-Description of bison.
-\needswork{}
-
-\part {Semantic Processing}
-\needswork{}
-
-\chapter {Syntax vs. Semantics}
-\needswork{}
-
-\chapter {Type systems}
-\needswork{}
-
-\chapter {Implementation details}
-\needswork{}
-
-\part{The Back-end}
-\needswork{}
-
-\chapter {The Visitor Pattern}
-\needswork{}
-
-\chapter {Code generation}
-\needswork{}
-
-\chapter {Optimization}
-\needswork{}
-
-\part {\LaTeX sample code}
-
-\begin{description}
-\item[Description List] Each description list item has a term followed by the
-description of that term.
-
-\item[Bunyip] Mythical beast of Australian Aboriginal legends.
-\end{description}
-
-\section{Theorem-Like Environments}
-
-The following theorem-like environments (in alphabetical order) are available
-in this style.
-
-\begin{acknowledgement}
-This is an acknowledgement
-\end{acknowledgement}
-
-\begin{algorithm}
-This is an algorithm
-\end{algorithm}
-
-\begin{axiom}
-This is an axiom
-\end{axiom}
-
-\begin{case}
-This is a case
-\end{case}
-
-\begin{claim}
-This is a claim
-\end{claim}
-
-\begin{conclusion}
-This is a conclusion
-\end{conclusion}
-
-\begin{condition}
-This is a condition
-\end{condition}
-
-\begin{conjecture}
-This is a conjecture
-\end{conjecture}
-
-\begin{corollary}
-This is a corollary
-\end{corollary}
-
-\begin{criterion}
-This is a criterion
-\end{criterion}
-
-\begin{definition}
-This is a definition
-\end{definition}
-
-\begin{example}
-This is an example
-\end{example}
-
-\begin{exercise}
-This is an exercise
-\end{exercise}
-
-\begin{lemma}
-This is a lemma
-\end{lemma}
-
-\begin{proof}
-This is the proof of the lemma.
-\end{proof}
-
-\begin{notation}
-This is notation
-\end{notation}
-
-\begin{problem}
-This is a problem
-\end{problem}
-
-\begin{proposition}
-This is a proposition
-\end{proposition}
-
-\begin{remark}
-This is a remark
-\end{remark}
-
-\begin{summary}
-This is a summary
-\end{summary}
-
-\begin{theorem}
-This is a theorem
-\end{theorem}
-
-\begin{proof}
-[Proof of the Main Theorem]This is the proof.
-\end{proof}
 
 \appendix
 
