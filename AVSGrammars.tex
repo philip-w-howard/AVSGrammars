@@ -1294,7 +1294,46 @@ Does the subset construction always result in a DFA, or might it result in anoth
 The consequence is that the resulting FA has no non-determinism and is therefore a DFA.
 
 \chapter{Theory}
+
+What we have done so far:
+
+We have shown that Thompson's Construction can turn any regular expression into an NFA. This implies that:
+\begin{quote}
+$L($regular expressions$) \subseteq L($NFA$)$
+\end{quote}
+This statement means that the set of all languages that can be constructed with regular expressions is a subset (or equal) of the languages that can be constructed with an NFA. In other words, anything that can be done with a regular expression can also be done with an NFA.
+
+The Subset Construction showed that any NFA can be turned into a DFA. This implies that:
+\begin{quote}
+$L($NFA$) \subseteq L($DFA$)$
+\end{quote}
+So we now have:
+\begin{quote}
+$L($regular expressions$) \subseteq L($NFA$) \subseteq L($DFA$)$
+\end{quote}
+
+There are proofs both by induction and construction that show that any DFA can be turned into a regular expression. The proofs aren't particularly illuminating, so they won't be presented here. The statement will simply be taken on faith. So we now have:
+
+\begin{quote}
+$L($regular expressions$) \subseteq L($NFA$) \subseteq L($DFA$) \subseteq L($regular epxressions$)$
+\end{quote}
+The only way that this can be true is if:
+\begin{quote}
+$L($regular expressions$) = L($NFA$) = L($DFA$)$
+\end{quote}
+In other words, regular expressions, NFAs and DFAs are all equally powerful. They can be used to define exactly the same set of languages. This relation is known as Kleene's Theorem. It can be used to prove interesting properties of regular languages. 
+
+\begin{theorem}
+The union of two regular languages is regular.
+\end{theorem}
+This can be proved by construction. Consider two languages $L_1$ and $L_2$ both of which are regular. Since they are regular, there is a DFA that corresponds to each of them. If we construct a new NFA by creating a new start state that is connected to the start states of both $L_1$ and $L_2$, we would have an NFA that accepts any word in $L_1$ or any word in $L_2$. Since we have an NFA for this language, the language must be regular.
 \needswork
+
+
+\begin{theorem}
+The intersection of two regular languages is regular.
+\end{theorem}
+
 zzz
 \part{Context Free Grammars}
 \chapter{Context Free Grammars}
