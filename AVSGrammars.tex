@@ -1424,7 +1424,30 @@ Lemma~\ref{T.RL.pumping.lemma} is known as the Pumping Lemma for Regular Languag
 \item The Lemma can be used to prove that a language is NOT regular. It cannot be used to prove that a language IS regular. In other words, there are some non-regular languages the fit the form of the pumping lemma, but any language that is infinite that does NOT fit the pumping lemma must not be regular.
 \end{enumerate}
 
-zzz
+Consider the language $ab*c$. This is an infinite language and it is regular, so it must conform to the pumping lemma. To show this, take $x=a$, $y=b$, $z=c$. With this assignment, it should be clear that all strings $xy^n z$ are in the language.
+
+Now let's consider the language of all strings that consist of any number of $a$s followed by any number of $b$s. This language can be represented as $a^n b^m$. Is this language regular? Let's see if we can prove it is NOT regular using the pumping lemma. Let's take $x=a$, $y=ab$, $z=b$. The string $xyz$ is $aabb$ which is in the language. However, the string $xy^2 z$ is $aababb$ which is NOT in the language. Can we conclude from this that the language is not regular? No.
+
+The previous paragraph gave a single example of a choice for $x, y, z$, and a single example is not a proof. To use the pumping lemma to prove a language is not regular, you must show that there is no possible choice of $x, y, z$ where the pumping lemma applies. Let's consider another choice. Let's choose $x=a$, $y=a$, $z=b$. With this choice, any $xy^n z$ can be written $a^{n+1} b$, all of which are in the language. Note that this does not represent ALL words in the language, but all words of this form ARE in the language. 
+
+Since we found strings $x, y, z$ for which all $xy^nz$ are in the language, we failed to prove that this language is not regular. This should come as no surprise since the since the regular expression $a^*b^*$ generates this language. Since there is a regular expression that generates the language, the language must be regular.
+
+Now let's make a minor modification to our language. Instead of any number of $a$s followed by any number of $b$s, let's require the $a$s to be followed by the same number of $b$s. This language can be expressed $a^nb^n$. Note that this time both letters have the same superscript meaning there must be the same number of each. Can we find an $x, y, z$ such that all strings $xy^nz$ are in the language.
+
+\begin{quote}
+Possibility 1: $y$ consists only of $a$'s. In this case, increasing $n$ in $xy^nz$ would increase the number of $a$'s without increasing the number of $b$s thus generating words not in the language.
+
+Possibility 2: $y$ consists only of $b$'s. In this case, increasing $n$ in $xy^nz$ would increase the number of $b$s without increasing the number of $a$'s thus generating words not in the language.
+
+Possibility 3: $y$ consists of both $a$s and $b$s. In this case, increasing $n$ in $xy^nz$ would increase the number of $a-b$ transitions. Since the language only allows one $a-b$ transition, this would generate words not in the language.
+
+Since $y$ cannot be the empty string, we've enumerated all possible choices for $y$ and none of them meet the requirements of the pumping lemma. We can therefore conclude that $a^nb^n$ is not regular.
+\end{quote}
+
+This language is of more than passing concern. Consider the substitution where instead of $a$ we have an open parenthesis and instead of $b$ we have a closing parenthesis. The language is not $(^n )^n$, which is the set of nested parenthesis. The ability to have an arbitrary number of nested parenthesis (or curly braces) is an artifact of many programming languages. The fact that you cannot generate this language with a regular expression means that the syntax of most programming languages is not regular. It also means that the syntax for regular expressions is not itself regular.
+
+If we assume that the syntax for programming languages is formal (and it would be difficult to write a compiler if it was not: how could you decide if a source file was a valid program if the language was not formal?), then we need another class of languages to express the syntax of programming languages. This other set of languages is the subject of the next part of this book.
+
 \part{Context Free Grammars}
 \chapter{Context Free Grammars}
 \needswork{}
