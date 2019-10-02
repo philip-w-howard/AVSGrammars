@@ -169,11 +169,11 @@ float=thbp,
 \tableofcontents
 \listoffigures
 \chapter{Preface}
-I've been teaching Introduction to Grammars (aka Computer Theory) at Oregon Institute of Technology (OIT) for several years. OIT offers a very hands-on program, so why include a theory course?
+I've been teaching Introduction to Grammars (aka Computer Theory) at Oregon Institute of Technology (OIT) for several years. OIT offers a very hands-on program, so why include a theory course? The most obvious answer is that it lays the theoretical background for a compiler class. I don't find that answer particularly compelling because to be successful in a compiler class a student needs a practical knowledge of some of the concepts included in a grammars class, but the student does not need the theoretical content to be successful in compilers.
 
-There is a Computer Theory text that I really like, but it has become criminally expensive (as I'm writing this, Amazon would be glad to sell you a new paperback edition for over \$300). So, why not write my own? Lot's of reasons that I won't enumerate, but obviously I've attempted to get past those and actually write the book. 
+To me, the primary reason for including the grammars class in our curriculum is precisely because it is a theory class. Requiring students to think abstractly, and to work on abstract problems (some of which are quite difficult) allows them to develop skills and thought processes that can be missed in a purely practical, hands-on program of study. These additional skills and thought processes will make them better equipped to solve some of the complex problems they may face in their professional careers.
 
-\needswork
+So why did I decide to write a text for this class? There is a Computer Theory text that I really like, but it has become criminally expensive (as I'm writing this, Amazon would be glad to sell you a new paperback edition for over \$500). I could not, in clear conscience, ask my students to purchase a book at that price. I found an Open text that could be legally downloaded free; a print-on-demand paperback version could be purchased for under \$10. It was a good text, but it was ``too mathematical'' for my purposes. I want my students to be able to wrestle with concepts without getting bogged down with too much notation. So I decided to attempt my own.
 
 I hope that this book proves useful to my students, and if it is discovered by others, that it is useful to them as well.
 
@@ -200,7 +200,7 @@ My grammars students often wonder why we include a theory course in an otherwise
 \section{Historical Background}
 \needswork
 \section{Formal Languages}
-Computer theory deals with what is known as ``formal languages''. They aren't formal in the sense that you use them when talking to important people (as opposed to the informality that you allow when shooting the breeze with friends). They are formal in the sense that the conform to a specific (usually mathematical) form. In particular, given a statement, it is always possible to answer the question, ``Is that statement a valid statement in this formal language?'' English does not meet this definition. Consider all the red ink used by English teachers while grading freshmen compositions. The writers thought their statements were valid English, the but teachers disagreed.
+Computer theory deals with what is known as ``formal languages''. They aren't formal in the sense that you use them when talking to important people (as opposed to the informality that you allow when shooting the breeze with friends). They are formal in the sense that they conform to a specific (usually mathematical) form. In particular, given a statement, it is always possible to answer the question, ``Is that statement a valid statement in this formal language?'' English does not meet this definition. Consider all the red ink used by English teachers while grading freshmen compositions. The writers thought their statements were valid English, the but teachers disagreed.
 
 Figure~\ref{F.formal.language.processor} illustrates what a formal language processor does. Any arbitrary input can be fed into the processor, and it answers the question, ``Is the input a valid statement in the language?''. It always returns ``yes'' or ``no''. If the language is a formal language, there can be no ``maybe''.
 
@@ -221,11 +221,11 @@ Figure~\ref{F.formal.language.processor} illustrates what a formal language proc
 \end{figure}
 %----------------------------------------------------------
 
-If you attempted to create a Language Processor for English, it should probably reject statements like, ``Cup sky red Perl''. But could you create a processor that accepts all valid English (including English poetry), and rejects all non-English. To get a sense of the difficulty of this challenge, I refer you to poetry (considered valid English poetry by those who get to decide such things) by ee cummings (capitalization is correct). 
+If you attempted to create a Language Processor for English, it should probably reject statements like, ``Cup sky red Perl''. Rejecting that statement might be easy enough, but could you create a processor that accepts all valid English (including English poetry), and rejects all non-English. To get a sense of the difficulty of this challenge, I refer you to poetry by ee cummings (capitalization is correct). The poetry of ee cummings is considered valid (and even good) English poetry by those who get to decide such things, but it would likely be rejected my any sensible English language validity checker.
 
 Those who study formal languages usually restrict themselves to very simple languages. As an example, consider the language of all strings consisting of any combination of the letters ``a'' and ``b''. This language includes strings such as ``aaaa'' and ``abababbbb''. It isn't useful for anything outside the study of formal languages, but it is an example of a formal language.
 
-The study of formal languages is tightly coupled with mathematical sets. In particular, a formal language is a set of strings. Namely, all those strings that meet the definition of the language.  This book assumes you are familiar with mathematical sets including the operations union, intersection, and subtraction. If you aren't familiar with these operations, I'm sure there's a Wikipedia page that can help you out.
+The study of formal languages is tightly coupled with mathematical sets. In particular, a formal language is a set of strings. Specifically, the set of all strings that meet the definition of the language.  This book assumes you are familiar with mathematical sets including the operations union, intersection, and subtraction. If you aren't familiar with these operations, I'm sure there's a Wikipedia page that can help you out.
 
 Formal languages consist of the following:
 \begin{enumerate}
@@ -236,7 +236,7 @@ Formal languages consist of the following:
 Let's illustrate with an example. 
 
 \begin{quote}
-$\Sigma = \{ a b \}$
+$\Sigma = \{ a \ b \}$
 
 All strings of five letters.
 \end{quote}
@@ -245,7 +245,7 @@ Given this definition, the string ``aaxbb'' would be rejected because 'x' is not
 
 Formal languages can be broken into categories based on the mechanism used to specify the language. We will initially be interested in three types of definitions, which are discussed in the following chapters.
 \begin{enumerate}
-\item Recursive definitions (not to be confused with Recursive Languages discussed in Chapter~\ref{C.Beyond.Context.Free})
+\item Recursive definitions (not to be confused with Recursive Languages discussed in Part~\ref{C.Beyond.Context.Free} of the book)
 \item Regular Expressions
 \item Context Free Grammars
 \end{enumerate}
@@ -272,7 +272,7 @@ Consider the following non-recursive definition of arithmetic expressions:
 \item Can't begin or end with an operator
 \end{enumerate}
 
-Is this set of rules sufficient? Do they allow every valid arithmetic expression? Do the preclude every invalid expression? Could you argue from these rules that the following is a valid arithmetic expression?
+Is this set of rules sufficient? Do they allow every valid arithmetic expression? Do the preclude every invalid expression? Could you argue from these rules that the following is (or isn't) a valid arithmetic expression?
 \begin{quote}
 $(2+7)/3-(((4+5)*(6)-1)*3 + 4)$
 \end{quote}
@@ -282,7 +282,7 @@ $()()(2+7)/3-(((4+5)*(6)-1)*3 + 4)$
 \end{quote}
 This last expression meets the definition given above, but is not a valid arithmetic expression because of the empty parenthesis. We could attempt to enhance our list of rules, but how could we know that we have a complete set?
 
-Let's instead give a recursive definition:
+Here is a recursive definition or arithmetic expressions (called AE in the definition):
 
 \begin{enumerate}
 \item Any number is in AE
@@ -296,7 +296,7 @@ Let's instead give a recursive definition:
 \end{enumerate}
 \end{enumerate}
 
-How can we use this definition to prove an expression is a valid arithmetic expression. We do so by construction: invoke the various rules one at a time until the desired expression is constructed. Let's do so with the expression:
+How can we use this definition to prove an expression is a valid arithmetic expression? We do so by construction: invoke the various rules one at a time until the desired expression is constructed. Let's do so with the expression:
 \begin{quote}
 $(2+7)/5$
 \end{quote}
@@ -311,7 +311,7 @@ The construction is as follows:
 \end{enumerate}
 Having constructed the desired expression using the rules, we have proven that it is a valid arithmetic expression. (More formally, we have proven that it is in the language AE as defined above).
 
-How do we prove that an expression isn't in AE? This is a bit more complicated. Take the expression given above:
+How do we prove that an expression is not in AE? This is a bit more complicated. Take the expression given above:
 \begin{quote}
 $()()(2+7)/3-(((4+5)*(6)-1)*3 + 4)$
 \end{quote}
@@ -344,14 +344,14 @@ Let's assume that a string in AE can contain empty parenthesis. Let's define $s$
 \item $f$ begins with a close parenthesis or ends with an open parenthesis
 \end{enumerate}
 However, we've already proven that neither of these can happen.
-\item Since there is no way to construct $s$, are assumption must be false: A string in AE cannot contain empty parenthesis.
+\item Since there is no way to construct $s$, our assumption must be false and we can conclude that a string in AE cannot contain empty parenthesis.
 \end{enumerate}
 
 \section{Constructing Recursive Definitions}
 We've seen several recursive definitions. What do they have in common? A recursive definition is always composed of two parts:
 \begin{itemize}
 \item Base Cases that identify some set of strings in the language. The base case for AE was ``Any number is in AE''.
-\item Recursive Rules of the form, ``If $x$ is in L, the so is $f(x)$''. Rules 2a-2e for AE are the recursive rules. 
+\item Recursive Rules of the form, ``If $x$ is in L, the so is $f(x)$''. Rules 2a-2e for AE are the recursive rules. Recursive rules can use multiple variables as illustrated in the definition of AE.
 \end{itemize}
 
 When constructing recursive definitions, it is important to keep in mind what the language is. For example, the language AE was a set of strings. As a result, rules 2a-2e were adding characters to the string, they were not performing arithmetic operations. The language EVEN was a set of numbers. As a result, Rule~b was performing an arithmetic operation to create a new number.
@@ -359,19 +359,19 @@ When constructing recursive definitions, it is important to keep in mind what th
 If the language is a set of strings, then the recursive rules always extend or combine strings. That is, they always make longer strings, they never remove characters from the string. In other words, you should never have a rule of the form, ``If $x$ in in L, then so is $x$ without the trailing semicolon.''
 
 \section{Summary}
-Recursive definitions provide a mechanism to construct formal languages. A recursive definition consists of base cases and recursive rules that are used to extend the language. The mechanism we presented here isn't very mathematically rigorous, so we can't prove many properties about the languages that are generated by these definitions (a short-coming that won't be found in the next several chapters). One thing we can say about languages generated by recursive definitions is that they are always infinte. That is, they always contain an infinite number of words. This is true because there is not limit on how many times a recursive rule can be invoked, and each invocation produces a new word in the language.
+Recursive definitions provide a mechanism to construct formal languages. A recursive definition consists of base cases and recursive rules that are used to extend the language. The mechanism we presented here isn't very mathematically rigorous, so we can't prove many properties about the languages that are generated by these definitions (a short-coming that won't be found in the next several chapters). One thing we can say about languages generated by recursive definitions is that they are always infinte. That is, they always contain an infinite number of words. This is true because there is no limit on how many times a recursive rule can be invoked, and each invocation produces a new word in the language.
 \needsproblems{}
 
 \part{Regular Languages}
 \chapter{Regular Expressions}
-Many programmers are familiar with regular expressions from non-compiler contexts. Examples include using an asterisk (*) as a wildcard in a file name, or specifying patterns for the \code{grep} utility. Different programs use different syntax for specifying regular expressions. In this chapter a minimalist syntax for all regular expressions is presented. Most programs that interpret regular expressions enhance this syntax in various ways to make writing regular expressions easier, but the added syntax does not add extra capabilities. In this chapter, we are not interested in programs that make use of regular expressions, so we don't need the syntactic sugar that many of the add. Instead, we are interested in the formal languages that can be specified using regular expressions.
+Many programmers are familiar with regular expressions from non-compiler contexts. Examples include using an asterisk (*) as a wildcard in a file name, or specifying patterns for the \code{grep} utility. Different programs use different syntax for specifying regular expressions. In this chapter a minimalist syntax for all regular expressions is presented. Most programs that interpret regular expressions enhance this syntax in various ways to make writing regular expressions easier, but the added syntax does not add extra capabilities. In this chapter, we are not interested in programs that make use of regular expressions, so we don't need the syntactic sugar that many of them add. Instead, we are interested in the formal languages that can be specified using regular expressions.
 
 Regular expressions include the following features:
 \begin{mydesc}[10em]
 	\item[Concatenation] Concatenation is gluing two strings end-to-end. For example, concatenating ``\code{ab}'' with ``\code{bc}'' yields the string ``\code{abcd}''.
   \item[Alternation] Alternation means to choose exactly one from a set of alternatives. Regular expressions use either the vertical bar (\code{|}) or the plus sign (\code{+}) to mean alternation. So the expression \code{a | b | c} means to choose either an '\code{a}', a '\code{b}', or a '\code{c}'. 
 	\item[Grouping] Parenthesis can be used for grouping operations much as they can in algebraic expressions.
-	\item[Kleene Closure] Kleene Closure means to take zero or more instances of a string. Kleene Closure is denoted by an asterisk (\code{*}). So, for example, \code{x*} means zero or more '\code{x}' characters. Kleene Closure has higher precedence than concatenation so that \code{ab*} means \code{a(b*)} not \code{(ab)*}.
+	\item[Kleene Closure] Kleene Closure means to take zero or more instances of a string. Kleene Closure is denoted by an asterisk ($^*$). So, for example, $x^*$ means zero or more '$x$' characters. Kleene Closure has higher precedence than concatenation so that $ab^*$ means $a(b^*)$ not $(ab)^*$.
 \end{mydesc}
 
 In addition to these operations, the $\Lambda$ symbol is used to represent an empty string (a string with no characters in it).
@@ -385,6 +385,8 @@ means the same as ($\Lambda$ \code{| a}).
 \item[one or more] The plus sign (\code{+}) is similar to Kleene Closure, but it is one-or-more not zero-or-more so that \code{a+} means the same as \code{aa*}.
 \item[character range] Square brackets (\code{[]}) can be used to specify a character range so that \code{[a-m]} means any single character in the range '\code{a}' through '\code{m}'. This could be represented long-hand as '\code{(a | b | c | d | ...)}'.
 \end{mydesc}
+
+These enhancements will be used in a few examples, and they are allowed in homework problems provided their use is clear. Note that the one-or-more enhancement uses the plus sign that can also be used for concatenation so any regular expression that uses any of these enhancements must use the vertical bar for alternation.
 
 If we want a regular expression for integer constants, we could try
 \begin{quote}\code{[0-9]+}\end{quote}
@@ -402,7 +404,7 @@ The following exercises can be used to practice writing regular expressions. You
 \begin{enumerate}
 \item Write a regular expression for a string containing any odd number of the letter \code{a}.
 \item Write a regular expression for C (or Java) variable names. Valid characters include upper and lower case letters, digits, and the underscore (\code{\_}).
-\item Write a regular expression for a string containing any number (including zero) of a positive even number of \code{a}'s followed by an add number of \code{b}'s. The following are valid strings: \code{aaaabbb}, \code{aabaabaabbb}, \code{aaaaaabbbbbaabaabaab}. The following are not valid strings: \code{aaab}, \code{aaaabbbaa}, \code{bbbaab}.
+\item Write a regular expression for a string containing a positive even number of \code{a}'s followed by an odd number of \code{b}'s. The following are valid strings: \code{aaaabbb}, \code{aabaabaabbb}, \code{aaaaaabbbbbaabaabaab}. The following are not valid strings: \code{aaab}, \code{aaaabbbaa}, \code{bbbaab}.
 \item For the previous question, state why each of the non-valid strings are non-valid.
 \item Write a regular expression for a floating-point constant. The following rules apply: 
 \begin{enumerate}
