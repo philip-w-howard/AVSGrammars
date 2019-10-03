@@ -393,7 +393,7 @@ The most common enhancements to this syntax are as follows:
  (\code{?}) 
 indicates zero or one of an item so that \code{a?} 
 means the same as ($\Lambda$ \code{| a}).
-\item[one or more] The plus sign (\code{+}) is similar to Kleene Closure, but it is one-or-more not zero-or-more so that \code{a+} means the same as \code{aa*}.
+\item[one or more] The plus sign (\code{+}) is similar to Kleene Closure, but it is one-or-more not zero-or-more so that \code{a+} means the same as $aa^*$.
 \item[character range] Square brackets (\code{[]}) can be used to specify a character range so that \code{[a-m]} means any single character in the range '\code{a}' through '\code{m}'. This could be represented long-hand as '\code{(a | b | c | d | ...)}'.
 \end{mydesc}
 
@@ -540,7 +540,7 @@ Two conditions can cause a string to be rejected:
 \item If there is no outbound transition on the current letter. The input $yx$ illustrates this case.
 \end{enumerate}
 
-Given these rules for processing FA's, it should be clear that the FA in Figure~\ref{F.FA_1} is equivalent to the regular expression \code{(yt)* (x | yz)}. It is no coincidence that there is a regular expression that corresponds to the FA. It turns out that every FA is equivalent to some regular expression, and that each regular expression has an FA that is equivalent to it. We will prove this in a later section.
+Given these rules for processing FA's, it should be clear that the FA in Figure~\ref{F.FA_1} is equivalent to the regular expression $(yt)^* (x | yz)$. It is no coincidence that there is a regular expression that corresponds to the FA. It turns out that every FA is equivalent to some regular expression, and that each regular expression has an FA that is equivalent to it. We will prove this in a later section.
 
 Figure~\ref{F.FA_2} gives another FA. This FA shows a slightly different format. The start state has a '-' in the label. Final states have a '$+$' in them. The states can be thought of as follows:
 \begin{enumerate}
@@ -794,7 +794,7 @@ The resulting diagram gets dropped into the \code{FA 2} position of the concaten
 } % end scalebox
 \end{center}
 
-As a second example, let's construct an NFA for \code{a (b | c)*}. This is the same as the previous example, except that the alternation is wrapped in Kleene Closure. The alternation is, again, the innermost operation, and it is the same as in the previous example:
+As a second example, let's construct an NFA for $a (b | c)^*$. This is the same as the previous example, except that the alternation is wrapped in Kleene Closure. The alternation is, again, the innermost operation, and it is the same as in the previous example:
 
 \begin{center}
 \scalebox{.7}{
@@ -852,7 +852,7 @@ This is now dropped into the Kleene Closure construction:
 \faarctransition {t}{u}{$\Lambda$}{315}{225};
 \faarctransition {y}{x}{$\Lambda$}{105}{75};
 
-\node at (7,-3) {\code{(b | c)*}};
+\node at (7,-3) {$(b | c)^*$};
 \end{tikzpicture}
 } % end scaled box
 \end{center}
@@ -888,12 +888,15 @@ Finally, we drop this into the concatenation construction:
 \faarctransition {t}{u}{$\Lambda$}{315}{225};
 \faarctransition {y}{x}{$\Lambda$}{105}{75};
 
-\node at (8,-3) {\code{a (b | c)*}};
+\node at (8,-3) {$a (b | c)^*$};
 \end{tikzpicture}
 } % end scaled box
 \end{center}
 
-As a third example, \code{a* (b | c)}, includes a concatenation of two complex item (\code{a*} and \code{(b | c)} ). To construct this, first construct \code{a*}, then construct \code{(b | c)} and then use the concatenation construction to combine them. Here are the results:
+%As a third example, $a^* (b | c)$, includes a concatenation of two complex items
+%$a^*$ and $(b | c)$ ). To construct this, 
+%first construct $a^*$, 
+%then construct $(b | c)$ and then use the concatenation construction to combine them. Here are the results:
 
 \begin{center}
 \scalebox{.7}{
@@ -927,8 +930,8 @@ As a third example, \code{a* (b | c)}, includes a concatenation of two complex i
 \fatransition{c1}{c2}{c};
 \fatransition{c2}{y}{$\Lambda$};
 
-\node at (8,-2) {\code{a* (b | c)}};
-%\node at (5,-3) {};
+\node at (8,-2) {$a^* (b | c)$};
+\node at (5,-3) {};
 \end{tikzpicture}
 } % end scaled box
 \end{center}
@@ -937,7 +940,7 @@ It should be clear that Thompson's construction creates lots of $\Lambda$ transi
 
 \section{Subset Construction}\label{S.Subset.Construction}
 
-To illustrate how an NFA could be processed, let's consider again the NFA for \code{a* (b | c)} presented in the last section, but presented again in Figure~\ref{F.subsetNFA}. In this figure, each node is labeled so they can be explicitly referred to. For each state, we can ask the question, ``What states could I wind up in if I encounter a particular letter in the input?''. For example, suppose we haven't consumed any input yet, what states could we be in? Clearly we could be in State~$1$, the start state, but because of the $\Lambda$ transitions, we could also be in states $2, 4, 5, 6, 8$. This set of states ($=\{1, 2, 4, 5, 6, 8\}$)\footnote{When specifying sets of characters,  it is often easier to read the list of items if each item is separated with a comma. This works unless the set included a comma (as sets of characters for a compiler often do). I will generally included commas for readability unless the set of characters includes punctuation (commas or other punctuation marks). I hope this will improve readability.}
+To illustrate how an NFA could be processed, let's consider again the NFA for $a^* (b | c)$ presented in the last section, but presented again in Figure~\ref{F.subsetNFA}. In this figure, each node is labeled so they can be explicitly referred to. For each state, we can ask the question, ``What states could I wind up in if I encounter a particular letter in the input?''. For example, suppose we haven't consumed any input yet, what states could we be in? Clearly we could be in State~$1$, the start state, but because of the $\Lambda$ transitions, we could also be in states $2, 4, 5, 6, 8$. This set of states ($=\{1, 2, 4, 5, 6, 8\}$)\footnote{When specifying sets of characters,  it is often easier to read the list of items if each item is separated with a comma. This works unless the set included a comma (as sets of characters for a compiler often do). I will generally included commas for readability unless the set of characters includes punctuation (commas or other punctuation marks). I hope this will improve readability.}
 forms a meta-state (let's call it $A$). From the meta-state~$A$, where could we wind up if we read an $a$. Since the meta-state~$A$ includes state~$2$, we can follow the $a$ to state~$3$. From there we can follow $\Lambda$s to $2, 4, 5, 6, 8$. This gives another meta-state. Let's call it $B = \{2, 3, 4, 5, 6, 8\}$. 
 
 \begin{figure}[hbt]
@@ -975,7 +978,7 @@ forms a meta-state (let's call it $A$). From the meta-state~$A$, where could we 
 
 \end{tikzpicture}
 } % end scaled box
-\caption[NFA produced by Thompson's]{This is the NFA produced by Thompson's for the regular expression \code{a* (b | c)}}
+\caption[NFA produced by Thompson's]{This is the NFA produced by Thompson's for the regular expression $a^* (b | c)$}
   \label{F.subsetNFA}
 \end{figure}
 
@@ -1365,8 +1368,8 @@ This can be proved by construction. Consider two languages $L_1$ and $L_2$ both 
 \fanonterminalnode {2, 1}{1+};
 \fanonterminalnode {2, -1}{2+};
 
-\fatransition{-}{1-}{$\lambda$};
-\fatransition{-}{2-}{$\lambda$};
+\fatransition{-}{1-}{$\Lambda$};
+\fatransition{-}{2-}{$\Lambda$};
 \fatransition{1-}{1+}{$FA_1$};
 \fatransition{2-}{2+}{$FA_2$};
 
@@ -1379,7 +1382,7 @@ This can be proved by construction. Consider two languages $L_1$ and $L_2$ both 
 \begin{theorem}
 The complement of any regular language is regular.
 \end{theorem}
-First, what do we mean by the complement of a language. If a regular language $L$ is defined over the alphabet $\Sigma$, then the complement of $L$, which we will call $L'$, is the set of all strings that are in $\Sigma$*, but not in $L$.
+First, what do we mean by the complement of a language. If a regular language $L$ is defined over the alphabet $\Sigma$, then the complement of $L$, which we will call $L'$, is the set of all strings that are in $\Sigma ^*$, but not in $L$.
 
 We can again prove this by construction. If $L$ is regular, then there is a complete DFA that generates the language. By ``complete'', we mean that every state has an outbound transition for every letter in $\Sigma$. If we take that DFA and reverse the ``plusness'' of each state (that is, every state that was a final state in the original becomes a non-final state in the result, and any state that was non-final in the original becomes final in the result) then any string accepted by the original will be rejected in the final and any string regected by the original will be accepted in the final. Since the DFA is complete, it will never ``crash'' - that is, for each input letter, it will always have a transition it can follow. Since it is a deterministic FA, a given input can only wind up in a single state. That one an only state has opposite implications in the two FAs. If it accepts the string in one, it rejects the string in the other. As a result, the two FAs represent languages that are complements of each other.
 \needswork % add figure
@@ -1450,7 +1453,7 @@ Lemma~\ref{T.RL.pumping.lemma} is known as the Pumping Lemma for Regular Languag
 \item The Lemma can be used to prove that a language is NOT regular. It cannot be used to prove that a language IS regular. In other words, there are some non-regular languages the fit the form of the pumping lemma, but any language that is infinite that does NOT fit the pumping lemma must not be regular.
 \end{enumerate}
 
-Consider the language $ab*c$. This is an infinite language and it is regular, so it must conform to the pumping lemma. To show this, take $x=a$, $y=b$, $z=c$. With this assignment, it should be clear that all strings $xy^n z$ are in the language.
+Consider the language $ab^*c$. This is an infinite language and it is regular, so it must conform to the pumping lemma. To show this, take $x=a$, $y=b$, $z=c$. With this assignment, it should be clear that all strings $xy^n z$ are in the language.
 
 Now let's consider the language of all strings that consist of any number of $a$s followed by any number of $b$s. This language can be represented as $a^n b^m$. Is this language regular? Let's see if we can prove it is NOT regular using the pumping lemma. Let's take $x=a$, $y=ab$, $z=b$. The string $xyz$ is $aabb$ which is in the language. However, the string $xy^2 z$ is $aababb$ which is NOT in the language. Can we conclude from this that the language is not regular? No.
 
@@ -1498,7 +1501,7 @@ Symbols in CFGs are of two flavors: non-terminals are those that appear on the l
 %----------------------------------------------------------
 \begin{cfg}{A CFG that defines the language of any number of \code{a}'s followed by the same number of \code{b}'s.}{F.cfg.1}
 Q\cfgprod{S}{a S b}Q
-Q\cfgprod{S}{$\lambda$}Q
+Q\cfgprod{S}{$\Lambda$}Q
 \end{cfg}
 %----------------------------------------------------------
 
@@ -1508,7 +1511,7 @@ What can we do with this CFG? Let's do some derivations. Starting with the start
 
 What if we invoked Production 1 more than once? The first invocation produces \code{aSb}. The next invocation produces \code{aaSbb}. Each invocation adds another \code{a} and \code{b}. When we finally invoke Production 2, we are left with a string of \code{a}'s followed by the same number of \code{b}'s.
 
-While not the most complex illustration, this CFG illustrates that CFGs are more powerful than regular expressions. Regular expressions are not able to generate balanced parenthesis. A regular expression such as \code{(*)*} allows any number of opening parenthesis and any number of closing parenthesis, but there is no way to guarantee that the number of closing parenthesis match the number of opening parenthesis. If we substituted parenthesis for the \code{a} and \code{b} in Figure~\ref{F.cfg.1}, we would have a solution to the balanced parenthesis problem.
+While not the most complex illustration, this CFG illustrates that CFGs are more powerful than regular expressions. Regular expressions are not able to generate balanced parenthesis. A regular expression such as $(^*)^*$ allows any number of opening parenthesis and any number of closing parenthesis, but there is no way to guarantee that the number of closing parenthesis match the number of opening parenthesis. If we substituted parenthesis for the \code{a} and \code{b} in Figure~\ref{F.cfg.1}, we would have a solution to the balanced parenthesis problem.
 
 Figure~\ref{F.cfg.2} presents a more complete, and more interesting CFG. This language defines a program as zero or more statements. An individual statement can be an assignment statement (in this language, an assignment statement is a terminal, so the assumption is that they are defined elsewhere), an \code{if} statement, or a compound statement (curly braces surrounding any number of statements). 
 
@@ -1518,7 +1521,7 @@ Figure~\ref{F.cfg.2} presents a more complete, and more interesting CFG. This la
 \begin{enumerate}
 \item \cfgprod{PROGRAM}{STMTS}
 \item \cfgprod{STMTS}{STMT STMTS}
-\item \cfgprod{STMTS}{$\lambda$}
+\item \cfgprod{STMTS}{$\Lambda$}
 \item \cfgprod{STMT}{IF\_STMT}
 \item \cfgprod{STMT}{COMPOUND\_STMT}
 \item \cfgprod{STMT}{assignment\_stmt}
