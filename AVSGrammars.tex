@@ -182,7 +182,7 @@ Phil Howard
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FORMATTING
 \setlength{\parindent}{0cm} % Default is 15pt.
-\setlength{\parskip}{12pt plus 2pt minus 2pt}
+\setlength{\parskip}{8pt plus 2pt minus 2pt}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \part{Introduction}
@@ -386,7 +386,7 @@ means the same as ($\Lambda$ \code{| a}).
 \item[character range] Square brackets (\code{[]}) can be used to specify a character range so that \code{[a-m]} means any single character in the range '\code{a}' through '\code{m}'. This could be represented long-hand as '\code{(a | b | c | d | ...)}'.
 \end{mydesc}
 
-These enhancements will be used in a few examples, and they are allowed in homework problems provided their use is clear. Note that the one-or-more enhancement uses the plus sign that can also be used for concatenation so any regular expression that uses any of these enhancements must use the vertical bar for alternation.
+These enhancements will be used in a few examples, and they are allowed in homework problems provided their use is clear. Note that the one-or-more enhancement uses the plus sign that can also be used for concatenation so any regular expression that uses \textbf{any} of these enhancements must use the vertical bar for alternation.
 
 If we want a regular expression for integer constants, we could try
 \begin{quote}\code{[0-9]+}\end{quote}
@@ -417,7 +417,7 @@ The following exercises can be used to practice writing regular expressions. You
 \section{Language Families}
 Each regular expression defines a language.\footnote{These languages are not unique; it is possible to write multiple regular expressions for the same language.} Remember that a formal language is a set of strings. Also recall that it is possible to have a set of sets, so what can we say about the set of all languages that can be defined by regular expressions? This set is known as Regular Languages. They are ``regular'' in the sense that they can be defined by a regular expression. Regular languages have a set of properties that they share. We will eventually explore what these properties are. 
 
-Separate from the set of regular languages, there is the language of regular expressions. We can give a recursive definition of this language (but we cannot give a regular expression for it because, as we shall see, it is not regular).
+We can also think of the set of all regular expressions. This is yet another language (set of strings). We can give a recursive definition of this language, but we cannot give a regular expression for it because, as we shall see, it is not regular.
 
 \begin{enumerate}
 \item Every letter in $\Sigma$ is in RE
@@ -425,7 +425,7 @@ Separate from the set of regular languages, there is the language of regular exp
 \begin{enumerate}
 \item $r_1 r_2$
 \item $r_1 + r_2$
-\item $r_1*$
+\item $r_1^*$
 \item $(r_1)$
 \end{enumerate}
 \end{enumerate}
@@ -439,21 +439,28 @@ So we now have three separate but related languages:
 
 It is important to keep these three languages separate. Consider the following questions, one for each category of language:
 \begin{itemize}
-\item What is the language defined by \code{(a | b)*a(a | b)*}? This question is asking you to enumerate (or otherwise describe) a particular regular language.
+\item What is the language defined by $(a + b)^*a(a + b)^*$? This question is asking you to enumerate (or otherwise describe) a particular regular language.
 \item Is the language L regular? This is asking whether the specific language L is in the set of all languages definable by regular expressions.
-\item Is the statement, '\code{a | (b | c)+} a regular expression? This is asking ``Is it a well-formed regular expression?'' or ``Is it in the language for regular expressions that we gave a recursive definition for?''
+\item Is the statement, $a\ |\ (b\ |\ c)+$ a regular expression? This is asking ``Is it a well-formed regular expression?'' or ``Is it in the language for regular expressions that we gave a recursive definition for?''
 \end{itemize}
 
-Any language that can be defined by a regular expression is known as a regular language. In the coming sections we want to examine properties of regular languages (properties of the entire family of regular languages, not of a particular regular language. We will do a couple of them now.
+In the coming sections we want to examine properties of regular languages (properties of the entire family of regular languages, not of a particular regular language). We will do a couple of them now.
 
-First of all, how do you prove a language is regular? The obvious solution is to write a regular expression that generates the language. One needs to be careful to make sure the regular language actually generates the correct language. For example, if one asked, ``Is the language of all strings over $\Sigma = \{a b\}$ which contain at least one \code{a} and at least one \code{b} regular?''
- the regular expression
+First of all, how do you prove a language is regular? The obvious solution is to write a regular expression that generates the language. One needs to be careful to make sure the regular language actually generates the correct language. For example, if one asked, ``Is the language L of all strings over $\Sigma = \{a\ b\}$ which contain at least one $a$ and at least one $b$ regular?''
+The regular expression
 \begin{quote}
-\code{(a+b)*a(a+b)*b(a+b)*}
+$(a+b)^*a(a+b)^*b(a+b)^*$
 \end{quote}
-would not be proof that it was. All strings generated by this regular expression contain at least one \code{a} and at least one \code{b}, but the string \code{ba} is part of the language, but it cannot be generated by the regular expression.
+would not be proof that it was. All strings generated by this regular expression contain at least one \code{a} and at least one \code{b}. However, the string \code{ba} is part of L, but it cannot be generated by the specified regular expression. In other words:
+\begin{quote}
+$(a+b)^*a(a+b)^*b(a+b)^* \subset L$
+\end{quote}
 
-A regular expression that generates a language is adequate proof that the language is regular (provided the regular expression actually corresponds to the language). How can we prove a language isn't regular? An inability to write a regular expression for the language is not sufficient proof. The statement, ``I can't write a regular expression for that language'' might be because the language isn't regular or it might be because you simply aren't creative (or smart or persistent) enough to come up with one. We will Have to wait awhile before we can come up with a proof that a language isn't regular.
+This is not sufficient proof that L is regular. It is always possible to give a regular subset of any language. This can be done by giving a alternation of a finite list of words from the language. The ability to show there is a regular subset of the language is not sufficient proof that the language is regular.
+
+A regular expression that generates a language is adequate proof that the language is regular (provided the regular expression actually corresponds to the language). How can we prove a language isn't regular? An inability to write a regular expression for the language is not sufficient proof. The statement, ``I can't write a regular expression for that language'' might be because the language isn't regular or it might be because you simply aren't creative (or smart or persistent) enough to come up with one. Chapter~\ref{C.RL.theory} provides a mechanism to prove a language isn't regular. 
+
+zzz
 
 Theorem~\ref{TH.finite.languages} gives the first property we will prove regarding regular languages.
 \begin{theorem}
@@ -466,10 +473,12 @@ The proof is quite simple. If a language is finite, every word in the language c
 (word\_1) + (word\_2) + \dots + (word\_n)
 \end{quote}
 
-\section{Why Regular Languages?}
-We've identified a class of languages known as ``Regular Languages'' --- namely, those languages that can be defined by regular expressions. Why is this class of languages interesting? From a theory point of view, they are interesting because they form what is considered the smallest class of mathematically defined formal languages. Later chapters will deal with larger classes of languages which are supersets of regular languages. 
+Before proving other properties of regular languages, we have a question to answer.
 
-From a practical point of view, regular languages are useful because fast an efficient to process. By ``process'', what is meant is answering the question, ``Is this input a member of a particular regular language?'' A common application of this is the \code{grep} utility included with most Linux distributions. With \code{grep}, you specify a regular expression and an input file, and \code{grep} identifies all lines of the file that include a match for the regular expression\footnote{This is a simplification of what \code{grep} does, but it is accurate for the purposes of this illustration}. Most uses of regular expressions include ``scanning'' for a match. A text string (often the contents of a text file) is read looking for a match to the regular expression. How efficient are regular expressions scanners? Theorem~\ref{TH.O.N.for.res}, which won't be proven until later, gives a bound on their efficiency.
+\section{Why Regular Languages?}
+We've identified a class of languages known as ``Regular Languages'' --- namely, those languages that can be defined by regular expressions. Why is this class of languages interesting? From a theory point of view, they are interesting because they form the smallest class of languages in what's known as Chompsky Hierarchy of languages. Later parts of the text will deal with larger classes of languages which are supersets of regular languages. 
+
+From a practical point of view, regular languages are useful because they are fast and efficient to process. By ``process'', what is meant is answering the question, ``Is this input a member of a particular regular language?'' A common application of this is the \code{grep} utility included with most Linux distributions. With \code{grep}, you specify a regular expression and an input file, and \code{grep} identifies all lines of the file that include a match for the regular expression\footnote{This is a simplification of what \code{grep} does, but it is accurate for the purposes of this illustration}. Most uses of regular expressions include ``scanning'' for a match. A text string (often the contents of a text file) is read looking for a match to the regular expression. How efficient are regular expressions scanners? Theorem~\ref{TH.O.N.for.res}, which won't be proven until later, gives a bound on their efficiency.
 \begin{theorem}
 \label{TH.O.N.for.res}
 Any regular expression can be scanned for in $O(N)$ with small time constant where $N$ is the length of the input string.
@@ -1296,6 +1305,7 @@ Does the subset construction always result in a DFA, or might it result in anoth
 The consequence is that the resulting FA has no non-determinism and is therefore a DFA.
 
 \chapter{Theory}
+\label{C.RL.theory}
 
 What we have done so far:
 
