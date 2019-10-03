@@ -42,7 +42,8 @@
 %\hypersetup{pdfauthor={Philip Howard}, pdftitle={A Very Simple Compiler Book}}
 
 \usepackage{tikz}
-\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{shapes,arrows.meta,bending}
+
 
 \usepackage{float}
 \floatstyle{boxed} 
@@ -111,13 +112,16 @@ float=thbp,
 %---------------------------------------------------
 % commands for drawing FAs
 \usetikzlibrary{arrows.meta} % to specify arrow size in transition commands.
-\newcommand{\faterminalnode}[3] {\draw (#1) circle [radius=9pt]; \node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
+\newcommand{\faterminalnode}[3] {\node at (#1) (#2) [circle, draw, double, minimum size=24pt] {#2};}
 \newcommand{\fastart}[1] {\coordinate (start) at (#1);}
 \newcommand{\fanonterminalnode}[2] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
 \newcommand{\fanolabel}[2] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {};}
 \newcommand{\fatransition}[3] {\draw [-{Latex[length=3mm,width=2.5mm]}] (#1) -- (#2) node [midway, above] {#3};}
 \newcommand{\farighttransition}[3] {\draw [-{Latex[length=3mm,width=2.5mm]}] (#1) -- (#2) node [midway, right] {#3};}
 \newcommand{\faarctransition}[5] {\draw [-{Latex[length=3mm,width=2.5mm]}] (#1) to[out=#4, in=#5] node  [midway, above] {#3} (#2) ;}
+\newcommand{\faloopright}[2] {\draw [arrows={-{Latex[length=3mm,width=2.5mm]}}] (#1) edge [loop right] node {#2} ();}
+\newcommand{\faloopleftt}[2] {\path [-{Latex[length=3mm,width=2.5mm]}] (#1) edge [loop left] node {#2} ();}
+%\faloopback {4+}{4+}{a,b}{30}{330};
 %---------------------------------------------------
 
 \usepackage{mdwlist}
@@ -159,7 +163,15 @@ float=thbp,
 \newtheorem{summary}[theorem]{Summary}
 \newenvironment{proof}[1][Proof]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
 %----------------------------------------------------------
+
+
 \begin{document}
+
+%zzz
+%\tikz [foo /.tip = {Latex[length=3mm,width=2.5mm]} ]
+%\tikz[arrows={[bend]}] 
+\tikzset{ >=Latex }
+\tikzset{arrows = {[length=3mm]} }
 
 \frontmatter
 \title{A Very Simple Grammars Book}
@@ -460,8 +472,6 @@ This is not sufficient proof that L is regular. It is always possible to give a 
 
 A regular expression that generates a language is adequate proof that the language is regular (provided the regular expression actually corresponds to the language). How can we prove a language isn't regular? An inability to write a regular expression for the language is not sufficient proof. The statement, ``I can't write a regular expression for that language'' might be because the language isn't regular or it might be because you simply aren't creative (or smart or persistent) enough to come up with one. Chapter~\ref{C.RL.theory} provides a mechanism to prove a language isn't regular. 
 
-zzz
-
 Theorem~\ref{TH.finite.languages} gives the first property we will prove regarding regular languages.
 \begin{theorem}
 \label{TH.finite.languages}
@@ -476,9 +486,9 @@ The proof is quite simple. If a language is finite, every word in the language c
 Before proving other properties of regular languages, we have a question to answer.
 
 \section{Why Regular Languages?}
-We've identified a class of languages known as ``Regular Languages'' --- namely, those languages that can be defined by regular expressions. Why is this class of languages interesting? From a theory point of view, they are interesting because they form the smallest class of languages in what's known as Chompsky Hierarchy of languages. Later parts of the text will deal with larger classes of languages which are supersets of regular languages. 
+We've identified a class of languages known as ``Regular Languages'' --- namely, those languages that can be defined by regular expressions. Why is this class of languages interesting? From a theory point of view, they are interesting because they form the smallest class of languages in what's known as the Chompsky Hierarchy of languages. Later parts of the text will deal with the larger classes of languages in the hierarchy, all of which are supersets of regular languages. 
 
-From a practical point of view, regular languages are useful because they are fast and efficient to process. By ``process'', what is meant is answering the question, ``Is this input a member of a particular regular language?'' A common application of this is the \code{grep} utility included with most Linux distributions. With \code{grep}, you specify a regular expression and an input file, and \code{grep} identifies all lines of the file that include a match for the regular expression\footnote{This is a simplification of what \code{grep} does, but it is accurate for the purposes of this illustration}. Most uses of regular expressions include ``scanning'' for a match. A text string (often the contents of a text file) is read looking for a match to the regular expression. How efficient are regular expressions scanners? Theorem~\ref{TH.O.N.for.res}, which won't be proven until later, gives a bound on their efficiency.
+From a practical point of view, regular languages are useful because they are fast and efficient to process. By ``process'', we mean answering the question, ``Is this input a member of a particular regular language?'' A common application of this is the \code{grep} utility included with most Linux distributions. With \code{grep}, you specify a regular expression and an input file, and \code{grep} identifies all lines of the file that include a match for the regular expression\footnote{This is a simplification of what \code{grep} does, but it is accurate for the purposes of this illustration}. Most uses of regular expressions include ``scanning'' for a match. A text string (often the contents of a text file) is read looking for a match to the regular expression. How efficient are regular expressions scanners? Theorem~\ref{TH.O.N.for.res}, which won't be proven until later, gives a bound on their efficiency.
 \begin{theorem}
 \label{TH.O.N.for.res}
 Any regular expression can be scanned for in $O(N)$ with small time constant where $N$ is the length of the input string.
@@ -486,14 +496,20 @@ Any regular expression can be scanned for in $O(N)$ with small time constant whe
 
 The next chapter discusses a ``machine'' that can perform this processing.
 
+\section{Exercises}
+\begin{enumerate}
+\item Add problems here
+\end{enumerate}
+\needsproblems
+
 \chapter{Finite Automata}
 There is a well-known children's game called Chutes and Ladders. The goal is to be the first player to move their piece from the beginning (bottom) to the ending (top) of the board. On a player's turn, they spin a spinner which lands on a number. The player advances their piece the specified number of squares on the board. If their piece lands on the bottom of a ladder, they climb the ladder thus making extra progress towards their goal. If their piece lands on the top of a chute, they slide down the chute winding up closer to the beginning. This game is considered a ``children's'' game because it involves no strategy. The outcome of the game is completely determined by the sequence of numbers generate by the spinner (assuming the players don't cheat).
 
-What does this game have to do with regular expressions of finite automata? If we assume that the spinner only generates numbers less than ten (single digit numbers), then we could spin the spinner a bunch of times and write down each result. The result would be a string of digits. We could then ask the question, ``Does this sequence of moves result in someone winning the game?'' That still doesn't sound like a regular expression question (although scanning a string sounds familiar), so let's think of a state machine.
+What does this game have to do with regular expressions or finite automata? If we assume that the spinner only generates numbers less than ten (single digit numbers), then we could spin the spinner a bunch of times and write down each result. The result would be a string of digits. We could then ask the question, ``Does this sequence of moves result in someone winning the game?'' That still doesn't sound like a regular expression question (although scanning a string sounds familiar), so let's think of a Finite Automaton\footnote{``Automaton is the singular of the plural ``Automata''.} (aka state machine).
 
-A state machine consists of a finite number of states (or configurations) and transitions from state to state. How could we turn Chutes and Ladders into a state machine? Suppose there were three players. Each player's marker could be on any of the squares on the board. Each configuration of markers (each player on each valid square in every combination) could be considered a state. There would be a large number of states, but the number would be finite. Transitions consist of moves: for example, Player~2 moves forward three spaces. Each state would have an outbound transition for each possible spinner result for each player. We now have a state machine representation of the game, but the question still remains, ``What does this have to do with regular expressions?''
+A finite automaton consists of a finite number of states (or configurations) and transitions from state to state. How could we turn Chutes and Ladders into a state machine? Suppose there were three players. Each player's marker could be on any of the squares on the board. Each configuration of markers (each player on each valid square in every combination) could be considered a state. There would be a large number of states, but the number would be finite. Transitions consist of moves such as ``Player~2 moves forward three spaces''. Each state would have an outbound transition for each possible spinner result for each player. The finite automaton representation of the game makes it clear that there is no strategy involved. The machine process the input (the sequence of spins) without any human involvement. The outcome is determined solely by the sequence of spins. But the question still remains, ``What does this have to do with regular expressions?''
 
-Before we answer that question (through some other examples), lets define a standardized way of graphically representing state machines (or more formally, finite automata). Finite Automata (aka State Machines) consist of a finite number of states and transitions between states. One state is defined as the start state, and any number of states can be defined as final states. The start state in an FA is signified by an inbound arrow that doesn't originate from another state. Processing always starts in the start state. Final states are signified by a double circle. Transitions are labeled by the letter that is used to move from one state to another. This format is illustrated in Figure~\ref{F.FA_1}.
+Before we answer that question (through some other examples), lets define a standardized way of graphically representing finite automata. Finite automata consist of a finite number of states and transitions between states. One state is defined as the start state, and any number of states can be defined as final states. The start state in an FA is signified by an inbound arrow that doesn't originate from another state. Processing always starts in the start state. Final states are signified by a double circle. Transitions are labeled by the letter that is used to move from one state to another. This format is illustrated in Figure~\ref{F.FA_1}.
 
 %----------------------------------------------------------
 \begin{figure}[hbt]
@@ -527,7 +543,7 @@ Two conditions can cause a string to be rejected:
 
 Given these rules for processing FA's, it should be clear that the FA in Figure~\ref{F.FA_1} is equivalent to the regular expression \code{(yt)* (x | yz)}. It is no coincidence that there is a regular expression that corresponds to the FA. It turns out that every FA is equivalent to some regular expression, and that each regular expression has an FA that is equivalent to it. We will prove this in a later section.
 
-Figure~\ref{F.FA_2} gives another FA. This FA shows a slightly different format. The start state has a '-' in the label. Final states have a '$+$' in them. The states can be though of as follows:
+Figure~\ref{F.FA_2} gives another FA. This FA shows a slightly different format. The start state has a '-' in the label. Final states have a '$+$' in them. The states can be thought of as follows:
 \begin{enumerate}
 \item State 1: the start state.
 \item State 2: An $a$ not preceded by an $a$.
@@ -552,14 +568,13 @@ Note that once a double letter has been found, the FA remains in the final state
 \fatransition{3}{4+}{b};
 \faarctransition{3}{2}{a}{120}{240};
 \faarctransition {2}{3}{b}{300}{60};
-\faarctransition {4+}{4+}{a,b}{30}{330};
-
+\faloopright {4+}{a,b};
 \end{tikzpicture}
  \caption[FA for double letters]{This FA accepts all strings that contain a double letter.}
   \label{F.FA_2}
 \end{figure}
 %----------------------------------------------------------
-
+zzz
 FA's can also be represented in table form. These tables are called transition tables. The transition table for the FA in Figure~\ref{F.FA_2} is given in Figure~\ref{T.FA.2}. There is one row for each state. The state name is given in the first column. The remaining columns indicate the new state based on the transition letter at the top of the column.
 
 %----------------------------------------------------------
