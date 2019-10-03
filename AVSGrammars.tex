@@ -42,7 +42,7 @@
 %\hypersetup{pdfauthor={Philip Howard}, pdftitle={A Very Simple Compiler Book}}
 
 \usepackage{tikz}
-\usetikzlibrary{shapes,arrows.meta,bending}
+\usetikzlibrary{shapes,arrows.meta}
 
 
 \usepackage{float}
@@ -111,17 +111,16 @@ float=thbp,
 
 %---------------------------------------------------
 % commands for drawing FAs
-\usetikzlibrary{arrows.meta} % to specify arrow size in transition commands.
 \newcommand{\faterminalnode}[3] {\node at (#1) (#2) [circle, draw, double, minimum size=24pt] {#2};}
 \newcommand{\fastart}[1] {\coordinate (start) at (#1);}
 \newcommand{\fanonterminalnode}[2] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
 \newcommand{\fanolabel}[2] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {};}
-\newcommand{\fatransition}[3] {\draw [-{Latex[length=3mm,width=2.5mm]}] (#1) -- (#2) node [midway, above] {#3};}
-\newcommand{\farighttransition}[3] {\draw [-{Latex[length=3mm,width=2.5mm]}] (#1) -- (#2) node [midway, right] {#3};}
-\newcommand{\faarctransition}[5] {\draw [-{Latex[length=3mm,width=2.5mm]}] (#1) to[out=#4, in=#5] node  [midway, above] {#3} (#2) ;}
-\newcommand{\faloopright}[2] {\draw [arrows={-{Latex[length=3mm,width=2.5mm]}}] (#1) edge [loop right] node {#2} ();}
-\newcommand{\faloopleftt}[2] {\path [-{Latex[length=3mm,width=2.5mm]}] (#1) edge [loop left] node {#2} ();}
-%\faloopback {4+}{4+}{a,b}{30}{330};
+\newcommand{\fatransition}[3] {\draw [->] (#1) -- (#2) node [midway, above] {#3};}
+\newcommand{\farighttransition}[3] {\draw [->] (#1) -- (#2) node [midway, right] {#3};}
+\newcommand{\faarctransition}[5] {\draw [->] (#1) to[out=#4, in=#5] node  [midway, above] {#3} (#2) ;}
+\newcommand{\faloopright}[2] {\draw (#1) edge [loop right] node {#2} ();}
+\newcommand{\faloopleftt}[2] {\path (#1) edge [loop left] node {#2} ();}
+
 %---------------------------------------------------
 
 \usepackage{mdwlist}
@@ -171,7 +170,7 @@ float=thbp,
 %\tikz [foo /.tip = {Latex[length=3mm,width=2.5mm]} ]
 %\tikz[arrows={[bend]}] 
 \tikzset{ >=Latex }
-\tikzset{arrows = {[length=3mm]} }
+\tikzset{arrows = {[length=3mm,width=2.5mm]} }
 
 \frontmatter
 \title{A Very Simple Grammars Book}
