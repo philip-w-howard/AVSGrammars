@@ -291,9 +291,17 @@ How about:
 \begin{quote}
 $()()(2+7)/3-(((4+5)*(6)-1)*3 + 4)$
 \end{quote}
-This last expression meets the definition given above, but is not a valid arithmetic expression because of the empty parenthesis. We could attempt to enhance our list of rules, but how could we know that we have a complete set?
+This last expression meets the definition given above, but is not a valid arithmetic expression because of the empty parenthesis. We could add a rule that states you can't have empty parenthesis, which would rule out the expression above. How about the expression:
+\begin{quote}
+$)))4((($
+\end{quote}
+This expression has balanced parenthesis (the same number of opens as closes), but they happen to be in the wrong order. We could fix that by specifying that parenthesis have to be properly nested. Then what about the expression:
+\begin{quote}
+$5(*)7$
+\end{quote}
+As you can see, there seems to be a never ending combination of ways to thwart our set of rules, so how can we know when we have a complete set? When we can't think of any new ways to break our set? What if someone more creative (or evil) comes along and finds a way to break the rules that we hadn't thought of.
 
-Here is a recursive definition or arithmetic expressions (called AE in the definition):
+Let's try a recursive definition for arithmetic expressions (called AE in the definition):
 
 \begin{enumerate}
 \item Any number is in AE
@@ -306,6 +314,7 @@ Here is a recursive definition or arithmetic expressions (called AE in the defin
 \item $(f)$
 \end{enumerate}
 \end{enumerate}
+I claim (without proof) that this is a complete set of rules that always works.
 
 How can we use this definition to prove an expression is a valid arithmetic expression? We do so by construction: invoke the various rules one at a time until the desired expression is constructed. Let's do so with the expression:
 \begin{quote}
@@ -365,13 +374,45 @@ We've seen several recursive definitions. What do they have in common? A recursi
 \item Recursive Rules of the form, ``If $x$ is in L, the so is $f(x)$''. Rules 2a-2e for AE are the recursive rules. Recursive rules can use multiple variables as illustrated in the definition of AE.
 \end{itemize}
 
-When constructing recursive definitions, it is important to keep in mind what the language is. For example, the language AE was a set of strings. As a result, rules 2a-2e were adding characters to the string, they were not performing arithmetic operations. The language EVEN was a set of numbers. As a result, Rule~b was performing an arithmetic operation to create a new number.
+When constructing recursive definitions, it is important to keep in mind what the language is. For example, the language AE was a set of strings. As a result, rules 2a-2e were adding characters to the string, they were not performing arithmetic operations. The language EVEN was a set of numbers, so Rule~b was performing an arithmetic operation to create a new number.
 
 If the language is a set of strings, then the recursive rules always extend or combine strings. That is, they always make longer strings, they never remove characters from the string. In other words, you should never have a rule of the form, ``If $x$ in in L, then so is $x$ without the trailing semicolon.''
 
+As another example of a recursive definition, consider the following definition of Polynomial:
+\begin{enumerate}
+\item Any number is in Polynomial
+\item The variable $x$ is in Polynomial
+\item If $f$ and $g$ are in Polynomial, then so are:
+\begin{enumerate}
+\item $f+g$
+\item $f-g$
+\item $f g$
+\item $f/g$
+\item $(f)$
+\end{enumerate}
+\end{enumerate}
+
+Note 1: In Rule~3c, $f g$ is used to represent the multiplication of $f$ and $g$. Polynomials are mathematical expressions, so we are using the mathematical notation for multiplication. If we were using a programming language notation, this rule would probably read $f*g$.
+
+Note 2: like AE, this is a set of strings so the arithmetic operators in Rule~3 are simply characters, no arithmetic operations are performed. 
+
+Given this definition, it should be easy enough to show that $(24/4/2)$ is in Polynomial (note that it is also in AE). What is the meaning of this expression? is it $3$ or $12$ (based on which operation is performed first). It turns out this is an erroneous question. Both Polynomial and AE are sets of strings. We can answer the question, ``Is this string in the language?'', but the question ``What does this string mean?'' is not relevant to these languages.
+
+In programming languages, there is syntax and semantics. One way of thinking of these two is that syntax deals with the question, ``Is this a valid statement in the formal language?'' Semantics deals with the question, ``What is the meaning of this statement?'' or even, ``Does this statement have a valid meaning in the language?''. At this point, we are only concerned with syntax, not semantics.
+
 \section{Summary}
-Recursive definitions provide a mechanism to construct formal languages. A recursive definition consists of base cases and recursive rules that are used to extend the language. The mechanism we presented here isn't very mathematically rigorous, so we can't prove many properties about the languages that are generated by these definitions (a short-coming that won't be found in the next several chapters). One thing we can say about languages generated by recursive definitions is that they are always infinte. That is, they always contain an infinite number of words. This is true because there is no limit on how many times a recursive rule can be invoked, and each invocation produces a new word in the language.
-\needsproblems{}
+Recursive definitions provide a mechanism to construct formal languages. A recursive definition consists of base cases and recursive rules that are used to extend the language. The mechanism we presented here isn't very mathematically rigorous, so we can't prove many properties about the languages that are generated by these definitions (a short-coming that won't be found in the next several chapters). One thing we can say about languages generated by recursive definitions is that they are always infinite. That is, they always contain an infinite number of words. This is true because there is no limit on how many times a recursive rule can be invoked, and each invocation produces a new word in the language.
+
+\section{Problems}
+\begin{enumerate}
+\item Given the definition of Polynomial given in this chapter argue either that the statement $x^3 + 4x^2 -7$ either is or is not in Polynomial.
+\item The definition of Polynomial given in this chapter only allows a single variable. Extend the definition to allow two variables.
+\item The language PALINDROME is the set of all strings that read the same forwards and backwards. Give a recursive definition of even-length PALINDROMEs over $\Sigma = \{a\ b\}$. 
+\item Extend your definition of PALINDROME to include both even and odd length strings.
+\item Give a recursive definition of positive integers (or argue that it can't be done).
+\item Give a recursive definition of positive rational numbers (or argue that it can't be done).
+\item Give a recursive definition of positive real numbers (or argue that it can't be done).
+\end{enumerate}
 
 \part{Regular Languages}
 \chapter{Regular Expressions}
