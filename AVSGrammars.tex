@@ -119,7 +119,8 @@ float=thbp,
 \newcommand{\farighttransition}[3] {\draw [->] (#1) -- (#2) node [midway, right] {#3};}
 \newcommand{\faarctransition}[5] {\draw [->] (#1) to[out=#4, in=#5] node  [midway, above] {#3} (#2) ;}
 \newcommand{\faloopright}[2] {\draw (#1) edge [loop right] node {#2} ();}
-\newcommand{\faloopleftt}[2] {\path (#1) edge [loop left] node {#2} ();}
+\newcommand{\faloopleft}[2] {\path (#1) edge [loop left] node {#2} ();}
+\newcommand{\falooptop}[2] {\path (#1) edge [loop above] node {#2} ();}
 
 %---------------------------------------------------
 
@@ -166,7 +167,7 @@ float=thbp,
 
 \begin{document}
 
-%zzz
+
 %\tikz [foo /.tip = {Latex[length=3mm,width=2.5mm]} ]
 %\tikz[arrows={[bend]}] 
 \tikzset{ >=Latex }
@@ -412,6 +413,7 @@ Recursive definitions provide a mechanism to construct formal languages. A recur
 \item Give a recursive definition of positive integers (or argue that it can't be done).
 \item Give a recursive definition of positive rational numbers (or argue that it can't be done).
 \item Give a recursive definition of positive real numbers (or argue that it can't be done).
+\item Give a recursive definition for the set of strings over $\Sigma=\{0 1 2 3 4 5 6 7 8 9\}$ that cannot start with the digit zero.
 \end{enumerate}
 
 \part{Regular Languages}
@@ -421,7 +423,7 @@ Many programmers are familiar with regular expressions from non-compiler context
 Regular expressions include the following features:
 \begin{mydesc}[10em]
 	\item[Concatenation] Concatenation is gluing two strings end-to-end. For example, concatenating ``\code{ab}'' with ``\code{bc}'' yields the string ``\code{abcd}''.
-  \item[Alternation] Alternation means to choose exactly one from a set of alternatives. Regular expressions use either the vertical bar (\code{|}) or the plus sign (\code{+}) to mean alternation. So the expression \code{a | b | c} means to choose either an '\code{a}', a '\code{b}', or a '\code{c}'. 
+  \item[Alternation] Alternation means to choose exactly one from a set of alternatives. Regular expressions use either the vertical bar (\code{|}) or the plus sign (\code{+}) to mean alternation. So the expression \code{a + b + c} means to choose either an '\code{a}', a '\code{b}', or a '\code{c}'. 
 	\item[Grouping] Parenthesis can be used for grouping operations much as they can in algebraic expressions.
 	\item[Kleene Closure] Kleene Closure means to take zero or more instances of a string. Kleene Closure is denoted by an asterisk ($^*$). So, for example, $x^*$ means zero or more '$x$' characters. Kleene Closure has higher precedence than concatenation so that $ab^*$ means $a(b^*)$ not $(ab)^*$.
 \end{mydesc}
@@ -433,9 +435,9 @@ The most common enhancements to this syntax are as follows:
 \item[zero or one] The question mark
  (\code{?}) 
 indicates zero or one of an item so that \code{a?} 
-means the same as ($\Lambda$ \code{| a}).
+means the same as ($\Lambda$ \code{+ a}).
 \item[one or more] The plus sign (\code{+}) is similar to Kleene Closure, but it is one-or-more not zero-or-more so that \code{a+} means the same as $aa^*$.
-\item[character range] Square brackets (\code{[]}) can be used to specify a character range so that \code{[a-m]} means any single character in the range '\code{a}' through '\code{m}'. This could be represented long-hand as '\code{(a | b | c | d | ...)}'.
+\item[character range] Square brackets (\code{[]}) can be used to specify a character range so that \code{[a-m]} means any single character in the range '\code{a}' through '\code{m}'. This could be represented long-hand as '\code{(a + b + c + d + ...)}'.
 \end{mydesc}
 
 These enhancements will be used in a few examples, and they are allowed in homework problems provided their use is clear. Note that the one-or-more enhancement uses the plus sign that can also be used for concatenation so any regular expression that uses \textbf{any} of these enhancements must use the vertical bar for alternation.
@@ -449,22 +451,20 @@ This fixes the leading zero problem, but it does not allow the number zero. This
 If we want to allow negative numbers, we could add an optional minus sign:
 \begin{quote}\code{0 | (-?[1-9][0-9]*)}\end{quote}
 
-The following exercises can be used to practice writing regular expressions. You use the enhanced syntax or the minimal syntax for these exercises.
+There are exercises at the end of the chapter that can be used to practice writing regular expressions. You use the enhanced syntax or the minimal syntax for these exercises.
 
-\textbf{Exercises}
+\section Manipulating Regular Expressions
 
-\begin{enumerate}
-\item Write a regular expression for a string containing any odd number of the letter \code{a}.
-\item Write a regular expression for C (or Java) variable names. Valid characters include upper and lower case letters, digits, and the underscore (\code{\_}).
-\item Write a regular expression for a string containing a positive even number of \code{a}'s followed by an odd number of \code{b}'s. The following are valid strings: \code{aaaabbb}, \code{aabaabaabbb}, \code{aaaaaabbbbbaabaabaab}. The following are not valid strings: \code{aaab}, \code{aaaabbbaa}, \code{bbbaab}.
-\item For the previous question, state why each of the non-valid strings are non-valid.
-\item Write a regular expression for a floating-point constant. The following rules apply: 
-\begin{enumerate}
-\item The integer part cannot have leading zeros unless the integer part is zero. 
-\item If there is a decimal point, it must be followed by at least one digit.
-\item The decimal part must not have trailing zeros unless the decimal part is zero.
-\end{enumerate}
-\end{enumerate}
+Regular expressions look similar to algebraic expressions, so it might be tempting to manipulate them as if they were algebraic expressions. Some manipulations are possible, but the rules can be quite different from algebra. For example, in both regular expressions and algebra,
+\begin{quote}
+$a(b+c) = ab + ac$
+\end{quote}
+but the following have no algebraic equivalent:
+\begin{quote}
+$(a^*)^* = a^*$\\
+$(a+b^*)^* = (a+b)*$\\
+$(a^*b^*)^* = (a+b)^*$
+\end{quote}
 
 \section{Language Families}
 Each regular expression defines a language.\footnote{These languages are not unique; it is possible to write multiple regular expressions for the same language.} Remember that a formal language is a set of strings. Also recall that it is possible to have a set of sets, so what can we say about the set of all languages that can be defined by regular expressions? This set is known as Regular Languages. They are ``regular'' in the sense that they can be defined by a regular expression. Regular languages have a set of properties that they share. We will eventually explore what these properties are. 
@@ -493,7 +493,7 @@ It is important to keep these three languages separate. Consider the following q
 \begin{itemize}
 \item What is the language defined by $(a + b)^*a(a + b)^*$? This question is asking you to enumerate (or otherwise describe) a particular regular language.
 \item Is the language L regular? This is asking whether the specific language L is in the set of all languages definable by regular expressions.
-\item Is the statement, $a\ |\ (b\ |\ c)+$ a regular expression? This is asking ``Is it a well-formed regular expression?'' or ``Is it in the language for regular expressions that we gave a recursive definition for?''
+\item Is the statement, $a + (b + c)+$ a regular expression? This is asking ``Is it a well-formed regular expression?'' or ``Is it in the language for regular expressions that we gave a recursive definition for?''
 \end{itemize}
 
 In the coming sections we want to examine properties of regular languages (properties of the entire family of regular languages, not of a particular regular language). We will do a couple of them now.
@@ -538,9 +538,25 @@ The next chapter discusses a ``machine'' that can perform this processing.
 
 \section{Exercises}
 \begin{enumerate}
-\item Add problems here
+\item Write a regular expression for a string containing any odd number of the letter \code{a}.
+\item Write a regular expression for C (or Java) variable names. Valid characters include upper and lower case letters, digits, and the underscore (\code{\_}).
+\item Write a regular expression for a string containing a positive even number of \code{a}'s followed by an odd number of \code{b}'s. The following are valid strings: \code{aaaabbb}, \code{aabaabaabbb}, \code{aaaaaabbbbbaabaabaab}. The following are not valid strings: \code{aaab}, \code{aaaabbbaa}, \code{bbbaab}.
+\item For the previous question, state why each of the non-valid strings are not valid.
+\item Write a regular expression for a floating-point constant. The following rules apply: 
+\begin{enumerate}
+\item The integer part cannot have leading zeros unless the integer part is zero. 
+\item If there is a decimal point, it must be followed by at least one digit.
+\item The decimal part must not have trailing zeros unless the decimal part is zero.
 \end{enumerate}
-\needsproblems
+For the following problems, give an English definition of the language defined by the specified regular expressions. Don't simply transliterate the regular expressions. For example, for the regular expression $a^*b(a+b)^*$, you should not say, ``Any number of $a$'s followed by a $b$ followed by any combination of characters.'' Instead, you should say ``All strings with a $b$.
+
+Assume $\Sigma = \{a\ b\}$ unless otherwise specified.
+
+\item $(a+b)^*a(a+b)^*b(a+b)^*$
+\item $(aa + ab + ba + bb)^*$
+\item $(a+b)(aa + ab + ba + bb)^*$
+\item $((a+b)(a+b))^*$
+\end{enumerate}
 
 \chapter{Finite Automata}
 There is a well-known children's game called Chutes and Ladders. The goal is to be the first player to move their piece from the beginning (bottom) to the ending (top) of the board. On a player's turn, they spin a spinner which lands on a number. The player advances their piece the specified number of squares on the board. If their piece lands on the bottom of a ladder, they climb the ladder thus making extra progress towards their goal. If their piece lands on the top of a chute, they slide down the chute winding up closer to the beginning. This game is considered a ``children's'' game because it involves no strategy. The outcome of the game is completely determined by the sequence of numbers generate by the spinner (assuming the players don't cheat).
@@ -581,7 +597,7 @@ Two conditions can cause a string to be rejected:
 \item If there is no outbound transition on the current letter. The input $yx$ illustrates this case.
 \end{enumerate}
 
-Given these rules for processing FA's, it should be clear that the FA in Figure~\ref{F.FA_1} is equivalent to the regular expression $(yt)^* (x | yz)$. It is no coincidence that there is a regular expression that corresponds to the FA. It turns out that every FA is equivalent to some regular expression, and that each regular expression has an FA that is equivalent to it. We will prove this in a later section.
+Given these rules for processing FA's, it can be shown that the FA in Figure~\ref{F.FA_1} is equivalent to the regular expression $(yt)^* (x + yz)$. It is no coincidence that there is a regular expression that corresponds to the FA. It turns out that every FA is equivalent to some regular expression, and that each regular expression has an FA that is equivalent to it. We will prove this in a later section.
 
 Figure~\ref{F.FA_2} gives another FA. This FA shows a slightly different format. The start state has a '-' in the label. Final states have a '$+$' in them. The states can be thought of as follows:
 \begin{enumerate}
@@ -614,7 +630,7 @@ Note that once a double letter has been found, the FA remains in the final state
   \label{F.FA_2}
 \end{figure}
 %----------------------------------------------------------
-zzz
+
 FA's can also be represented in table form. These tables are called transition tables. The transition table for the FA in Figure~\ref{F.FA_2} is given in Figure~\ref{T.FA.2}. There is one row for each state. The state name is given in the first column. The remaining columns indicate the new state based on the transition letter at the top of the column.
 
 %----------------------------------------------------------
@@ -680,11 +696,14 @@ The NFA in Figure~\ref{F.NFA_1} accepts the following stings:
 	\item[$zy$] This string is accepted by using the $z$ to transition to Node~$d$ and then using the $y$ to transition to Node~$e$.
 \end{mydesc}
 
-NFA's aren't any more powerful than DFA's--anything you can do with an NFA you can also do with a DFA\footnote{Section~Figure~\ref{S.Subset.Construction} gives a construction that can turn any NFA into an equivalent DFA. This is sufficient to argue that anything that can be done with an NFA can also be done with a DFA.}. The reason for introducing NFA's is that converting from a regular expression to code that accepts strings matching that regular expression makes use of NFA's.
+NFA's aren't any more powerful than DFA's--anything you can do with an NFA you can also do with a DFA\footnote{Section~\ref{S.Subset.Construction} gives a construction that can turn any NFA into an equivalent DFA. This is sufficient to argue that anything that can be done with an NFA can also be done with a DFA.}. The reason for introducing NFA's is that converting from a regular expression to code that accepts strings matching that regular expression makes use of NFA's.
 
 \section{Thompson's}
 
 The first step in converting a regular expression to executable code is to convert it to an equivalent NFA. For this conversion, we are going to use Thompson's Construction\footnote{Credited to Ken Thompson, the originator of the Unix operating system.}. The beauty of Thompson's construction is that it is a mechanical process -- one that doesn't require any creative thought. In other words, it can be automated. A computer program can be written to perform this conversion.
+
+If two FA's each have a single start state and a single final state, and if the start state doesn't have any inbound edges and the final state doesn't have any outbound edges, then the two FA's can be composed by connecting the end state of one FA to the start state of the other using a $\Lambda$ transition. Thompson's Construction makes use of this fact by showing how to compose FA's for each operation supported by regular expressions (concatenation, alternation, and Kleene Closure). An NFA can be built for any regular expression simply by composing it one small piece at a time using Thompson's three diagrams. Figure~\ref{F.Thompsons} shows the three base diagrams.
+
 
 %----------------------------------------------------------
 \begin{figure}[htb]
@@ -769,11 +788,9 @@ The first step in converting a regular expression to executable code is to conve
 \end{figure}
 %----------------------------------------------------------
 
-If two FA's each have a single start state and a single final state, and if the start state doesn't have any inbound edges and the final state doesn't have any outbound edges, then the two FA's can be composed by connecting the end state of one FA to the start state of the other using a $\Lambda$ transition. Thompson's Construction makes use of this fact by creating composed FA's for each operation supported by regular expressions (concatenation, alternation, and Kleene Closure). An NFA can be built for any regular expression simply by composing it one small piece at a time using Thompson's three diagrams. Figure~\ref{F.Thompsons} shows the three base diagrams.
-
 The trick to using Thompson's construction is to NOT be creative. Each FA built with Thompson's has a single start and a single final state. The diagram can be dropped as-is directly into the next step in the construction. Nodes never need to be erased, and each composition should be drawn exactly as shown in Figure~\ref{F.Thompsons}.
 
-Let's illustrate by doing several constructions. First, let's construct an NFA for \code{a (b | c)}. It's best to start with the inner most operation (in this case \code{(b | c)}) and work out. So first draw the alternation diagram as shown below:
+Let's illustrate by doing several constructions. First, let's construct an NFA for \code{a (b + c)}. It's best to start with the inner most operation (in this case \code{(b + c)}) and work out. So first draw the alternation diagram as shown below:
 
 \begin{center}
 \scalebox{.7}{
@@ -788,14 +805,14 @@ Let's illustrate by doing several constructions. First, let's construct an NFA f
 
 \fatransition{start}{x}{};
 \fatransition{x}{b1}{$\Lambda$};
-\fatransition{b1}{b2}{y};
+\fatransition{b1}{b2}{b};
 \fatransition{b2}{y}{$\Lambda$};
 
 \fatransition{x}{c1}{$\Lambda$};
 \fatransition{c1}{c2}{c};
 \fatransition{c2}{y}{$\Lambda$};
 
-\node at (5,-2) {\code{(b | c)}};
+\node at (5,-2) {\code{(b + c)}};
 \node at (5,-3) {};
 \end{tikzpicture}
 } % end scaled box
@@ -822,20 +839,20 @@ The resulting diagram gets dropped into the \code{FA 2} position of the concaten
 
 
 \fatransition{x}{b1}{$\Lambda$};
-\fatransition{b1}{b2}{y};
+\fatransition{b1}{b2}{b};
 \fatransition{b2}{y}{$\Lambda$};
 
 \fatransition{x}{c1}{$\Lambda$};
 \fatransition{c1}{c2}{c};
 \fatransition{c2}{y}{$\Lambda$};
 
-\node at (7,-2) {\code{a (b | c)}};
+\node at (7,-2) {\code{a (b + c)}};
 \node at (7,-3) {};
 \end{tikzpicture}
 } % end scalebox
 \end{center}
 
-As a second example, let's construct an NFA for $a (b | c)^*$. This is the same as the previous example, except that the alternation is wrapped in Kleene Closure. The alternation is, again, the innermost operation, and it is the same as in the previous example:
+As a second example, let's construct an NFA for $a (b + c)^*$. This is the same as the previous example, except that the alternation is wrapped in Kleene Closure. The alternation is, again, the innermost operation, and it is the same as in the previous example:
 
 \begin{center}
 \scalebox{.7}{
@@ -850,14 +867,14 @@ As a second example, let's construct an NFA for $a (b | c)^*$. This is the same 
 
 \fatransition{start}{x}{};
 \fatransition{x}{b1}{$\Lambda$};
-\fatransition{b1}{b2}{y};
+\fatransition{b1}{b2}{b};
 \fatransition{b2}{y}{$\Lambda$};
 
 \fatransition{a}{c1}{$\Lambda$};
 \fatransition{c1}{c2}{c};
 \fatransition{c2}{y}{$\Lambda$};
 
-\node at (5,-2) {\code{(b | c)}};
+\node at (5,-2) {\code{(b + c)}};
 %\node at (5,-3) {};
 \end{tikzpicture}
 } % end scaled box
@@ -881,7 +898,7 @@ This is now dropped into the Kleene Closure construction:
 \fatransition{start}{t}{};
 \fatransition{t}{x}{$\Lambda$};
 \fatransition{x}{b1}{$\Lambda$};
-\fatransition{b1}{b2}{y};
+\fatransition{b1}{b2}{b};
 \fatransition{b2}{y}{$\Lambda$};
 
 \fatransition{x}{c1}{$\Lambda$};
@@ -893,7 +910,7 @@ This is now dropped into the Kleene Closure construction:
 \faarctransition {t}{u}{$\Lambda$}{315}{225};
 \faarctransition {y}{x}{$\Lambda$}{105}{75};
 
-\node at (7,-3) {$(b | c)^*$};
+\node at (7,-3) {$(b + c)^*$};
 \end{tikzpicture}
 } % end scaled box
 \end{center}
@@ -903,7 +920,7 @@ Finally, we drop this into the concatenation construction:
 \scalebox{.7}{
 \begin{tikzpicture}
 \fastart {0, 0};
-\fanonterminalnode {2,0} {a}
+\fanonterminalnode {2,0} {s}
 \fanonterminalnode {4,0} {t}
 \fanonterminalnode {6,0} {x};
 \fanolabel {8,1} {b1};
@@ -914,10 +931,10 @@ Finally, we drop this into the concatenation construction:
 \faterminalnode {14,0} {u};
 
 \fatransition{start}{s}{};
-\fatransition{s}{t}{$\Lambda$};
+\fatransition{s}{t}{$a$};
 \fatransition{t}{x}{$\Lambda$};
 \fatransition{x}{b1}{$\Lambda$};
-\fatransition{b1}{b2}{y};
+\fatransition{b1}{b2}{b};
 \fatransition{b2}{y}{$\Lambda$};
 
 \fatransition{x}{c1}{$\Lambda$};
@@ -929,15 +946,15 @@ Finally, we drop this into the concatenation construction:
 \faarctransition {t}{u}{$\Lambda$}{315}{225};
 \faarctransition {y}{x}{$\Lambda$}{105}{75};
 
-\node at (8,-3) {$a (b | c)^*$};
+\node at (8,-3) {$a (b + c)^*$};
 \end{tikzpicture}
 } % end scaled box
 \end{center}
 
-%As a third example, $a^* (b | c)$, includes a concatenation of two complex items
-%$a^*$ and $(b | c)$ ). To construct this, 
-%first construct $a^*$, 
-%then construct $(b | c)$ and then use the concatenation construction to combine them. Here are the results:
+As a third example, $a^* (b + c)$, includes a concatenation of two complex items
+$a^*$ and $(b + c)$ ). To construct this, 
+first construct $a^*$, 
+then construct $(b + c)$ and then use the concatenation construction to combine them. Here is the resulting diagram:
 
 \begin{center}
 \scalebox{.7}{
@@ -964,14 +981,14 @@ Finally, we drop this into the concatenation construction:
 
 \fatransition{u}{x}{$\Lambda$};
 \fatransition{x}{b1}{$\Lambda$};
-\fatransition{b1}{b2}{y};
+\fatransition{b1}{b2}{b};
 \fatransition{b2}{y}{$\Lambda$};
 
 \fatransition{x}{c1}{$\Lambda$};
 \fatransition{c1}{c2}{c};
 \fatransition{c2}{y}{$\Lambda$};
 
-\node at (8,-2) {$a^* (b | c)$};
+\node at (8,-2) {$a^* (b + c)$};
 \node at (5,-3) {};
 \end{tikzpicture}
 } % end scaled box
@@ -981,7 +998,7 @@ It should be clear that Thompson's construction creates lots of $\Lambda$ transi
 
 \section{Subset Construction}\label{S.Subset.Construction}
 
-To illustrate how an NFA could be processed, let's consider again the NFA for $a^* (b | c)$ presented in the last section, but presented again in Figure~\ref{F.subsetNFA}. In this figure, each node is labeled so they can be explicitly referred to. For each state, we can ask the question, ``What states could I wind up in if I encounter a particular letter in the input?''. For example, suppose we haven't consumed any input yet, what states could we be in? Clearly we could be in State~$1$, the start state, but because of the $\Lambda$ transitions, we could also be in states $2, 4, 5, 6, 8$. This set of states ($=\{1, 2, 4, 5, 6, 8\}$)\footnote{When specifying sets of characters,  it is often easier to read the list of items if each item is separated with a comma. This works unless the set included a comma (as sets of characters for a compiler often do). I will generally included commas for readability unless the set of characters includes punctuation (commas or other punctuation marks). I hope this will improve readability.}
+To illustrate how an NFA could be processed, let's consider again the NFA for $a^* (b + c)$ presented in the last section, but presented again in Figure~\ref{F.subsetNFA}. In this figure, each node is labeled so they can be explicitly referred to. For each state, we can ask the question, ``What states could I wind up in if I encounter a particular letter in the input?''. For example, suppose we haven't consumed any input yet, what states could we be in? Clearly we could be in State~$1$, the start state, but because of the $\Lambda$ transitions, we could also be in states $2, 4, 5, 6, 8$. This set of states ($=\{1, 2, 4, 5, 6, 8\}$)\footnote{When specifying sets of characters,  it is often easier to read the list of items if each item is separated with a comma. This works unless the set included a comma (as sets of characters for a compiler often do). I will generally included commas for readability unless the set of characters includes punctuation (commas or other punctuation marks). I hope this will improve readability.}
 forms a meta-state (let's call it $A$). From the meta-state~$A$, where could we wind up if we read an $a$. Since the meta-state~$A$ includes state~$2$, we can follow the $a$ to state~$3$. From there we can follow $\Lambda$s to $2, 4, 5, 6, 8$. This gives another meta-state. Let's call it $B = \{2, 3, 4, 5, 6, 8\}$. 
 
 \begin{figure}[hbt]
@@ -1019,7 +1036,7 @@ forms a meta-state (let's call it $A$). From the meta-state~$A$, where could we 
 
 \end{tikzpicture}
 } % end scaled box
-\caption[NFA produced by Thompson's]{This is the NFA produced by Thompson's for the regular expression $a^* (b | c)$}
+\caption[NFA produced by Thompson's]{This is the NFA produced by Thompson's for the regular expression $a^* (b + c)$}
   \label{F.subsetNFA}
 \end{figure}
 
@@ -1466,7 +1483,7 @@ Consider any infinite regular language $L$. The language $L$ can be generated by
 Let $L$ be any infinite regular language, then there exist strings $x,y,z$, where $y$ is not the empty string, such that all strings $x y^n z$ with $n>0$ are in $L$.
 \end{lemma}
 
-Since there are an infinte number of words in $L$, any FA that generates $L$ must have a loop. The string $x$ represents the path from the start state to the beginning of the loop. The string $y$ represents the path around the loop. The string $z$ represents the path from the end of the loop to a final state. Since $y$ represents a loop, then each circuit around the loop generates another $y$. Since the loop can be traversed an arbitrary number of times, strings with an arbitrary number of $y$s can be generated. This is shown in Figure~\ref{F.RL.pumping.lemma}.
+Since there are an infinte number of words in $L$, any FA that generates $L$ must have a loop. The string $x$ represents the path from the start state to the beginning of the loop. The string $y$ represents the path around the loop. The string $z$ represents the path from the end of the loop to a final state. Since $y$ represents a loop, then each circuit around the loop generates another $y$. Since the loop can be traversed an arbitrary number of times, strings with an arbitrary number of $y$'s can be generated. This is shown in Figure~\ref{F.RL.pumping.lemma}.
 
 %----------------------------------------------------------
 \begin{figure}[hbt]
@@ -1479,7 +1496,7 @@ Since there are an infinte number of words in $L$, any FA that generates $L$ mus
 
 \fatransition{1-}{2}{x};
 \fatransition{2}{3}{z};
-\faarctransition {2}{2}{y}{45}{135};
+\falooptop {2}{y};
 
 \end{tikzpicture}
 \caption[FA illustrating the pumping lemma]{This FA illustrates the proof of the pumping lemma. The strings $x,y,z$ are labeled. Clearly each circuit of the loop generates another $y$.}
@@ -1496,7 +1513,7 @@ Lemma~\ref{T.RL.pumping.lemma} is known as the Pumping Lemma for Regular Languag
 
 Consider the language $ab^*c$. This is an infinite language and it is regular, so it must conform to the pumping lemma. To show this, take $x=a$, $y=b$, $z=c$. With this assignment, it should be clear that all strings $xy^n z$ are in the language.
 
-Now let's consider the language of all strings that consist of any number of $a$s followed by any number of $b$s. This language can be represented as $a^n b^m$. Is this language regular? Let's see if we can prove it is NOT regular using the pumping lemma. Let's take $x=a$, $y=ab$, $z=b$. The string $xyz$ is $aabb$ which is in the language. However, the string $xy^2 z$ is $aababb$ which is NOT in the language. Can we conclude from this that the language is not regular? No.
+Now let's consider the language of all strings that consist of any number of $a$'s followed by any number of $b$'s. This language can be represented as $a^n b^m$. Is this language regular? Let's see if we can prove it is NOT regular using the pumping lemma. Let's take $x=a$, $y=ab$, $z=b$. The string $xyz$ is $aabb$ which is in the language. However, the string $xy^2 z$ is $aababb$ which is NOT in the language. Can we conclude from this that the language is not regular? No.
 
 The previous paragraph gave a single example of a choice for $x, y, z$, and a single example is not a proof. To use the pumping lemma to prove a language is not regular, you must show that there is no possible choice of $x, y, z$ where the pumping lemma applies. Let's consider another choice. Let's choose $x=a$, $y=a$, $z=b$. With this choice, any $xy^n z$ can be written $a^{n+1} b$, all of which are in the language. Note that this does not represent ALL words in the language, but all words of this form ARE in the language. 
 
