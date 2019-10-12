@@ -101,7 +101,7 @@ float=thbp,
 
 \newcommand{\code}[1] {\lstinline[breaklines=yes,breakatwhitespace=yes]{#1}}
 
-\newcommand{\cfgprod}[2] {\ttfamily{#1} $\rightarrow$ \ttfamily{#2}}
+\newcommand{\cfgprod}[2] {{\ttfamily #1} $\rightarrow$ {\ttfamily #2}}
 
 %\usepackage[T1]{fontenc}  % access \textquotedbl
 %\usepackage{textcomp}     % access \textquotesingle
@@ -1408,7 +1408,7 @@ The only way that this can be true is if:
 \begin{quote}
 $L($regular expressions$) = L($NFA$) = L($DFA$)$
 \end{quote}
-In other words, regular expressions, NFAs and DFAs are all equally powerful. They can be used to define exactly the same set of languages. This relation is known as Kleene's Theorem. It can be used to prove interesting properties of regular languages. 
+In other words, regular expressions, NFAs and DFAs are all equally powerful. They can be used to define exactly the same set of languages. This relation is known as Kleene's Theorem. It can be used to prove interesting properties of regular languages. Some properties are easier to prove using DFA's, some are easier to prove using regular expressions, but since these mechanisms are equivalent (can be used to define the same set of languages), then proving a property using one mechanism means the property applies to all languages in the family.
 
 \begin{theorem}
 The union of two regular languages is regular.
@@ -1436,6 +1436,7 @@ This can be proved by construction. Consider two languages $L_1$ and $L_2$ both 
 \label{F.union.re}
 \end{figure}
 %----------------------------------------------------------
+This could also be proved using regular expressions. If $RE_1$ is a regular expression that defines $L_1$, and $RE_2$ is a regular expression that defines $L_2$, then $RE_1 + RE_2$ defines the language $FA_1 \cup FA_2$.
 
 \begin{theorem}
 The complement of any regular language is regular.
@@ -1443,12 +1444,100 @@ The complement of any regular language is regular.
 First, what do we mean by the complement of a language. If a regular language $L$ is defined over the alphabet $\Sigma$, then the complement of $L$, which we will call $L'$, is the set of all strings that are in $\Sigma ^*$, but not in $L$.
 
 We can again prove this by construction. If $L$ is regular, then there is a complete DFA that generates the language. By ``complete'', we mean that every state has an outbound transition for every letter in $\Sigma$. If we take that DFA and reverse the ``plusness'' of each state (that is, every state that was a final state in the original becomes a non-final state in the result, and any state that was non-final in the original becomes final in the result) then any string accepted by the original will be rejected in the final and any string regected by the original will be accepted in the final. Since the DFA is complete, it will never ``crash'' - that is, for each input letter, it will always have a transition it can follow. Since it is a deterministic FA, a given input can only wind up in a single state. That one an only state has opposite implications in the two FAs. If it accepts the string in one, it rejects the string in the other. As a result, the two FAs represent languages that are complements of each other.
-\needswork % add figure
+
+%----------------------------------------------------------
+\begin{figure}[htb]
+\centering
+
+%\scalebox{.7}{
+\begin{subfigure}[b]{0.45\textwidth}
+\centering
+\begin{tikzpicture}
+
+\fanonterminalnode {0,2} {a-};
+\fanonterminalnode {2,2} {b+};
+\fanonterminalnode {0,0} {c+};
+\fanonterminalnode {2,0} {d};
+
+\faarctransition {a-}{b+}{}{45}{135};
+\faarctransition {a-}{c+}{}{225}{135};
+\faarctransition {a-}{d}{}{315}{180};
+\faarctransition {b+}{d}{}{315}{45};
+\faarctransition {d}{a-}{}{135}{0};
+\faarctransition {c+}{b+}{}{0}{225};
+
+%\node at (5,-1) {Concatenation};
+%\node at (5,-2) {};
+\end{tikzpicture}
+\caption{Original FA}
+\end{subfigure}
+%}
+~
+\begin{subfigure}[b]{0.45\textwidth}
+\centering
+\begin{tikzpicture}
+
+\fanonterminalnode {0,2} {a+-};
+\fanonterminalnode {2,2} {b};
+\fanonterminalnode {0,0} {c};
+\fanonterminalnode {2,0} {d+};
+
+\faarctransition {a+-}{b}{}{45}{135};
+\faarctransition {a+-}{c}{}{225}{135};
+\faarctransition {a+-}{d+}{}{315}{180};
+\faarctransition {b}{d+}{}{315}{45};
+\faarctransition {d+}{a+-}{}{135}{0};
+\faarctransition {c}{b}{}{0}{225};
+
+%\node at (5,-1) {Concatenation};
+%\node at (5,-2) {};
+\end{tikzpicture}
+\caption{Compliment FA}
+\end{subfigure}
+%}
+
+ \caption[Complement of a Regular Language]{A complete DFA can be modified to generate the complement of the original language by changing the ``plussness'' of each node: Final nodes in the original become non-final in the converted diagram and non-final nodes in the original become final nodes in the converted diagram.}
+  \label{F.RL.Compliment}
+\end{figure}
+%----------------------------------------------------------
 
 \begin{theorem}
 The intersection of two regular languages is regular.
 \end{theorem}
-\needswork
+
+DeMorgan's Law for sets states that $L_1 \cap L_2 = (L_1' \cup L_2')'$. In other words, the intersection of two sets is equal to the complement of the union of the complement of the two sets. If $L_1$ and $L_2$ are regular then so are their complements ($L_1'$ and $L_2'$). Since these are regular, then so is their union ($L_1' \cup L_2'$). And finally, so is the complement of that language ($(L_1' \cup L_2')'$). Since this is equivalent of the intersection of the two languages, then the intersection must also be regular.
+
+\begin{theorem}
+There is an algorithm to determine if two regular expressions are equivalent.
+\end{theorem}
+Consider $L_1 = L(RE_1)$ and $L_2 = L(RE_2)$. If $RE_1$ and $RE_2$ define different languages, then either $L_1$ contains words not in $L_2$ or $L_2$ contains words not in $L_1$ (or both).
+Since $L_1$ and $L_2$ are regular, we can compute $L_3 = (L_1 \cap L_2') \cup (L_1' \cap L_2)$. The first term in $L_3$ is all strings that are in $L_1$ but not in $L_2$. The second term is all strings that are in $L_2$ but not in $L_1$. If the union of those two terms is empty, then the two languages $L_1$ and $L_2$ must be equivalent.
+
+But now we need a decision procedure for ``Is the language empty?''. If we have a regular expression for a language, then the following procedure will give one word in the language:
+\begin{enumerate}
+\item Delete all stars
+\item If a $\Lambda$ is part of an alternation, remove that part of the alternation.
+\item Delete all remaining $\Lambda$'s
+\item For every alternation, keep only the left-most option
+\item Remove parenthesis
+\end{enumerate}
+What is left must be a word in the language.
+
+If we have an FA for the language, then the following procedure will determine if the FA accepts at least one word:
+\begin{enumerate}
+\item Add the start state to a work list
+\item Remove a state from the work list and mark it as visited. Add all unmarked states reachable from this state to the work list.
+\item Repeat Step~2 until the work list is empty.
+\item If a final state was marked, then the language includes at least one word.
+\end{enumerate}
+
+\begin{theorem}
+\label{T.FA.length}
+Let F be an FA with N states. If F accepts any words at all, then it must accept a word of length less than N.
+\end{theorem}
+The shortest path from the start state to an accept state must visit each node at most once. As a result, if there is any path from the start state to an accept state, there must be a path with length less than N.
+
+Theorem~\ref{T.FA.length} leads to another decision process for ``Is the language empty?'': Enumerate all words of length less than N (the number of states in the FA), and try them all. If the FA accepts any words, it must accept one of these words.
 
 \begin{theorem}
 Any infinite regular language must have a loop in the FA.
@@ -1519,40 +1608,57 @@ The previous paragraph gave a single example of a choice for $x, y, z$, and a si
 
 Since we found strings $x, y, z$ for which all $xy^nz$ are in the language, we failed to prove that this language is not regular. This should come as no surprise since the since the regular expression $a^*b^*$ generates this language. Since there is a regular expression that generates the language, the language must be regular.
 
-Now let's make a minor modification to our language. Instead of any number of $a$s followed by any number of $b$s, let's require the $a$s to be followed by the same number of $b$s. This language can be expressed $a^nb^n$. Note that this time both letters have the same superscript meaning there must be the same number of each. Can we find an $x, y, z$ such that all strings $xy^nz$ are in the language.
+Now let's make a minor modification to our language. Instead of any number of $a$'s followed by any number of $b$'s, let's require the $a$'s to be followed by the same number of $b$'s. This language can be expressed $a^nb^n$. Note that this time both letters have the same superscript meaning there must be the same number of each. Can we find an $x, y, z$ such that all strings $xy^nz$ are in the language.
 
 \begin{quote}
-Possibility 1: $y$ consists only of $a$'s. In this case, increasing $n$ in $xy^nz$ would increase the number of $a$'s without increasing the number of $b$s thus generating words not in the language.
+Possibility 1: $y$ consists only of $a$'s. In this case, increasing $n$ in $xy^nz$ would increase the number of $a$'s without increasing the number of $b$'s thus generating words not in the language.
 
-Possibility 2: $y$ consists only of $b$'s. In this case, increasing $n$ in $xy^nz$ would increase the number of $b$s without increasing the number of $a$'s thus generating words not in the language.
+Possibility 2: $y$ consists only of $b$'s. In this case, increasing $n$ in $xy^nz$ would increase the number of $b$'s without increasing the number of $a$'s thus generating words not in the language.
 
-Possibility 3: $y$ consists of both $a$s and $b$s. In this case, increasing $n$ in $xy^nz$ would increase the number of $a-b$ transitions. Since the language only allows one $a-b$ transition, this would generate words not in the language.
+Possibility 3: $y$ consists of both $a$'s and $b$'s. In this case, increasing $n$ in $xy^nz$ would increase the number of $a$-$b$ transitions. Since the language only allows one $a-b$ transition, this would generate words not in the language.
 
 Since $y$ cannot be the empty string, we've enumerated all possible choices for $y$ and none of them meet the requirements of the pumping lemma. We can therefore conclude that $a^nb^n$ is not regular.
 \end{quote}
 
-This language is of more than passing concern. Consider the substitution where instead of $a$ we have an open parenthesis and instead of $b$ we have a closing parenthesis. The language is not $(^n )^n$, which is the set of nested parenthesis. The ability to have an arbitrary number of nested parenthesis (or curly braces) is an artifact of many programming languages. The fact that you cannot generate this language with a regular expression means that the syntax of most programming languages is not regular. It also means that the syntax for regular expressions is not itself regular.
+This language is of more than passing concern. Consider the substitution where instead of $a$ we have an open parenthesis and instead of $b$ we have a closing parenthesis. The language is now $(^n )^n$, which is the set of nested parenthesis. The ability to have an arbitrary number of nested parenthesis (or curly braces) is an artifact of many programming languages. The fact that you cannot generate this language with a regular expression means that the syntax of most programming languages is not regular. It also means that the syntax for regular expressions is not itself regular.
 
 If we assume that the syntax for programming languages is formal (and it would be difficult to write a compiler if it was not: how could you decide if a source file was a valid program if the language was not formal?), then we need another class of languages to express the syntax of programming languages. This other set of languages is the subject of the next part of this book.
 
+\needsproblems
+
 \part{Context Free Grammars}
-\chapter{Context Free Grammars}
-\needswork{}
+The previous chapter showed that there are languages that have features common in computer programming languages that cannot be represented as regular expressions. One such example is nested parenthesis (or curly braces). Since it's reasonable to assume that programming languages are formal languages, there must be another category of language that includes programming languages. This part of the text explores this category of language.
 
 \chapter{Context Free Grammars}
-Regular expressions are used to define the tokens a compiler processes. We also need a mechanism to define the syntax of the language a compiler processes. Context Free Grammars are used for this purpose.
 
-A Context Free Grammar (CFG) is made up a a list of productions of the form:
+Recall that nested parenthesis cannot be represented as a regular expression. They can be represented using a recursive definition:
+\begin{enumerate}
+\item $()$ is in BAL
+\item if $x$ is in BAL, then so is $(x)$
+\end{enumerate}
 
-\indent this symbol can be replaced by this collection of symbols
+This suggests that languages defined recursively are more powerful (in the sense that they can define more languages) than regular expressions. We want to formalize the structure of recursive definitions so that we can prove properties of these languages much as we did for regular languages in Chapter~\ref{C.RL.theory}. Context Free Grammars are one such formalization.
 
-A production in a CFG consists of a left hand side and a right hand side. The left hand side gives the symbol that can be replaced. The right hand side gives the list of symbols that can replace the symbol on the left. The two sides are typically separated 
+A Context Free Grammar (CFG) is made up a a list of productions of the general form:
+
+\begin{quote}
+X can be replaced by A B C
+\end{quote}
+
+The potential for recursion comes about because the variable being replaced can appear in the replacement:
+\begin{quote}
+X can be replaced by A X C
+\end{quote}
+
+More formally, a production in a CFG consists of a left hand side and a right hand side. The left hand side gives the symbol that can be replaced. The right hand side gives the list of symbols that can replace the symbol on the left. The two sides are typically separated 
 either by an arrow ( $\rightarrow$ ) 
 or sometimes a colon-colon-equals ( ::= ). 
 A sample production that indicates that the symbol \code{A} 
 can be replaced by \code{X Y Z} is given below:
 
 \cfgprod{A}{X Y Z}
+
+zzz
 
 Symbols in CFGs are of two flavors: non-terminals are those that appear on the left hand side of a production. They are non-terminals because they can be replaced by other symbols. Terminals are those symbols that never appear on the left hand side. They are ``terminal'' because they can never be replaced. For ease of reading, non-terminals are usually given in UPPERCASE. terminals are given in lowercase. CFGs also need a start symbol - the symbol that is the starting point for derivations. The start symbol is often either \code{S} or \code{START}, but if neither is specified, the left hand side of the first production is considered the start symbol.
 
