@@ -1781,12 +1781,80 @@ Derivations can also be represented as syntax trees. In a syntax tree, the child
 
 Note that if the derivation is given in tree form, there is no sense of left-most and right-most because the tree gives no indication of what order the productions were invoked. For the derivation represented in Figure~\ref{D.derive.1}, it would not matter what order the productions were invoked in. All derivations would produce an identical tree. This is because the grammar in Figure~\ref{F.cfg.2} is non-ambiguous. An ambiguous grammar is one in which it is possible to produce different trees for the same input. 
 
+\section{Ambiguous Grammars}
+A grammar is ambiguous when a single input can produce multiple different trees. The grammar in Figure~\ref{F.GR.ambiguous} illustrates this. The expression $3+4*5$ can be derived two different ways. One has the multiplication happening first and the other with the addition happening first. These two derivations are illustrated by the trees in Figure~\ref{D.derive.2}.
 
-zzz
+%----------------------------------------------------------
+\begin{cfg}{An ambiguous expression grammar.}{F.GR.ambiguous}
+Q\cfgprod{EXPR}{EXPR + num}Q
+Q\cfgprod{EXPR}{EXPR * num}Q
+Q\cfgprod{EXPR}{num}Q
+\end{cfg}
+%----------------------------------------------------------
 
+%----------------------------------------------------------
+\begin{figure}[htb]
+\centering
 
+%\scalebox{.7}{
+\begin{subfigure}[b]{0.95\textwidth}
+\centering
+\begin{tikzpicture}[sibling distance=4em, 
+  every node/.style = {shape=rectangle, rounded corners,
+    draw, align=center,
+    top color=white, bottom color=blue!20}]]
+  \node {EXPR}
+    child { node {EXPR} 
+		  child { node {3}}
+			child { node {+}}
+      child { node {EXPR}
+        child { node {4} }
+				child { node {*} }
+				child { node {5} }
+			}
+		};
+\end{tikzpicture}
+\caption{Derivation showing multiplication happening first.}
+\end{subfigure}
+%%%%%%
+
+\begin{subfigure}[b]{0.95\textwidth}
+\centering
+\begin{tikzpicture}[sibling distance=4em, 
+  every node/.style = {shape=rectangle, rounded corners,
+    draw, align=center,
+    top color=white, bottom color=blue!20}]]
+  \node {EXPR}
+    child { node {EXPR} 
+      child { node {EXPR}
+  		  child { node {3}}
+	  		child { node {+}}
+        child { node {4} }
+			}
+			child { node {*} }
+			child { node {5} }
+		};
+\end{tikzpicture}
+\caption{Derivation showing addition happening first.}
+\end{subfigure}
+%%%%%%
+
+ \caption[Derivations from an ambiguous grammar]{Two syntax trees showing derivations of $3+4*5$ using the ambiguous grammar in Figure~\ref{F.GR.ambiguous}}
+\label{D.derive.2}
+\end{figure}
+%----------------------------------------------------------
+
+For programming languages, ambiguous grammars are clearly bad. The expression $3+4*5$ should not evaluate to a different value simply because the compiler did a left-most derivation versus a right-most derivation. There are expression grammars that resolve the ambiguity of the grammar in Figure~\ref{F.GR.ambiguous}, but since this is a theory book, we will leave that topic for a compiler book.
 
 \chapter{Pushdown Automata}
+When talking about regular languages, we found that an existing concept - state machines (aka finite automata) proved very useful for processing regular languages. In this chapter, rather than showing that an existing machine is useful for processing context free languages (those that can be defined by a CFG), we will instead invent such a machine.
+
+Finite automata have no way of ``remembering'' what path they took. This is why they were unable to solve the balanced parenthesis problem. They had no way to remember how many opening parenthesis they encountered, so they couldn't enforce that there be the same number of closing parenthesis. To solve this problem, we propose that a push-down stack be added to finite automata thus making a new machine called a pushdown automata.
+
+To illustrate how this could allow us to solve the balanced parenthesis problem, suppose each time we encountered an opening parenthesis in the input, we pushed it onto the stack. Each time we encountered a closing parenthesis, we popped an open from the stack. If we never attempted to pop an empty stack, and if at the end of the input, the stack was empty, then we must have only encountered balenced parenthesis.
+
+
+zzz
 \needswork{}
 
 \part{Beyond Context Free Languages}
