@@ -102,6 +102,7 @@ float=thbp,
 \newcommand{\code}[1] {\lstinline[breaklines=yes,breakatwhitespace=yes]{#1}}
 
 \newcommand{\cfgprod}[2] {{\ttfamily #1} $\rightarrow$ {\ttfamily #2}}
+\newcommand{\cfgindentprod}[2] {\begin{quote} {\ttfamily #1} $\rightarrow$ {\ttfamily #2} \end{quote}}
 
 %\usepackage[T1]{fontenc}  % access \textquotedbl
 %\usepackage{textcomp}     % access \textquotesingle
@@ -284,7 +285,7 @@ Consider the following non-recursive definition of arithmetic expressions:
 \item Can't begin or end with an operator
 \end{enumerate}
 
-Is this set of rules sufficient? Do they allow every valid arithmetic expression? Do the preclude every invalid expression? Could you argue from these rules that the following is (or isn't) a valid arithmetic expression?
+Is this set of rules sufficient? Do they allow every valid arithmetic expression? Do they preclude every invalid expression? Could you argue from these rules that the following is (or isn't) a valid arithmetic expression?
 \begin{quote}
 $(2+7)/3-(((4+5)*(6)-1)*3 + 4)$
 \end{quote}
@@ -372,12 +373,12 @@ However, we've already proven that neither of these can happen.
 We've seen several recursive definitions. What do they have in common? A recursive definition is always composed of two parts:
 \begin{itemize}
 \item Base Cases that identify some set of strings in the language. The base case for AE was ``Any number is in AE''.
-\item Recursive Rules of the form, ``If $x$ is in L, the so is $f(x)$''. Rules 2a-2e for AE are the recursive rules. Recursive rules can use multiple variables as illustrated in the definition of AE.
+\item Recursive Rules of the form, ``If $x$ is in L, then so is $f(x)$''. Rules 2a-2e for AE are the recursive rules. Recursive rules can use multiple variables as illustrated in the definition of AE.
 \end{itemize}
 
 When constructing recursive definitions, it is important to keep in mind what the language is. For example, the language AE was a set of strings. As a result, rules 2a-2e were adding characters to the string, they were not performing arithmetic operations. The language EVEN was a set of numbers, so Rule~b was performing an arithmetic operation to create a new number.
 
-If the language is a set of strings, then the recursive rules always extend or combine strings. That is, they always make longer strings, they never remove characters from the string. In other words, you should never have a rule of the form, ``If $x$ in in L, then so is $x$ without the trailing semicolon.''
+If the language is a set of strings, then the recursive rules always extend or combine strings. That is, they always make longer strings, they never remove characters from the string. In other words, you should never have a rule of the form, ``If $x$ is in L, then so is $x$ without the trailing semicolon.''
 
 As another example of a recursive definition, consider the following definition of Polynomial:
 \begin{enumerate}
@@ -473,7 +474,7 @@ We can also think of the set of all regular expressions. This is yet another lan
 
 \begin{enumerate}
 \item Every letter in $\Sigma$ is in RE
-\item If $r_1$ and $r_2$ are in RE, the so are:
+\item If $r_1$ and $r_2$ are in RE, then so are:
 \begin{enumerate}
 \item $r_1 r_2$
 \item $r_1 + r_2$
@@ -1656,11 +1657,9 @@ or sometimes a colon-colon-equals ( ::= ).
 A sample production that indicates that the symbol \code{A} 
 can be replaced by \code{X Y Z} is given below:
 
-\cfgprod{A}{X Y Z}
+\cfgindentprod{A}{X Y Z}
 
-zzz
-
-Symbols in CFGs are of two flavors: non-terminals are those that appear on the left hand side of a production. They are non-terminals because they can be replaced by other symbols. Terminals are those symbols that never appear on the left hand side. They are ``terminal'' because they can never be replaced. For ease of reading, non-terminals are usually given in UPPERCASE. terminals are given in lowercase. CFGs also need a start symbol - the symbol that is the starting point for derivations. The start symbol is often either \code{S} or \code{START}, but if neither is specified, the left hand side of the first production is considered the start symbol.
+Symbols in CFGs are of two flavors: non-terminals are those that appear on the left hand side of a production. They are non-terminals because they can be replaced by other symbols. Terminals are those symbols that never appear on the left hand side. They are ``terminal'' because they can never be replaced. For ease of reading, non-terminals are usually given in UPPERCASE, and terminals are given in lowercase. CFGs also need a start symbol - the symbol that is the starting point for derivations. The start symbol is often either \code{S} or \code{START}, but if neither is specified, the left hand side of the first production is considered the start symbol.
 
 %----------------------------------------------------------
 \begin{cfg}{A CFG that defines the language of any number of \code{a}'s followed by the same number of \code{b}'s.}{F.cfg.1}
@@ -1669,7 +1668,7 @@ Q\cfgprod{S}{$\Lambda$}Q
 \end{cfg}
 %----------------------------------------------------------
 
-Figure~\ref{F.cfg.1} shows a complete CFG. The productions have been numbered for easy reference. There are only two productions. The first one says that the start symbol (\code{S}) can be replaced with \code{a S b}. Note that this is a recursive rule because the \code{S} appears on both sides. The second production says that \code{S} can be replaced with nothing.
+Figure~\ref{F.cfg.1} shows a complete CFG. The productions have been numbered for easy reference. There are only two productions. The first one says that the start symbol (\code{S}) can be replaced with ``\code{a S b}''. Note that this is a recursive rule because the \code{S} appears on both sides. The second production says that \code{S} can be replaced with nothing.
 
 What can we do with this CFG? Let's do some derivations. Starting with the start symbol and Production 1, we can get the string \code{aSb}. If we then use Production 2, we are left with the string \code{ab}. Since there are no more non-terminals, we are done.
 
@@ -1680,22 +1679,17 @@ While not the most complex illustration, this CFG illustrates that CFGs are more
 Figure~\ref{F.cfg.2} presents a more complete, and more interesting CFG. This language defines a program as zero or more statements. An individual statement can be an assignment statement (in this language, an assignment statement is a terminal, so the assumption is that they are defined elsewhere), an \code{if} statement, or a compound statement (curly braces surrounding any number of statements). 
 
 %----------------------------------------------------------
-\begin{figure}[hbt]
-\centering
-\begin{enumerate}
-\item \cfgprod{PROGRAM}{STMTS}
-\item \cfgprod{STMTS}{STMT STMTS}
-\item \cfgprod{STMTS}{$\Lambda$}
-\item \cfgprod{STMT}{IF\_STMT}
-\item \cfgprod{STMT}{COMPOUND\_STMT}
-\item \cfgprod{STMT}{assignment\_stmt}
-\item \cfgprod{IF\_STMT} {if ( expr ) STMT}
-\item \cfgprod{COMPOUND\_STMT} { \{ STMTS \} }
-\item \cfgprod{COMPOUND\_STMT} { STMT }
-\end{enumerate}
-\caption[CFG of a simple programming language]{This CFG defines a program as being zero or more statements, where each statement is either an \code{if} statement, an assignment statement or a compound statement.}
-\label{F.cfg.2}
-\end{figure}
+\begin{cfg}{This CFG defines a program as being zero or more statements, where each statement is either an \code{if} statement, an assignment statement or a compound statement.}{F.cfg.2}
+Q\cfgprod{PROGRAM}{STMTS}Q
+Q\cfgprod{STMTS}{STMT STMTS}Q
+Q\cfgprod{STMTS}{$\Lambda$}Q
+Q\cfgprod{STMT}{IF\_STMT}Q
+Q\cfgprod{STMT}{COMPOUND\_STMT}Q
+Q\cfgprod{STMT}{assignment\_stmt}Q
+Q\cfgprod{IF\_STMT} {if ( expr ) STMT}Q
+Q\cfgprod{COMPOUND\_STMT} { \{ STMTS \} }Q
+Q\cfgprod{COMPOUND\_STMT} { STMT }Q
+\end{cfg}
 %----------------------------------------------------------
 
 \begin{lstlisting}[caption={Sample program in the language defined by the CFG in Figure~\ref{F.cfg.2}},label=L.nested.ifs]
@@ -1720,7 +1714,7 @@ The program in Listing~\ref{L.nested.ifs} illustrates the features of the langua
 
 Listing~\ref{L.nested.ifs} claims to be a program in the language defined in Figure~\ref{F.cfg.2}. How can we substantiate this claim? This is normally done by showing a derivation of the program given the CFG. Each line of a derivation substitutes a single non-terminal for the right-hand-side of a production for that non-terminal. 
 
-Derivations start with the start symbol and continue until there are only non-terminals. Each step other than the first should list the production number that was invoked to make the substitution. Rather than starting with the longer program in Listing~\ref{L.nested.ifs}, let's start with the shorter program in Listing~\ref{L.short.prog}.
+Derivations start with the start symbol and continue until there are only terminals. Each step other than the first should list the production number that was invoked to make the substitution. Rather than starting with the longer program in Listing~\ref{L.nested.ifs}, let's start with the shorter program in Listing~\ref{L.short.prog}.
 
 \begin{lstlisting}[caption={Short program program in the language defined by the CFG in Figure~\ref{F.cfg.2}. The derivation of this program is given in Derivation~\ref{D.derive.1}},label=L.short.prog]
 if (expr)
@@ -1742,6 +1736,55 @@ if (expr)
 6   if ( expr ) { assignment_stmt assignment_stmt STMTS }
 3   if ( expr ) { assignment_stmt assignment_stmt }
 \end{derivation}
+
+This derivation is what's known as a left-most derivation because each time there were multiple non-terminals that could be replaced, the left-most one was replaced. It is also possible to do right-most derivations, and you can also do neither: sometimes pick the left-most non-terminal, sometimes the right-most, and sometimes one in the middle.
+
+Derivations can also be represented as syntax trees. In a syntax tree, the children of each non-terminal are the items from the right hand side of the production that was used to replace the non-terminal. Figure~\ref{F.syntax.tree.1} shows the syntax tree for the derivation in Figure~\ref{D.derive.1}.
+
+\begin{figure}
+\begin{tikzpicture}[sibling distance=4em, 
+  level 5/.style={sibling distance=10em},
+  level 6/.style={sibling distance=6em},
+  every node/.style = {shape=rectangle, rounded corners,
+    draw, align=center,
+    top color=white, bottom color=blue!20}]]
+  \node {START}
+    child { node {START} 
+      child { node {IF\_STMT}
+        child { node {if} }
+				child { node {(} }
+				child {node {expr} }
+				child { node {)} } 
+				child { node {STMT}
+				  child { node { \{ } }
+					child { node {STMTS} 
+					  child { node {STMT} 
+						  child {node {assignment\_stmt} }
+						}
+						child { node {STMTS}
+					    child { node {STMT} 
+						    child {node {assignment\_stmt} }
+						  }
+						  child { node {STMTS}
+							 child { node {$\Lambda$} }
+							}
+						}
+					}
+					child { node { \} } }
+				}
+			}
+		};
+\end{tikzpicture}
+\caption[Syntax tree]{A syntax tree representing the derivation in Figure~\ref{D.derive.1}.}
+\label{F.syntax.tree.1}
+\end{figure}
+
+Note that if the derivation is given in tree form, there is no sense of left-most and right-most because the tree gives no indication of what order the productions were invoked. For the derivation represented in Figure~\ref{D.derive.1}, it would not matter what order the productions were invoked in. All derivations would produce an identical tree. This is because the grammar in Figure~\ref{F.cfg.2} is non-ambiguous. An ambiguous grammar is one in which it is possible to produce different trees for the same input. 
+
+
+zzz
+
+
 
 \chapter{Pushdown Automata}
 \needswork{}
