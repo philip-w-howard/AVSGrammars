@@ -1145,6 +1145,10 @@ Completing rows 2 and 3, there are no $b$ nor $c$ transitions out of any of the 
 
 Moving on to row 4, we can follow an $a$ from state 6 to state 4. We can then follow $\Lambda$s from 4 to 1 and 1 to 2 yielding meta-state $C$ containing states 1, 2, 4.
 
+For row 5, we can follow a $b$ from 3 to 4 and from 5 to 2. We can then follow a $\Lambda$s from 4 to 1 and from there to 2 (which we've already reached), so this meta-state contains 1, 2 and 4, which we've already labeled $C$.
+
+For row 6, we can follow a $c$ from 5 to 6. There are no $\Lambda$s from 6, so meta-state~$D$ contains only 6. Adding these new rows to the table, we have:
+
 \begin{center}
 \small
 \begin{tabular}{c|l|l|l|l}
@@ -1155,49 +1159,23 @@ Moving on to row 4, we can follow an $a$ from state 6 to state 4. We can then fo
 2 & A & 1, 2 & b & - \\
 3 & A & 1, 2 & c & - \\
 4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
-5 & B & 3, 5, 6 & b & \\
-6 & B & 3, 5, 6 & c & \\
+5 & B & 3, 5, 6 & b & C \\
+6 & B & 3, 5, 6 & c & D = 6 \\
 7 & C & 1, 2, 4 & a & \\
 8 & C & 1, 2, 4 & b & \\
 9 & C & 1, 2, 4 & c & \\
+10 & D & 6 & a & \\
+11 & D & 6 & b & \\
+12 & D & 6 & c & \\
 \hline
 \end{tabular}
 \end{center}
 
-For row 5, we can follow a $b$ from 3 to 4 and from 5 to 2. There are no $\Lambda$s from either 2 or 4, so meta-state~$D$ contains 2 and 4.
+Completing row 7, we can follow an $a$ from 1 to 5 and 2 to 3. The $\Lambda$ closure adds 6. This set of states is already labeled $B$, so we don't need to add any rows to the table.
 
-For row 6, we can follow a $c$ from 5 to 6. There are no $\Lambda$s from 6, so meta-state~$E$ contains only 6. Adding these new rows to the table, we have:
+For Row 8, there are no outbound edges on $b$ so the resulting states is empty.
 
-\begin{center}
-\small
-\begin{tabular}{c|l|l|l|l}
-\hline
-& \textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
-\hline
-1 & A & 1, 2 & a & B = 3, 5, 6 \\
-2 & A & 1, 2 & b & - \\
-3 & A & 1, 2 & c & - \\
-4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
-5 & B & 3, 5, 6 & b & D = 2, 4 \\
-6 & B & 3, 5, 6 & c & E = 6 \\
-7 & C & 1, 2, 4 & a & \\
-8 & C & 1, 2, 4 & b & \\
-9 & C & 1, 2, 4 & c & \\
-10 & D & 2, 4 & a & \\
-11 & D & 2, 4 & b & \\
-12 & D & 2, 4 & c & \\
-13 & E & 6 & a & \\
-14 & E & 6 & b & \\
-15 & E & 6 & c & \\
-\hline
-\end{tabular}
-\end{center}
-
-Completing row 10, we can follow an $a$ from 1 to 5 and 2 to 3. The $\Lambda$ closure adds 6. This set of states is already labeled $B$, so we don't need to add any rows to the table.
-
-For Row 11, there are no outbound edges on $b$ so the resulting states is empty.
-
-For Row 12, we can follow a $c$ from 4 to 7. This new meta-state is labeled $F$.
+For Row 9, we can follow a $c$ from 4 to 7. This new meta-state is labeled $E$.
 
 \begin{center}
 \small
@@ -1209,29 +1187,26 @@ For Row 12, we can follow a $c$ from 4 to 7. This new meta-state is labeled $F$.
 2 & A & 1, 2 & b & - \\
 3 & A & 1, 2 & c & - \\
 4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
-5 & B & 3, 5, 6 & b & D = 2, 4 \\
-6 & B & 3, 5, 6 & c & E = 6 \\
+5 & B & 3, 5, 6 & b & C \\
+6 & B & 3, 5, 6 & c & D = 6 \\
 7 & C & 1, 2, 4 & a & B\\
 8 & C & 1, 2, 4 & b & -\\
-9 & C & 1, 2, 4 & c & F = 7 \\
-10 & D & 2, 4 & a & \\
-11 & D & 2, 4 & b & \\
-12 & D & 2, 4 & c & \\
-13 & E & 6 & a & \\
-14 & E & 6 & b & \\
-15 & E & 6 & c & \\
-16 & F & 7 & a & \\
-17 & F & 7 & b & \\
-18 & F & 7 & c & \\
+9 & C & 1, 2, 4 & c & E = 7 \\
+10 & D & 6 & a & \\
+11 & D & 6 & b & \\
+12 & D & 6 & c & \\
+13 & E & 7 & a & \\
+14 & E & 7 & b & \\
+15 & E & 7 & c & \\
 \hline
 \end{tabular}
 \end{center}
 
-For row 10, we can follow the a from 2 to 3 and then the $\Lambda$ to 6. This is meta-state~$G$.
+For row 10, we can follow the a from 6 to 4 and then the $\Lambda$ to 1 and 2. This is already labeled~$C$.
 
 For row 11, there are no outbound transitions on $b$, so the resulting states is empty.
 
-For row 12, we can follow a $c$ from 4 to 7. This is already labeled $F$.
+For row 12, there are no outbound transitions on $c$, so the resulting states is empty.
 
 \begin{center}
 \small
@@ -1243,38 +1218,22 @@ For row 12, we can follow a $c$ from 4 to 7. This is already labeled $F$.
 2 & A & 1, 2 & b & - \\
 3 & A & 1, 2 & c & - \\
 4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
-5 & B & 3, 5, 6 & b & D = 2, 4 \\
-6 & B & 3, 5, 6 & c & E = 6 \\
+5 & B & 3, 5, 6 & b & C \\
+6 & B & 3, 5, 6 & c & D = 6 \\
 7 & C & 1, 2, 4 & a & B\\
 8 & C & 1, 2, 4 & b & -\\
-9 & C & 1, 2, 4 & c & F = 7 \\
-10 & D & 2, 4 & a & G = 3, 6\\
-11 & D & 2, 4 & b & - \\
-12 & D & 2, 4 & c & F \\
-13 & E & 6 & a & \\
-14 & E & 6 & b & \\
-15 & E & 6 & c & \\
-16 & F & 7 & a & \\
-17 & F & 7 & b & \\
-18 & F & 7 & c & \\
-19 & G & 3, 6 & a & \\
-20 & G & 3, 6 & b & \\
-21 & G & 3, 6 & c & \\
+9 & C & 1, 2, 4 & c & E = 7 \\
+10 & D & 6 & a & C\\
+11 & D & 6 & b & -\\
+12 & D & 6 & c & -\\
+13 & E & 7 & a & \\
+14 & E & 7 & b & \\
+15 & E & 7 & c & \\
 \hline
 \end{tabular}
 \end{center}
 
-For Row 13, we can follow an $a$ from 6 to 4 and then $\Lambda$s to 1 and 2. This is already labeled $C$.
-
-For Rows 13-18, there are no available outbound transitions, so the resulting states are empty.
-
-The transitions for Row 19 are the same as for Row 13, so the result is $C$.
-
-For Row 20, we can follow a $b$ from 3 to 4 and then $\Lambda$s give us meta-state $C$.
-
-For Row 21, there are no outbound transitions on $c$ so the resulting state is empty.
-
-This gives us the following table:
+For Rows 13-15, there are no outbound edges from 7, so the resulting states are empty. This gives us the following table:
 
 \begin{center}
 \small
@@ -1286,23 +1245,17 @@ This gives us the following table:
 2 & A & 1, 2 & b & - \\
 3 & A & 1, 2 & c & - \\
 4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
-5 & B & 3, 5, 6 & b & D = 2, 4 \\
-6 & B & 3, 5, 6 & c & E = 6 \\
+5 & B & 3, 5, 6 & b & C \\
+6 & B & 3, 5, 6 & c & D = 6 \\
 7 & C & 1, 2, 4 & a & B\\
 8 & C & 1, 2, 4 & b & -\\
-9 & C & 1, 2, 4 & c & F = 7 \\
-10 & D & 2, 4 & a & G = 3, 6\\
-11 & D & 2, 4 & b & - \\
-12 & D & 2, 4 & c & F \\
-13 & E & 6 & a & C\\
-14 & E & 6 & b & - \\
-15 & E & 6 & c & - \\
-16 & F & 7 & a & - \\
-17 & F & 7 & b & - \\
-18 & F & 7 & c & - \\
-19 & G & 3, 6 & a & C \\
-20 & G & 3, 6 & b & C\\
-21 & G & 3, 6 & c & - \\
+9 & C & 1, 2, 4 & c & E = 7 \\
+10 & D & 6 & a & C\\
+11 & D & 6 & b & -\\
+12 & D & 6 & c & -\\
+13 & E & 7 & a & -\\
+14 & E & 7 & b & -\\
+15 & E & 7 & c & -\\
 \hline
 \end{tabular}
 \end{center}
@@ -1324,15 +1277,11 @@ The subset construction was supposed to turn an NFA into a DFA, but it appears t
 \hline
 A & a & B \\
 B & a & C \\
-B & b & D \\
-B & c & E \\
+B & b & C \\
+B & c & D \\
 C & a & B\\
-C & c & F \\
-D & a & G \\
-D & c & F \\
-E & a & C\\
-G & a & C \\
-G & b & C\\
+C & c & E \\
+D & a & C \\
 \hline
 \end{tabular}
 \caption[Transition table for DFA]{A summary of the table derived in this section. Each row contains the start state, and input character, and the resulting state if that character is found while in the start state.}
@@ -1349,25 +1298,25 @@ This is known as a transition table. It is fairly straight forward to convert th
 \fanonterminalnode {2,0} {A};
 \fanonterminalnode {4,0} {B};
 \fanonterminalnode {6,0} {C};
-\fanonterminalnode {6,-4} {D};
-\fanonterminalnode {5,2} {E};
-\faterminalnode    {8,0} {F};
-\fanonterminalnode {6,-2} {G};
+\fanonterminalnode {6,-2} {D};
+\faterminalnode    {8,0} {E};
 
 \fatransition{start}{A}{};
 \fatransition{A}{B}{a};
-\fatransition{B}{C}{a};
-\fatransition{C}{F}{c};
-\fatransition{C}{F}{c};
+\fatransition{B}{C}{{a, b}}; %zzz
+\fatransition{B}{D}{c};
+\faarctransition{C}{B}{a}{100}{75};
+\fatransition{C}{E}{c};
+%\fatransition{D}{C}{a};
 %\faarctransition{B}{D}{b}{270}{180};
-\fatransition{B}{D}{b};
-\farighttransition{D}{G}{a};
-\farighttransition{G}{C}{a,b};
+%\fatransition{B}{D}{b};
+\farighttransition{D}{C}{a};
+%\farighttransition{G}{C}{a,b};
 %\faarctransition{D}{F}{c}{0}{270};
-\fatransition{D}{F}{c};
-\farighttransition{B}{E}{c};
-\fatransition{E}{C}{a};
-\faarctransition {C}{B}{a}{225}{315};
+%\fatransition{D}{F}{c};
+%\farighttransition{B}{E}{c};
+%\fatransition{E}{C}{a};
+%\faarctransition {C}{B}{a}{225}{315};
 
 \end{tikzpicture}
 } % end scaled box
@@ -1627,6 +1576,9 @@ If we assume that the syntax for programming languages is formal (and it would b
 
 \needsproblems
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%% CFGs %%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{Context Free Grammars}
 The previous chapter showed that there are languages that have features common in computer programming languages that cannot be represented as regular expressions. One such example is nested parenthesis (or curly braces). Since it's reasonable to assume that programming languages are formal languages, there must be another category of language that includes programming languages. This part of the text explores this category of language.
 
@@ -1659,7 +1611,7 @@ can be replaced by \code{X Y Z} is given below:
 
 \cfgindentprod{A}{X Y Z}
 
-Symbols in CFGs are of two flavors: non-terminals are those that appear on the left hand side of a production. They are non-terminals because they can be replaced by other symbols. Terminals are those symbols that never appear on the left hand side. They are ``terminal'' because they can never be replaced. For ease of reading, non-terminals are usually given in UPPERCASE, and terminals are given in lowercase. CFGs also need a start symbol - the symbol that is the starting point for derivations. The start symbol is often either \code{S} or \code{START}, but if neither is specified, the left hand side of the first production is considered the start symbol.
+Symbols in CFGs are of two flavors: non-terminals are those that appear on the left hand side of a production. They are non-terminals because they can be replaced by other symbols. Terminals are those symbols that never appear on the left hand side. They are ``terminal'' because they can never be replaced. For ease of reading, non-terminals are usually given in \texttt{UPPERCASE}, and terminals are given in \texttt{lowercase}. CFGs also need a start symbol: the symbol that is the starting point for derivations. The start symbol is often either \code{S} or \code{START}, but if neither is specified, the left hand side of the first production is considered the start symbol.
 
 %----------------------------------------------------------
 \begin{cfg}{A CFG that defines the language of any number of \code{a}'s followed by the same number of \code{b}'s.}{F.cfg.1}
@@ -1674,7 +1626,7 @@ What can we do with this CFG? Let's do some derivations. Starting with the start
 
 What if we invoked Production 1 more than once? The first invocation produces \code{aSb}. The next invocation produces \code{aaSbb}. Each invocation adds another \code{a} and \code{b}. When we finally invoke Production 2, we are left with a string of \code{a}'s followed by the same number of \code{b}'s.
 
-While not the most complex illustration, this CFG illustrates that CFGs are more powerful than regular expressions. Regular expressions are not able to generate balanced parenthesis. A regular expression such as $(^*)^*$ allows any number of opening parenthesis and any number of closing parenthesis, but there is no way to guarantee that the number of closing parenthesis match the number of opening parenthesis. If we substituted parenthesis for the \code{a} and \code{b} in Figure~\ref{F.cfg.1}, we would have a solution to the balanced parenthesis problem.
+While not the most complex illustration, this CFG illustrates that CFGs are more powerful than regular expressions\footnote{Technically, we've only shown that CFGs can solve one problem that regular expressions can't. It remains to be shown that everything you can do with a regular expression you can also do with a CFG. Once we show that, we can conclude that CFGs are strictly more powerful than regular expressions.}. Regular expressions are not able to generate balanced parenthesis. A regular expression such as $(^*)^*$ allows any number of opening parenthesis and any number of closing parenthesis, but there is no way to guarantee that the number of closing parenthesis match the number of opening parenthesis. If we substituted parenthesis for the \code{a} and \code{b} in Figure~\ref{F.cfg.1}, we would have a solution to the balanced parenthesis problem.
 
 Figure~\ref{F.cfg.2} presents a more complete, and more interesting CFG. This language defines a program as zero or more statements. An individual statement can be an assignment statement (in this language, an assignment statement is a terminal, so the assumption is that they are defined elsewhere), an \code{if} statement, or a compound statement (curly braces surrounding any number of statements). 
 
@@ -1737,9 +1689,9 @@ if (expr)
 3   if ( expr ) { assignment_stmt assignment_stmt }
 \end{derivation}
 
-This derivation is what's known as a left-most derivation because each time there were multiple non-terminals that could be replaced, the left-most one was replaced. It is also possible to do right-most derivations, and you can also do neither: sometimes pick the left-most non-terminal, sometimes the right-most, and sometimes one in the middle.
+The derivation in Derivation~\ref{D.derive.1} is what's known as a left-most derivation because each time there were multiple non-terminals, the left-most one was replaced. It is also possible to do right-most derivations, and you can also do neither: sometimes pick the left-most non-terminal, sometimes the right-most, and sometimes one in the middle.
 
-Derivations can also be represented as syntax trees. In a syntax tree, the children of each non-terminal are the items from the right hand side of the production that was used to replace the non-terminal. Figure~\ref{F.syntax.tree.1} shows the syntax tree for the derivation in Figure~\ref{D.derive.1}.
+Derivations can also be represented as syntax trees. In a syntax tree, the children of each non-terminal are the items from the right hand side of the production that was used to replace the non-terminal. Figure~\ref{F.syntax.tree.1} shows the syntax tree for the derivation in Derivation~\ref{D.derive.1}.
 
 \begin{figure}
 \begin{tikzpicture}[sibling distance=4em, 
@@ -1779,10 +1731,10 @@ Derivations can also be represented as syntax trees. In a syntax tree, the child
 \label{F.syntax.tree.1}
 \end{figure}
 
-Note that if the derivation is given in tree form, there is no sense of left-most and right-most because the tree gives no indication of what order the productions were invoked. For the derivation represented in Figure~\ref{D.derive.1}, it would not matter what order the productions were invoked in. All derivations would produce an identical tree. This is because the grammar in Figure~\ref{F.cfg.2} is non-ambiguous. An ambiguous grammar is one in which it is possible to produce different trees for the same input. 
+Note that if the derivation is given in tree form, there is no sense of left-most or right-most because the tree gives no indication of what order the productions were invoked. For the derivation represented in Figure~\ref{D.derive.1}, it would not matter what order the productions were invoked in. All derivations would produce an identical tree. 
 
 \section{Ambiguous Grammars}
-A grammar is ambiguous when a single input can produce multiple different trees. The grammar in Figure~\ref{F.GR.ambiguous} illustrates this. The expression $3+4*5$ can be derived two different ways. One has the multiplication happening first and the other with the addition happening first. These two derivations are illustrated by the trees in Figure~\ref{D.derive.2}.
+A grammar is ambiguous when a single input can produce multiple different trees. The grammar in CFG~\ref{F.GR.ambiguous} illustrates this. The expression $3+4*5$ can be derived two different ways. One has the multiplication happening first and the other with the addition happening first. These two derivations are illustrated by the trees in Figure~\ref{D.derive.2}.
 
 %----------------------------------------------------------
 \begin{cfg}{An ambiguous expression grammar.}{F.GR.ambiguous}
@@ -1839,15 +1791,24 @@ Q\cfgprod{EXPR}{num}Q
 \end{subfigure}
 %%%%%%
 
- \caption[Derivations from an ambiguous grammar]{Two syntax trees showing derivations of $3+4*5$ using the ambiguous grammar in Figure~\ref{F.GR.ambiguous}}
+ \caption[Derivations from an ambiguous grammar]{Two syntax trees showing derivations of $3+4*5$ using the ambiguous grammar in CFG~\ref{F.GR.ambiguous}}
 \label{D.derive.2}
 \end{figure}
 %----------------------------------------------------------
 
 For programming languages, ambiguous grammars are clearly bad. The expression $3+4*5$ should not evaluate to a different value simply because the compiler did a left-most derivation versus a right-most derivation. There are expression grammars that resolve the ambiguity of the grammar in Figure~\ref{F.GR.ambiguous}, but since this is a theory book, we will leave that topic for a compiler book.
 
+\section{Exercises}
+For the following problems, assume $\Sigma = \{a|b\}$ unless specified otherwise.
+\begin{enumerate}
+\item Write a CFG for PALINDROME.
+\item Write a CFG for the language defined by the regular expression $a^*b$.
+\item Give a derivation for the program in Listing~\ref{L.nested.ifs}.
+\item Is the language defined by CFG~\ref{F.cfg.2} ambiguous? If so, show two syntax trees for the same input. If not, you must argue that it is not possible to create two different syntax trees for the same input.
+\end{enumerate}
+
 \chapter{Pushdown Automata}
-When talking about regular languages, we found that an existing concept - state machines (aka finite automata) proved very useful for processing regular languages. In this chapter, rather than showing that an existing machine is useful for processing context free languages (those that can be defined by a CFG), we will instead invent such a machine.
+When talking about regular languages, we found that an existing concept, state machines (aka finite automata), proved very useful for processing regular languages. In this chapter, rather than showing that an existing machine is useful for processing context free languages (those that can be defined by a CFG), we will instead invent such a machine.
 
 Finite automata have no way of ``remembering'' what path they took. This is why they were unable to solve the balanced parenthesis problem. They had no way to remember how many opening parenthesis they encountered, so they couldn't enforce that there be the same number of closing parenthesis. To solve this problem, we propose that a push-down stack be added to finite automata thus making a new machine called a pushdown automata.
 
