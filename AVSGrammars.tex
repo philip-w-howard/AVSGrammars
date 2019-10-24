@@ -122,6 +122,14 @@ float=thbp,
 \newcommand{\faloopright}[2] {\draw (#1) edge [loop right] node {#2} ();}
 \newcommand{\faloopleft}[2] {\path (#1) edge [loop left] node {#2} ();}
 \newcommand{\falooptop}[2] {\path (#1) edge [loop above] node {#2} ();}
+%---------------------------------------------------
+% commands for drawing PDAs
+\newcommand{\pdaterminal}[3] {\node at (#1) (#2) [rectangle, draw, rounded corners] {#3};}
+\newcommand{\pdaread}[3] {\node at (#1) (#2) [diamond, draw] {#3}; }
+\newcommand{\pdatransition}[3] {\draw [->] (#1) -- (#2) node [midway, above] {#3};}
+\newcommand{\pdarighttransition}[3] {\draw [->] (#1) -- (#2) node [midway, right] {#3};}
+\newcommand{\pdaarctransition}[5] {\draw [->] (#1) to[out=#4, in=#5] node  [midway, above] {#3} (#2) ;}
+\newcommand{\pdaloopright}[2] {\draw (#1) edge [loop right] node {#2} ();}
 
 %---------------------------------------------------
 
@@ -182,6 +190,7 @@ float=thbp,
 \tableofcontents
 \listoffigures
 \chapter{Preface}
+
 I've been teaching Introduction to Grammars (aka Computer Theory) at Oregon Institute of Technology (OIT) for several years. OIT offers a very hands-on program, so why include a theory course? The most obvious answer is that it lays the theoretical background for a compiler class. I don't find that answer particularly compelling because to be successful in a compiler class a student needs a practical knowledge of some of the concepts included in a grammars class, but the student does not need the theoretical content to be successful in compilers.
 
 To me, the primary reason for including the grammars class in our curriculum is precisely because it is a theory class. Requiring students to think abstractly, and to work on abstract problems (some of which are quite difficult) allows them to develop skills and thought processes that can be missed in a purely practical, hands-on program of study. These additional skills and thought processes will make them better equipped to solve some of the complex problems they may face in their professional careers.
@@ -454,7 +463,7 @@ If we want to allow negative numbers, we could add an optional minus sign:
 
 There are exercises at the end of the chapter that can be used to practice writing regular expressions. You use the enhanced syntax or the minimal syntax for these exercises.
 
-\section Manipulating Regular Expressions
+\section{Manipulating Regular Expressions}
 
 Regular expressions look similar to algebraic expressions, so it might be tempting to manipulate them as if they were algebraic expressions. Some manipulations are possible, but the rules can be quite different from algebra. For example, in both regular expressions and algebra,
 \begin{quote}
@@ -1303,7 +1312,7 @@ This is known as a transition table. It is fairly straight forward to convert th
 
 \fatransition{start}{A}{};
 \fatransition{A}{B}{a};
-\fatransition{B}{C}{{a, b}}; %zzz
+\fatransition{B}{C}{{a, b}}; 
 \fatransition{B}{D}{c};
 \faarctransition{C}{B}{a}{100}{75};
 \fatransition{C}{E}{c};
@@ -1812,10 +1821,103 @@ When talking about regular languages, we found that an existing concept, state m
 
 Finite automata have no way of ``remembering'' what path they took. This is why they were unable to solve the balanced parenthesis problem. They had no way to remember how many opening parenthesis they encountered, so they couldn't enforce that there be the same number of closing parenthesis. To solve this problem, we propose that a push-down stack be added to finite automata thus making a new machine called a pushdown automata.
 
-To illustrate how this could allow us to solve the balanced parenthesis problem, suppose each time we encountered an opening parenthesis in the input, we pushed it onto the stack. Each time we encountered a closing parenthesis, we popped an open from the stack. If we never attempted to pop an empty stack, and if at the end of the input, the stack was empty, then we must have only encountered balenced parenthesis.
+To illustrate how this could allow us to solve the balanced parenthesis problem, suppose each time we encountered an opening parenthesis in the input, we pushed it onto the stack. Each time we encountered a closing parenthesis, we popped an open from the stack. If we never attempted to pop an empty stack, and if at the end of the input, the stack was empty, then we must have only encountered balanced parenthesis.
+
+For pushdown automata (PDA), the input is viewed as residing on a tape. Each ``cell'' on the tape contains a single character (or token). The tape is infinite in length, and every call after the end of the input contains a $\Lambda$. Each time the tape is read, it advances to the next cell. Note that with this configuration, reading past the end of the input always returns a $\Lambda$.
+
+The stack for a PDA is also viewed as a tape, infinite in both directions, with all cells initially holding a $\Lambda$. When a token is pushed onto the stack, it is written to the tape and the tape advances to the next cell. When a token is popped off the stack, the tape is advanced to the previous cell and the token at that location is read. Note that with this configuration, popping an empty stack always returns a $\Lambda$.
+
+It should be pointed out, that a $\Lambda$ in a PDA is very different from a $\Lambda$ in an FA. For an FA, a $\Lambda$ transition means you go to the next state without reading any input. For a PDA, it means you're read past the input of popped below the bottom of the stack.
+
+The other difference between an FA and a PDA, is that with an FA, transitions imply reading input. For a PDA, each read is made explicit.
+
+Because of the differences between FA's and PDA's, we need a new set of symbols. Figure~\ref{F.pda.symbols} shows several of these. The start and end states are rounded rectangles. The end states make it clear whether the input is accepted or rejected. The explicit reads are diamonds, and the outbound edges are labeled with the token that was read from the input tape.
+
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+
+\pdaterminal{0,0}{start}{start}
+\coordinate (start1) at (0, -1);
+\pdaterminal{2,0}{accept}{accept}
+\coordinate (accept1) at (2, 1);
+\pdaterminal{5,0}{reject}{reject}
+\coordinate (reject1) at (3.5, 0);
+\pdaread{8,0}{read}{read}
+\coordinate (readin) at (6.5, 0);
+\coordinate (reada) at (8, 2);
+\coordinate (readb) at (10,0);
+
+\pdatransition{start}{start1}{}
+\pdatransition{accept1}{accept}{}
+\pdatransition{reject1}{reject}{}
+\pdarighttransition{read}{reada}{a}
+\pdatransition{read}{readb}{b}
+\pdatransition{readin}{read}{}
+
+\end{tikzpicture}
+
+\caption[Symbols for PDAs]{Symbols for PDAs. The start symbol is only allowed to have outbound arrows. The accept and reject symbols are only allowed to have inbound arrows. The is no requirement on where the arrows enter or leave the symbols, only that the diagram be neat. When the PDA enters a read symbol, the input tape is read and the outbound arrow corresponding to the read symbol is followed.}
+\label{F.pda.symbols}
+\end{figure}
+
+It is possible to draw an FA using the PDA symbols. An example is given in Figure~\ref{F.PDA.1}. This is the FA for all words with a double letter originally shown in Figure~\ref{F.FA_2}.
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{subfigure}[b]{0.45\textwidth}
+\centering
+\begin{tikzpicture}
+
+\fanonterminalnode {-2,0}{1-};
+\fanonterminalnode {2,0}{4+};
+\fanonterminalnode {0,2}{2};
+\fanonterminalnode {0,-2}{3};
+
+\fatransition{1-}{2}{a};
+\fatransition{1-}{3}{b};
+\fatransition{2}{4+}{a};
+\fatransition{3}{4+}{b};
+\faarctransition{3}{2}{a}{120}{240};
+\faarctransition {2}{3}{b}{300}{60};
+\faloopright {4+}{a,b};
+\end{tikzpicture}
+ \caption{FA for accepting all strings that contain a double letter.}
+\end{subfigure}
+
+\begin{subfigure}[b]{0.45\textwidth}
+\centering
+\begin{tikzpicture}
+
+\pdaterminal {0,0}{accept}{accept};
+\pdaread{0, 2}{double}{read}
+\pdaread{-2, 4}{reada}{read}
+\pdaread{2, 4}{readb}{read}
+\pdaread{0, 6}{first}{read}
+\pdaterminal {0,8}{start}{start}
+\pdatransition {start}{first}{}
+\pdatransition {first}{reada}{a}
+\pdatransition {first}{readb}{b}
+\pdaarctransition {reada}{readb}{b}{345}{195}
+\pdaarctransition {readb}{reada}{a}{165}{15}
+\pdatransition {reada}{double}{a}
+\pdatransition {readb}{double}{b}
+\pdarighttransition {double}{accept}{$\Lambda$}
+\pdaloopright {double}{a,b};
+
+\end{tikzpicture}
+ \caption{PDA for accepting all strings that contain a double letter.}
+\end{subfigure}
+
+\caption{Both an FA and a PDA for accepting all strings that contain a double letter.}
+\label{F.PDA.1}
+\end{figure}
+%----------------------------------------------------------
 
 
 zzz
+
 \needswork{}
 
 \part{Beyond Context Free Languages}
