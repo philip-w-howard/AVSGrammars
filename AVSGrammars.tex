@@ -125,9 +125,14 @@ float=thbp,
 %---------------------------------------------------
 % commands for drawing PDAs
 \newcommand{\pdaterminal}[3] {\node at (#1) (#2) [rectangle, draw, rounded corners] {#3};}
+\newcommand{\pdapush}[3] {\node at (#1) (#2) [rectangle, draw] {#3};}
 \newcommand{\pdaread}[3] {\node at (#1) (#2) [diamond, draw] {#3}; }
 \newcommand{\pdatransition}[3] {\draw [->] (#1) -- (#2) node [midway, above] {#3};}
+\newcommand{\pdaxthree}[4] {\draw [->] (#1) -- (#2) node [midway, above] {#4} -- (#3) ;}
+\newcommand{\pdaxfour}[5] {\draw [->] (#1) -- (#2) node [midway, above] {#5} -- (#3) -- (#4);}
 \newcommand{\pdarighttransition}[3] {\draw [->] (#1) -- (#2) node [midway, right] {#3};}
+\newcommand{\pdalefttransition}[3] {\draw [->] (#1) -- (#2) node [midway, left] {#3};}
+
 \newcommand{\pdaarctransition}[5] {\draw [->] (#1) to[out=#4, in=#5] node  [midway, above] {#3} (#2) ;}
 \newcommand{\pdaloopright}[2] {\draw (#1) edge [loop right] node {#2} ();}
 
@@ -1589,14 +1594,38 @@ If we assume that the syntax for programming languages is formal (and it would b
 %%%%%%%%%%%%%%%% CFGs %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{Context Free Grammars}
-The previous chapter showed that there are languages that have features common in computer programming languages that cannot be represented as regular expressions. One such example is nested parenthesis (or curly braces). Since it's reasonable to assume that programming languages are formal languages, there must be another category of language that includes programming languages. This part of the text explores this category of language.
+With English, there is a progression of language elements:
+\begin{quote}
+English: Letters $\rightarrow$ Words $\rightarrow$ Sentences $\rightarrow$ Paragraphs.
+\end{quote}
+With computers, there is a similar progression:
+\begin{quote}
+Computers: Characters $\rightarrow$ Tokens $\rightarrow$ Programming Languages $\rightarrow$ Algorithms.
+\end{quote}
+
+Regular expressions are suitable for defining tokens (such as integer constants or identifiers), but they can't be used for defining most programming languages because most programming languages have nesting features (parenthesis, curly braces, etc.), and regular languages are incapable of defining such features. 
+
+In this part of the book we examine another category of languages: Context Free Languages. These languages are capable of expressing nesting, and they are suitable for defining most programming languages.
 
 \chapter{Context Free Grammars}
-
-Recall that nested parenthesis cannot be represented as a regular expression. They can be represented using a recursive definition:
+zzz
+Recall that nested parenthesis cannot be represented as a regular expression. Another example that fits the same pattern as nested parenthesis is shown in Listing~\ref{L.infinite.ifs}
+\begin{lstlisting}[caption={Nested if statements},label=L.infinite.ifs]
+if (x)
+{
+   if (x)
+	 {
+	    if (x)
+			{
+			   etc.
+			}
+	 }
+}
+\end{lstlisting}
+Each of these nesting problems boils down to the language $a^nb^n$, which we've shown cannot be represented with a regular expression. This pattern can, however, be represented with a recursive definition:
 \begin{enumerate}
-\item $()$ is in BAL
-\item if $x$ is in BAL, then so is $(x)$
+\item $\Lambda$ is in BAL
+\item if $x$ is in BAL, then so is $axb$
 \end{enumerate}
 
 This suggests that languages defined recursively are more powerful (in the sense that they can define more languages) than regular expressions. We want to formalize the structure of recursive definitions so that we can prove properties of these languages much as we did for regular languages in Chapter~\ref{C.RL.theory}. Context Free Grammars are one such formalization.
@@ -1861,8 +1890,7 @@ Because of the differences between FA's and PDA's, we need a new set of symbols.
 \label{F.pda.symbols}
 \end{figure}
 
-It is possible to draw an FA using the PDA symbols. An example is given in Figure~\ref{F.PDA.1}. This is the FA for all words with a double letter originally shown in Figure~\ref{F.FA_2}.
-
+It is possible to draw an FA using the PDA symbols. An example is given in Figure~\ref{F.PDA.1}. It should be clear from this example that any DFA can be drawn using the new symbols. However, the purpose of the new symbols isn't simply to give us another wan to draw DFAs. Instead, the new format allows us to add memory in the form of a pushdown stack. Push operations are encoded in a rectangle. Pop operations use the same symbol as read, but with the word ``pop'' instead of ``read''.
 %----------------------------------------------------------
 \begin{figure}[hbt]
 \centering
@@ -1870,44 +1898,42 @@ It is possible to draw an FA using the PDA symbols. An example is given in Figur
 \centering
 \begin{tikzpicture}
 
-\fanonterminalnode {-2,0}{1-};
-\fanonterminalnode {2,0}{4+};
-\fanonterminalnode {0,2}{2};
-\fanonterminalnode {0,-2}{3};
+\fanonterminalnode {-2,0}{-};
+\fanonterminalnode {0,0}{+};
 
-\fatransition{1-}{2}{a};
-\fatransition{1-}{3}{b};
-\fatransition{2}{4+}{a};
-\fatransition{3}{4+}{b};
-\faarctransition{3}{2}{a}{120}{240};
-\faarctransition {2}{3}{b}{300}{60};
-\faloopright {4+}{a,b};
+\faarctransition{-}{+}{a}{30}{150};
+\faarctransition {+}{-}{b}{210}{330};
+\faloopright {+}{a};
+\faloopleft {-}{b}
 \end{tikzpicture}
- \caption{FA for accepting all strings that contain a double letter.}
+ \caption{FA for accepting $(a+b)^*a$.}
 \end{subfigure}
 
 \begin{subfigure}[b]{0.45\textwidth}
 \centering
 \begin{tikzpicture}
 
-\pdaterminal {0,0}{accept}{accept};
-\pdaread{0, 2}{double}{read}
-\pdaread{-2, 4}{reada}{read}
-\pdaread{2, 4}{readb}{read}
-\pdaread{0, 6}{first}{read}
-\pdaterminal {0,8}{start}{start}
-\pdatransition {start}{first}{}
-\pdatransition {first}{reada}{a}
-\pdatransition {first}{readb}{b}
-\pdaarctransition {reada}{readb}{b}{345}{195}
-\pdaarctransition {readb}{reada}{a}{165}{15}
-\pdatransition {reada}{double}{a}
-\pdatransition {readb}{double}{b}
-\pdarighttransition {double}{accept}{$\Lambda$}
-\pdaloopright {double}{a,b};
-
+\pdaterminal {0,4}{start}{start}
+\coordinate (start1) at (0, 3.25);
+\pdaread {0,2}{nota}{read}
+\coordinate (nota1) at (-1.5, 2);
+\coordinate (nota2) at (-1.5, 3.25);
+\pdaread {3,2}{reada}{read}
+\coordinate (reada1) at (3, 3.25);
+\coordinate (reada2) at (3, 1);
+\coordinate (reada3) at (1.5, 1);
+\coordinate (reada4) at (1.5, 2);
+\pdaterminal {3,0}{accept}{accept}
+\pdaterminal {0,0}{reject}{reject}
+\pdatransition {start}{nota}{}
+\pdatransition {nota}{reada}{a}
+\pdarighttransition {nota}{reject}{$\Lambda$}
+\pdarighttransition {reada}{accept}{$\Lambda$}
+\pdaxthree {reada2}{reada3}{reada4}{a}
+\pdaxthree {reada}{reada1}{start1}{b}
+\pdaxfour {nota}{nota1}{nota2}{start1}{b}
 \end{tikzpicture}
- \caption{PDA for accepting all strings that contain a double letter.}
+ \caption{PDA for accepting $(a+b)^*a$.}
 \end{subfigure}
 
 \caption{Both an FA and a PDA for accepting all strings that contain a double letter.}
@@ -1915,9 +1941,50 @@ It is possible to draw an FA using the PDA symbols. An example is given in Figur
 \end{figure}
 %----------------------------------------------------------
 
+Figure~\ref{F.PDA.2} shows a PDA for accepting $a^nb^n$. Each time an $a$ is read, it is pushed on the stack. Each time a $b$ is read, the stack is popped. If the stack is empty, the string is rejected because we had too many $b$'s. If we read an $a$ following a $b$, we also reject the string.
 
-zzz
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
 
+\pdaterminal {0,8}{start}{start}
+\coordinate (start1) at (0, 7);
+\pdapush {-2, 7}{pusha}{push a}
+\pdaread {0,5}{reada}{read}
+\coordinate (reada1) at (-2, 5);
+\pdaread {0,2}{popa}{pop}
+\coordinate (popa1) at (0, 4);
+\pdaread {3, 2}{readb}{read}
+\coordinate (readb1) at (3, 4);
+\pdaread {6, 2}{popfinal}{pop}
+\coordinate (popfinal1) at (6, 5);
+\coordinate (popfinal2) at (9, 2);
+\pdaterminal {0,-0.5}{reject1}{reject}
+\pdaterminal {3,-0.5}{reject2}{reject}
+\pdaterminal {6,-0.5}{accept}{accept}
+\pdaterminal {9,-0.5}{reject3}{reject}
+
+\pdatransition {start}{reada}{}
+\pdalefttransition {reada}{popa}{b}
+\pdarighttransition {popa}{reject1}{$\Lambda$}
+\pdarighttransition {readb}{reject2}{a}
+\pdarighttransition {popfinal}{accept}{$\Lambda$}
+\pdatransition {pusha}{start1}{}
+\pdatransition {popa}{readb}{a}
+\pdatransition {readb}{popfinal}{$\Lambda$}
+\pdaxthree {reada}{reada1}{pusha}{a}
+\pdaxthree {readb}{readb1}{popa1}{b}
+\pdaxthree {reada}{popfinal1}{popfinal}{$\Lambda$}
+\pdaxthree {popfinal}{popfinal2}{reject3}{a}
+\end{tikzpicture}
+
+\caption{PDA for accepting $a^nb^n$.}
+\label{F.PDA.2}
+\end{figure}
+%----------------------------------------------------------
+
+Since Figure~\ref{F.PDA.1} shows a solution to to $a^nb^n$, it is clear that PDAs are more powerful than FAs. 
 \needswork{}
 
 \part{Beyond Context Free Languages}
