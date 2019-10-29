@@ -1596,11 +1596,11 @@ If we assume that the syntax for programming languages is formal (and it would b
 \part{Context Free Grammars}
 With English, there is a progression of language elements:
 \begin{quote}
-English: Letters $\rightarrow$ Words $\rightarrow$ Sentences $\rightarrow$ Paragraphs.
+Letters $\rightarrow$ Words $\rightarrow$ Sentences $\rightarrow$ Paragraphs
 \end{quote}
 With computers, there is a similar progression:
 \begin{quote}
-Computers: Characters $\rightarrow$ Tokens $\rightarrow$ Programming Languages $\rightarrow$ Algorithms.
+Characters $\rightarrow$ Tokens $\rightarrow$ Programming Languages $\rightarrow$ Algorithms
 \end{quote}
 
 Regular expressions are suitable for defining tokens (such as integer constants or identifiers), but they can't be used for defining most programming languages because most programming languages have nesting features (parenthesis, curly braces, etc.), and regular languages are incapable of defining such features. 
@@ -1639,7 +1639,7 @@ Where the X, A, B, C can be thought of as variables. The potential for recursion
 X can be replaced by A X C
 \end{quote}
 
-More formally, a production in a CFG consists of a left hand side and a right hand side. The left hand side gives the symbol that can be replaced. The right hand side gives the list of symbols that can replace the symbol on the left. The two sides are typically separated 
+More formally, a production in a CFG consists of a left hand side and a right hand side. The left hand side gives the symbol that can be replaced. The right hand side gives the list of symbols that can replace that symbol. The two sides are typically separated 
 either by an arrow ( $\rightarrow$ ) 
 or sometimes a colon-colon-equals ( ::= ). 
 A sample production that indicates that the symbol \code{A} 
@@ -1664,7 +1664,7 @@ What if we invoked Production 1 more than once? The first invocation produces \c
 
 While not the most complex illustration, this CFG illustrates that CFGs are more powerful than regular expressions\footnote{Technically, we've only shown that CFGs can solve one problem that regular expressions can't. It remains to be shown that everything you can do with a regular expression you can also do with a CFG. Once we show that, we can conclude that CFGs are strictly more powerful than regular expressions.}. Regular expressions are not able to generate balanced parenthesis. A regular expression such as $(^*)^*$ allows any number of opening parenthesis and any number of closing parenthesis, but there is no way to guarantee that the number of closing parenthesis match the number of opening parenthesis. If we substituted parenthesis for the \code{a} and \code{b} in Figure~\ref{F.cfg.1}, we would have a solution to the balanced parenthesis problem.
 
-Figure~\ref{F.cfg.2} presents a more complete, and more interesting CFG. This language defines a program as zero or more statements. An individual statement can be an assignment statement (in this language, an assignment statement is a terminal, so the assumption is that they are defined elsewhere), an \code{if} statement, or a compound statement (curly braces surrounding any number of statements). 
+Figure~\ref{F.cfg.2} presents a more interesting CFG. This language defines a program as zero or more statements. An individual statement can be an assignment statement (in this language, an assignment statement is a terminal, so the assumption is that they are defined elsewhere), an \code{if} statement, or a compound statement (curly braces surrounding any number of statements). 
 
 %----------------------------------------------------------
 \begin{cfg}{This CFG defines a program as being zero or more statements, where each statement is either an \code{if} statement, an assignment statement or a compound statement.}{F.cfg.2}
@@ -1676,13 +1676,12 @@ Q\cfgprod{STMT}{COMPOUND\_STMT}Q
 Q\cfgprod{STMT}{assignment\_stmt}Q
 Q\cfgprod{IF\_STMT} {if ( expr ) STMT}Q
 Q\cfgprod{COMPOUND\_STMT} { \{ STMTS \} }Q
-Q\cfgprod{COMPOUND\_STMT} { STMT }Q
 \end{cfg}
 %----------------------------------------------------------
 
-The program in Listing~\ref{L.nested.ifs} illustrates the features of the language defined by the CFG in Figure~\ref{F.cfg.2}. Line~1 is a simple assignment statement. The \code{if} statement that begins in Line~2 is a simple \code{if} statement. The \code{if} statement that begins in Line~4 shows a nested \code{if} statement. The compound statement that begins in Line~8 shows that compound statements can be nested and that they can be empty (in Line~11).
+The program in Listing~\ref{L.nested.ifs} illustrates the features of the language defined by the CFG in CFG~\ref{F.cfg.2}. Line~1 is a simple assignment statement. The \code{if} statement that begins in Line~2 is a simple \code{if} statement. The \code{if} statement that begins in Line~4 shows a nested \code{if} statement. The compound statement that begins in Line~8 shows that compound statements can be nested and that they can be empty (in Line~11).
 
-\begin{lstlisting}[caption={Sample program in the language defined by the CFG in Figure~\ref{F.cfg.2}},label=L.nested.ifs]
+\begin{lstlisting}[caption={Sample program in the language defined by the CFG in CFG~\ref{F.cfg.2}},label=L.nested.ifs]
 assignment_statement
 if (expr)
    assignment_statement
@@ -1704,7 +1703,7 @@ Listing~\ref{L.nested.ifs} claims to be a program in the language defined in Fig
 
 Derivations start with the start symbol and continue until there are only terminals. Each step other than the first should list the production number that was invoked to make the substitution. Rather than starting with the longer program in Listing~\ref{L.nested.ifs}, let's start with the shorter program in Listing~\ref{L.short.prog}.
 
-\begin{lstlisting}[caption={Short program program in the language defined by the CFG in Figure~\ref{F.cfg.2}. The derivation of this program is given in Derivation~\ref{D.derive.1}},label=L.short.prog]
+\begin{lstlisting}[caption={Short program program in the language defined by the CFG in CFG~\ref{F.cfg.2}. The derivation of this program is given in Derivation~\ref{D.derive.1}},label=L.short.prog]
 if (expr)
 {
    assignment_statement
@@ -1833,17 +1832,17 @@ Q\cfgprod{EXPR}{num}Q
 For programming languages, ambiguous grammars are clearly bad. The expression $3+4*5$ should not evaluate to a different value simply because the compiler did a left-most derivation versus a right-most derivation. There are expression grammars that resolve the ambiguity of the grammar in Figure~\ref{F.GR.ambiguous}, but since this is a theory book, we will leave that topic for a compiler book.
 
 \section {Grammar Forms}
-One of the tasks of a compiler is to find a derivation of the input (the source code being compiled) given the definition of the language (typically expressed as a CFG). In order for a compiler to be efficient, there needs to be turn-the-crank algorithms for finding a derivation. The algorithms should not require a guess-and-check process. In particular, given the next $N$ input symbols, the compiler should always know what production to use next in the derivation.
+One of the tasks of a compiler is to find a derivation of the input (the source code being compiled) given the definition of the language (typically expressed as a CFG). This part of a compiler is known as a parser. In order for a parser to be efficient, there needs to be turn-the-crank algorithms for finding a derivation. The algorithms should not require a guess-and-check process. In particular, given the next $N$ input symbols, the parser should always know what production to use next in the derivation.
 
-There are two primary algorithms used by compilers. One is a top-down algorithm, the other is a bottom-up algorithm. The top-down algorithm starts with the start symbol and based in the next input token invokes a production. This continues until all input is exhausted and only terminals remain. The bottom-up algorithm reads tokens and periodically reduces some collection of symbols that match the right hand side of a production to the symbol on the left hand side of that production. This continues until all input is exhausted and only the start symbol remains.
+There are two primary algorithms used by parsers. One is a top-down algorithm, the other is a bottom-up algorithm. The top-down algorithm starts with the start symbol and based in the next input token invokes a production. This continues until all input is exhausted and only terminals remain. The bottom-up algorithm reads tokens and periodically reduces some collection of symbols that match the right hand side of a production to the symbol on the left hand side of that production. This continues until all input is exhausted and only the start symbol remains.
 
-There are two grammar forms that are used in support of these compilers. An LL(1) grammar reads input left to right (the first L), does a left-most derivation (the second L), and can always make a decision with 1 token of look-ahead. An LR(1) grammar reads input left to right, does a right-most derivation and can always make a decision with 1 token of look-ahead. LL(1) grammars are used by top-down parsers, and LR(1) grammars are used by bottom-up parsers.
+There are two grammar forms that are used in support of these compilers. An LL(1) grammar reads input Left to right (the first L), does a Left-most derivation (the second L), and can always make a decision with 1 token of look-ahead. An LR(1) grammar reads input Left to right, does a Right-most derivation and can always make a decision with 1 token of look-ahead. LL(1) grammars are used by top-down parsers, and LR(1) grammars are used by bottom-up parsers.
 
 These grammars are related as follows:
 \begin{quote}
 $LL(1) \subset LR(1) \subset CFG$
 \end{quote}
-To illustrate what causes difficulties with the top-down algorithm, consider grammar given in CFG~\ref{C.paren.expr}. This grammar defines fully parenthesized expressions. Since they are fully parenthesized, the grammar is unambiguous. However, with this grammar, how many tokens of look-ahead are required to determine which production to invoke first? If the first token is a number, then clearly Production~1 must be invoked. But if the first token is an open parenthesis, then how many additional tokens must be read to determine which of the productions 2-5 should be invoked? Three is not enough because expressions can be nested as in 
+To illustrate what causes difficulties with the top-down algorithm, consider the grammar given in CFG~\ref{C.paren.expr}. This grammar defines fully parenthesized expressions. Since they are fully parenthesized, the grammar is unambiguous. However, with this grammar, how many tokens of look-ahead are required to determine which production to invoke first? If the first token is a number, then clearly Production~1 must be invoked. But if the first token is an open parenthesis, then how many additional tokens must be read to determine which of the productions 2-5 should be invoked? Three is not enough because expressions can be nested as in 
 \begin{quote}
 (((5-3)-3)*2)
 \end{quote}
@@ -1857,15 +1856,45 @@ Q\cfgprod{EXPR}{(EXPR / EXPR)}Q
 Q\cfgprod{EXPR}{(EXPR * EXPR)}Q
 \end{cfg}
 %----------------------------------------------------------
+
 The specifics of the top-down and bottom-up algorithms are left to a course on compilers. Also, the algorithms for transforming a grammar into LL(1) or LR(1) form are left to a course on compilers. Later, we will look at other grammar forms and transformations to convert a grammar into a particular form, but we will be interested in a form that is useful for proving properties of grammars, not a form that is useful to a compiler.
 
 \section{Exercises}
-For the following problems, assume $\Sigma = \{a|b\}$ unless specified otherwise.
+For the following problems, assume $\Sigma = \{a\ b\}$ unless specified otherwise.
 \begin{enumerate}
 \item Write a CFG for PALINDROME.
 \item Write a CFG for the language defined by the regular expression $a^*b$.
-\item Give a derivation for the program in Listing~\ref{L.nested.ifs}.
+\item Write a CFG for arithmetic expressions in postfix notation (where the operators come after the operands).
+\item Give a derivation for the program in Listing~\ref{L.nested.ifs}. Be sure to list the production number used in each step.
+\item Provide derivations for the following two statements given the following CFG. Be sure to list the production numbers for each step.
+\begin{quote}
+$3+4*5+7$\\
+$(3+4)*(5+7)*8$
+\end{quote}
+%----------------------------------------------------------
+\begin{cfg}{}{}
+Q\cfgprod{START}{AE}Q
+Q\cfgprod{AE}{AE+AE}Q
+Q\cfgprod{AE}{AE*AE}Q
+Q\cfgprod{AE}{(AE)}Q
+Q\cfgprod{AE}{number}Q
+\end{cfg}
+%----------------------------------------------------------
+\item Use the following CFG and show derivations for the two expressions from the previous problems. Be sure to list the production numbers for each step.
+%----------------------------------------------------------
+\begin{cfg}{}{}
+Q\cfgprod{START}{EXPR}Q
+Q\cfgprod{EXPR}{FACT+EXPR}Q
+Q\cfgprod{EXPR}{FACT}Q
+Q\cfgprod{FACT}{(EXPR)}Q
+Q\cfgprod{FACT}{FACT * number}Q
+Q\cfgprod{FACT}{number}Q
+\end{cfg}
+%----------------------------------------------------------
 \item Is the language defined by CFG~\ref{F.cfg.2} ambiguous? If so, show two syntax trees for the same input. If not, you must argue that it is not possible to create two different syntax trees for the same input.
+\item Is the grammar in Question 5 ambiguous? Explain.
+\item Is the grammar in Question 6 ambiguous? Explain.
+\item Do the grammars in Questions 5 and 6 define the same language? Explain.
 \end{enumerate}
 
 \chapter{Pushdown Automata}
