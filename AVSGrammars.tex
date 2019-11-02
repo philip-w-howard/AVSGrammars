@@ -81,7 +81,7 @@ float=thbp,
 
 \lstnewenvironment{derivation}[2]
 {
-\lstset{float=thbp,caption={#1},label={#2},numbers=none}
+\lstset{float=htbp,caption={#1},label={#2},numbers=none}
 \renewcommand{\lstlistingname}{Derivation}
 }
 {
@@ -91,7 +91,7 @@ float=thbp,
 
 \lstnewenvironment{cfg}[2]
 {
-\lstset{float=thbp,caption={#1},label={#2},stepnumber=1,escapechar=Q}
+\lstset{float=htbp,caption={#1},label={#2},stepnumber=1,escapechar=Q}
 \renewcommand{\lstlistingname}{CFG}
 }
 {
@@ -1594,6 +1594,8 @@ If we assume that the syntax for programming languages is formal (and it would b
 %%%%%%%%%%%%%%%% CFGs %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{Context Free Grammars}
+
+\chapter{Context Free Grammars}
 With English, there is a progression of language elements:
 \begin{quote}
 Letters $\rightarrow$ Words $\rightarrow$ Sentences $\rightarrow$ Paragraphs
@@ -1607,8 +1609,7 @@ Regular expressions are suitable for defining tokens (such as integer constants 
 
 In this part of the book we examine another category of languages: Context Free Languages. These languages are capable of expressing nesting, and they are suitable for defining most programming languages.
 
-\chapter{Context Free Grammars}
-
+\section{Introduction to CFGs}
 Recall that nested parenthesis cannot be represented as a regular expression. Another example that fits the same pattern as nested parenthesis is shown in Listing~\ref{L.infinite.ifs}
 \begin{lstlisting}[caption={Nested if statements},label=L.infinite.ifs]
 if (x)
@@ -1726,7 +1727,60 @@ if (expr)
 
 The derivation in Derivation~\ref{D.derive.1} is what's known as a left-most derivation because each time there were multiple non-terminals, the left-most one was replaced. It is also possible to do right-most derivations, and you can also do neither: sometimes pick the left-most non-terminal, sometimes the right-most, and sometimes one in the middle.
 
-Derivations can also be represented as syntax trees. In a syntax tree, the children of each non-terminal are the items from the right hand side of the production that was used to replace the non-terminal. Figure~\ref{F.syntax.tree.1} shows the syntax tree for the derivation in Derivation~\ref{D.derive.1}.
+\subsection{Derivation forms}\label{S.derive.forms}
+The left-most nature of Derivation~\ref{D.derive.1} wasn't that obvious because there were never more than two non-terminals in any line of the derivation. For a better example, consider the the CFG for expressions in postfix notation given in CFG~\ref{CFG.postfix}. Using that grammar, Derivation~\ref{D.post.top.down} shows a derivation of the expression
+\begin{quote}
+3 4 + 5 6 - *
+\end{quote}
+%----------------------------------------------------------
+\begin{cfg}{This CFG defines the syntax for postfix expressions. In production 4, the vertical bars represent alternation, so an OP can be one of the four arithmetic operators.}{CFG.postfix}
+Q\cfgprod{EXPR}{POST}Q
+Q\cfgprod{POST}{POST POST OP}Q
+Q\cfgprod{POST}{number}Q
+Q\cfgprod{OP}{+ | - | * | /}Q
+\end{cfg}
+%----------------------------------------------------------
+
+\begin{derivation}{Derivation of the expression 3 4 + 5 6 - *}{D.post.top.down}
+    EXPR
+1   POST
+2   POST POST OP
+2   POST POST OP POST OP
+3   3 POST OP POST OP
+3   3 4 OP POST OP
+4   3 4 + POST OP
+2   3 4 + POST POST OP OP
+3   3 4 + 5 POST OP OP
+3   3 4 + 5 6 OP OP
+4   3 4 + 5 6 - OP
+4   3 4 + 5 6 - *
+\end{derivation}
+Derivation~\ref{D.post.top.down} is both top-down and left-most. It is top-down because it begins with the start symbol and progresses to all terminals. When a derivation is represented graphically (see Section~\ref{S.syntax.trees}), this derivation starts at the top of the diagram and progresses to the bottom. This derivation is also left-most because in each step, the left-most non-terminal is the one that was replaced.
+
+Derivation~\ref{D.post.bottom.up} shows a bottom-up right-most derivation of the same expression. It is bottom up because it begins with all terminals and combines them using productions until the terminals have been reduced to the start symbol. Note that if these steps were reversed, the derivation would be top-down. In this sense, top-down and bottom-up derivations are inverses of each other. Note also that if this derivation was inverted to its top-down form, it would be a right-most derivation. In each step it is the right-most non-terminal that gets replaced. The left-most or right-most nature of a derivation is always from the top-down perspective.
+\begin{derivation}{Bottom-up right-most Derivation of the expression 3 4 + 5 6 - *}{D.post.bottom.up}
+    3 4 + 5 6 - *
+3   POST 4 + 5 6 - *
+3   POST POST + 5 6 - *
+4   POST POST OP 5 6 - *
+2   POST 5 6 - *
+3   POST POST 6 - *
+3   POST POST POST - *
+4   POST POST POST OP *
+2   POST POST *
+4   POST POST OP
+2   POST
+1   EXPR
+\end{derivation}
+
+We now have four derivation forms: top-down left-most, top-down right-most, bottom-up left-most, and bottom-up right-most. The first and last of these are the most common, and the ones most often used by compilers. 
+
+One last thing to note: If you were asked to give a derivation of an expression using our postfix grammar, there would be many correct answers. You could chose which order to invoke productions and which non-terminal to replace in each step. But if any of the four flavors mentioned in the previous paragraph were requested, there would be exactly one correct answer. There would be no choice as to which non-terminal to replace or which production to invoke. 
+
+The only-one-right-derivation property is true of this grammar because it is non-ambiguous. Ambiguous grammars will be described in Section~\ref{S.ambiguous.grammars}.
+
+\subsection{Syntax Trees}\label{S.syntax.trees}
+Derivations can be represented graphically as syntax trees. In a syntax tree, the children of each non-terminal are the items from the right hand side of the production that was used to replace the non-terminal. Figure~\ref{F.syntax.tree.1} shows the syntax tree for the derivation in Derivation~\ref{D.derive.1}.
 \begin{figure}[htb]
 \begin{tikzpicture}[sibling distance=4em, 
   level 5/.style={sibling distance=10em},
@@ -1764,11 +1818,19 @@ Derivations can also be represented as syntax trees. In a syntax tree, the child
 \caption[Syntax tree]{A syntax tree representing the derivation in Figure~\ref{D.derive.1}.}
 \label{F.syntax.tree.1}
 \end{figure}
-Note that if the derivation is given in tree form, there is no sense of left-most or right-most because the tree gives no indication of what order the productions were invoked. For the derivation represented in Figure~\ref{D.derive.1}, it would not matter what order the productions were invoked in. All derivations would produce an identical tree. 
+Note that if the derivation is given in tree form, there is no sense of left-most or right-most because the tree gives no indication of what order the productions were invoked. For the derivation represented in Figure~\ref{D.derive.1}, it would not matter what order the productions were invoked. All derivations would produce an identical tree. The only-one-tree property is true because the grammar used for this derivation is non-ambiguous. Ambiguous grammars are discussed in the next section.
 
-\section{Ambiguous Grammars}
-A grammar is ambiguous when a single input can produce multiple different trees. The grammar in CFG~\ref{F.GR.ambiguous} illustrates this. The expression $3+4*5$ can be derived two different ways. One has the multiplication happening first and the other with the addition happening first. These two derivations are illustrated by the trees in Figure~\ref{D.derive.2}.
+\section{Ambiguous Grammars}\label{S.ambiguous.grammars}
+English, and I presume all spoken languages, is ambiguous. A single statement can be interpreted different ways. Consider the two statements
+\begin{quote}
+Fruit flies like an apple.
+Time flies like an arrow.
+\end{quote}
+Both statements appear structurally the same; only a couple of words were changed. However, with the normal interpretations, ``flies'' is the subject in the first sentence, but the verb in the second (unless the second sentence is referring to flies native to the Tardis). If we are sufficiently familiar with the English language, we come up with the correct interpretation of each sentence without even consciously thinking about it. But what if you tried to write a program to understand English? How would it distinguish betweeen the two.
 
+Consider the statement, ``I shot the man with the gun.'' When the police show up and you utter that sentence, you hope they interpret it as, ``See that man over there with a gun? I shot him in self defence.'' You hope they don't interpret it, ``See this gun in my hand? I shot that [possibly unarmed] man over there with this gun.'' Although I hope you never find youself in a situation where you have to utter such a sentence, if you do, you might want to pick a less ambiguous statement.
+
+A grammar is ambiguous when a single input can produce multiple different meanings. For CFGs, the ``meanings'' are defined by the syntax tree produced by parsing a statement. The grammar in CFG~\ref{F.GR.ambiguous} illustrates this. The expression $3+4*5$ can be derived two different ways. One has the multiplication happening first and the other with the addition happening first. These two derivations are illustrated by the trees in Figure~\ref{D.derive.2}.
 %----------------------------------------------------------
 \begin{cfg}{An ambiguous expression grammar.}{F.GR.ambiguous}
 Q\cfgprod{EXPR}{EXPR + num}Q
@@ -1776,11 +1838,9 @@ Q\cfgprod{EXPR}{EXPR * num}Q
 Q\cfgprod{EXPR}{num}Q
 \end{cfg}
 %----------------------------------------------------------
-
 %----------------------------------------------------------
 \begin{figure}[htb]
 \centering
-
 %\scalebox{.7}{
 \begin{subfigure}[b]{0.95\textwidth}
 \centering
@@ -1829,25 +1889,24 @@ Q\cfgprod{EXPR}{num}Q
 \end{figure}
 %----------------------------------------------------------
 
+Note that the ambiguity of a grammar is defined by the existence of multiple trees for the same expression. It is not defined based on different derivation orders for the same expression. Recall that when a derivation is represented as a tree, the top-down vs. bottom-up and left-most vs. right-most nature of the derivation is obscured. Any grammar can be used in a left-most or right-most (or middle-most) fashion. That does not mean the grammar is ambiguous (otherwise, all grammars would be). If each of these derivations results in the same tree, the grammar is considered non-ambiguous.
+
 For programming languages, ambiguous grammars are clearly bad. The expression $3+4*5$ should not evaluate to a different value simply because the compiler did a left-most derivation versus a right-most derivation. There are expression grammars that resolve the ambiguity of the grammar in Figure~\ref{F.GR.ambiguous}, but since this is a theory book, we will leave that topic for a compiler book.
 
 \section {Grammar Forms}
 One of the tasks of a compiler is to find a derivation of the input (the source code being compiled) given the definition of the language (typically expressed as a CFG). This part of a compiler is known as a parser. In order for a parser to be efficient, there needs to be turn-the-crank algorithms for finding a derivation. The algorithms should not require a guess-and-check process. In particular, given the next $N$ input symbols, the parser should always know what production to use next in the derivation.
 
-There are two primary algorithms used by parsers. One is a top-down algorithm, the other is a bottom-up algorithm. The top-down algorithm starts with the start symbol and based in the next input token invokes a production. This continues until all input is exhausted and only terminals remain. The bottom-up algorithm reads tokens and periodically reduces some collection of symbols that match the right hand side of a production to the symbol on the left hand side of that production. This continues until all input is exhausted and only the start symbol remains.
+There are two primary algorithms used by parsers. One is a top-down algorithm, the other is a bottom-up algorithm. The top-down algorithm starts with the start symbol and based on the next input token invokes a production. This continues until all input is exhausted and only terminals remain. The bottom-up algorithm reads tokens and periodically reduces some collection of symbols that match the right hand side of a production to the symbol on the left hand side of that production. This continues until all input is exhausted and only the start symbol remains.
 
 There are two grammar forms that are used in support of these compilers. An LL(1) grammar reads input Left to right (the first L), does a Left-most derivation (the second L), and can always make a decision with 1 token of look-ahead. An LR(1) grammar reads input Left to right, does a Right-most derivation and can always make a decision with 1 token of look-ahead. LL(1) grammars are used by top-down parsers, and LR(1) grammars are used by bottom-up parsers.
 
-These grammars are related as follows:
+These grammars are related as follows.
 \begin{quote}
 $LL(1) \subset LR(1) \subset CFG$
 \end{quote}
-To illustrate what causes difficulties with the top-down algorithm, consider the grammar given in CFG~\ref{C.paren.expr}. This grammar defines fully parenthesized expressions. Since they are fully parenthesized, the grammar is unambiguous. However, with this grammar, how many tokens of look-ahead are required to determine which production to invoke first? If the first token is a number, then clearly Production~1 must be invoked. But if the first token is an open parenthesis, then how many additional tokens must be read to determine which of the productions 2-5 should be invoked? Three is not enough because expressions can be nested as in 
-\begin{quote}
-(((5-3)-3)*2)
-\end{quote}
-As a result, this grammar is not an LL(1) grammar.
-%----------------------------------------------------------
+Note that these are strict subsets. There are things that can be done with an LR(1) grammar that cannot be done with an LL(1) grammar. An there are things that can be done with CFGs that cannot be done with an LR(1) grammar.
+
+To illustrate what causes difficulties with the top-down algorithm (and therefore the restrictions placed on LL(1) grammars), consider the grammar given in CFG~\ref{C.paren.expr}. %----------------------------------------------------------
 \begin{cfg}{This CFG defines a fully parenthesized expression.}{C.paren.expr}
 Q\cfgprod{EXPR}{number}Q
 Q\cfgprod{EXPR}{(EXPR + EXPR)}Q
@@ -1856,6 +1915,11 @@ Q\cfgprod{EXPR}{(EXPR / EXPR)}Q
 Q\cfgprod{EXPR}{(EXPR * EXPR)}Q
 \end{cfg}
 %----------------------------------------------------------
+This grammar defines fully parenthesized expressions. Since they are fully parenthesized, the grammar is unambiguous. However, with this grammar, how many tokens of look-ahead are required to determine which production to invoke first? If the first token is a number, then clearly Production~1 must be invoked. But if the first token is an open parenthesis, then how many additional tokens must be read to determine which of the productions 2-5 should be invoked? Three is not enough because expressions can be nested as in 
+\begin{quote}
+(((5-3)-3)*2)
+\end{quote}
+As a result, this grammar is not an LL(1) grammar.
 
 The specifics of the top-down and bottom-up algorithms are left to a course on compilers. Also, the algorithms for transforming a grammar into LL(1) or LR(1) form are left to a course on compilers. Later, we will look at other grammar forms and transformations to convert a grammar into a particular form, but we will be interested in a form that is useful for proving properties of grammars, not a form that is useful to a compiler.
 
@@ -1880,14 +1944,15 @@ Q\cfgprod{AE}{(AE)}Q
 Q\cfgprod{AE}{number}Q
 \end{cfg}
 %----------------------------------------------------------
-\item Use the following CFG and show derivations for the two expressions from the previous problems. Be sure to list the production numbers for each step.
+\item Use the following CFG and show derivations for the two expressions from the previous problem. Be sure to list the production numbers for each step.
 %----------------------------------------------------------
 \begin{cfg}{}{}
 Q\cfgprod{START}{EXPR}Q
-Q\cfgprod{EXPR}{FACT+EXPR}Q
-Q\cfgprod{EXPR}{FACT}Q
+Q\cfgprod{EXPR}{EXPR + TERM}Q
+Q\cfgprod{EXPR}{TERM}Q
+Q\cfgprod{TERM}{TERM * FACT}Q
+Q\cfgprod{TERM}{FACT}Q
 Q\cfgprod{FACT}{(EXPR)}Q
-Q\cfgprod{FACT}{FACT * number}Q
 Q\cfgprod{FACT}{number}Q
 \end{cfg}
 %----------------------------------------------------------
@@ -2039,6 +2104,70 @@ Figure~\ref{F.PDA.2} shows a PDA for accepting $a^nb^n$. Each time an $a$ is rea
 Since Figure~\ref{F.PDA.1} shows a solution to to $a^nb^n$, it is clear that PDAs are more powerful than FAs. 
 \needswork{}
 
+\chapter{Theory of Context Free Languages}
+In this chapter we will examine various properties of context free languages.
+\section{All regular languages are context free}
+When proving Kleene's Theorem, we used various constructions to show the equivalence of various forms of expressing a language. We will do the same here.
+
+Take any FA, and give each state a unique name. To build an equivalent CFG, create a non-terminal for each state in the FA. For each edge in the FA, create a production as illustrated in Figure~\ref{F.FA.2.CFG}. For every final state in the FA, create a production with that state on the left-hand side and $\Lambda$ on the right.
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+
+\fanonterminalnode {0,0}{A};
+\fanonterminalnode {2,0}{B};
+\fanonterminalnode {6,0}{C};
+
+\fatransition{A}{B}{x};
+\faloopright {C}{y};
+\node at (1, -1) {A ::= xB};
+\node at (6.5, -1) {C ::= yC};
+\end{tikzpicture}
+ \caption{Creating CFG productions from FA transitions.}
+  \label{F.FA.2.CFG}
+\end{figure}
+%----------------------------------------------------------
+For a complete example of using this construction, consider the FA in Figure~\ref{F.FA.to.CFG.example}. This FA is represented by the following CFG.
+%----------------------------------------------------------
+\begin{cfg}{}{}
+Q\cfgprod{S}{aB}Q
+Q\cfgprod{B}{bD}Q
+Q\cfgprod{B}{aC}Q
+Q\cfgprod{C}{aC}Q
+Q\cfgprod{C}{$\Lambda$}Q
+Q\cfgprod{D}{aB}Q
+Q\cfgprod{D}{bE}Q
+Q\cfgprod{E}{$\Lambda$}Q
+\end{cfg}
+%----------------------------------------------------------
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+
+\fanonterminalnode {0,0}{S-};
+\fanonterminalnode {2,2}{B};
+\fanonterminalnode {2,0}{C+};
+\fanonterminalnode {4,2}{D};
+\fanonterminalnode {4,0}{E+};
+
+
+\fatransition{S-}{B}{a};
+\fatransition{B}{D}{b};
+\farighttransition{B}{C+}{a};
+\farighttransition{D}{E+}{b};
+\faloopright {C+}{a};
+\faarctransition {D}{B}{a}{115}{75};
+
+\end{tikzpicture}
+ \caption{Illustration of FA that is turned into a CFG.}
+  \label{F.FA.to.CFG.example}
+\end{figure}
+%----------------------------------------------------------
+
+zzz
 \part{Beyond Context Free Languages}
 \label{C.Beyond.Context.Free}
 \needswork{}
