@@ -33,6 +33,7 @@
 % ensures that the paper size is a4, fonts are typeset at the size 12p
 % and the equation numbers are on the right side.
 %
+\usepackage{ulem}
 \usepackage{amsmath}%
 \usepackage{amsfonts}%
 \usepackage{amssymb}%
@@ -2166,8 +2167,100 @@ Q\cfgprod{E}{$\Lambda$}Q
   \label{F.FA.to.CFG.example}
 \end{figure}
 %----------------------------------------------------------
+\needswork
+Need to do a proof that this works.
+
+\section{Chompsky's Normal Form}
+In this section we show that all grammars (for languages that don't include the empty string) can be transformed into Chompsky's Normal Form. In this form, all productions either have exactly two non-terminals on the right hand side (and no terminals) or exactly one terminal.
+
+\subsection {Eliminating Lambda Productions}
+CFG~\ref{C.with.lambda.1} shows a CFG that includes a $Lambda$ production. CFG~\ref{C.no.lambda.1} shows an equivalent CFG without the $Lambda$. There are two differences in the second CFG: the production for $L$ does not include the $Lambda$ option, and there is a second production for $S$, which does not include the $L$. This additional production is necessary because in the original CFG, $L$ can be replaced with $Lambda$ (nothing). Since that option was removed in the second CFG, we need an additional production that doesn't include $L$.
+%----------------------------------------------------------
+\begin{cfg}{CFG that includes a $Lambda$ production.}{C.with.lambda.1}
+Q\cfgprod{S}{STUFF L OTHER}Q
+Q...Q
+Q\cfgprod{L}{$\Lambda$ | a | b}Q
+\end{cfg}
+%----------------------------------------------------------
+\begin{cfg}{Equivalent CFG without a $Lambda$ production.}{C.no.lambda.1}
+Q\cfgprod{S}{STUFF L OTHER}Q
+Q\cfgprod{S}{STUFF OTHER}Q
+Q...Q
+Q\cfgprod{L}{a | b}Q
+\end{cfg}
+%----------------------------------------------------------
+
+This transformation seems easy enough, but there is a potential problem. What if removing the $Lambda$ from one production adds a $Lambda$ to another. Consider the grammar in CFG~\ref{C.with.lambda.2}. If we follow the pattern from the previous example using this grammar, when we eliminate the $Lambda$ from the $A$ production, we will introduce a $Lambda$ to the $B$ production. When we eliminate that $Lambda$, we will re-introduce the $Lambda$ to the $A$ production.
+%----------------------------------------------------------
+\begin{cfg}{CFG that includes recursive $Lambda$s.}{C.with.lambda.2}
+Q\cfgprod{S}{STUFF}Q
+Q...Q
+Q\cfgprod{A}{$\Lambda$ | B}Q
+Q\cfgprod{B}{STUFF | A}Q
+\end{cfg}
+%----------------------------------------------------------
+
+The solution to recursive $Lambda$s is to eliminate them all at once. The first step is to find all non-terminals that are nullable. That is, all non-terminals that can be replaced by a $Lambda$ either directly or indirectly. A non-terminal is nullible if either:
+\begin{quote}
+{\ttfamily X} $\rightarrow \Lambda$\\
+or\\
+{\ttfamily X} $\rightarrow$ ... $\rightarrow \Lambda$\\
+\end{quote}
+
+We can find all the nullables using the following procedure:
+\begin{enumerate}
+\item Mark all non-terminals with $Lambda$ productions.
+\item If a production has only marked non-terminals on the right hand side, mark the non-terminal on the left hand side.
+\item If Step~2 resulted in marking a new non-terminal, mark that non-terminal throughout the grammar.
+\item Repeat steps 2 and 3 until no new non-terminals are marked.
+\end{enumerate}
+All terminals marked as a result of this procedure are nullable. Consider the following grammar (which happens to be for the language $(A+b)^*bb(a+b)^*$):
+\begin{quote}
+{\ttfamily S} $\rightarrow$ {\ttfamily X Y}\\
+{\ttfamily X} $\rightarrow$ {\ttfamily Z b}\\
+{\ttfamily Y} $\rightarrow$ {\ttfamily b W}\\
+{\ttfamily Z} $\rightarrow$ {\ttfamily A B}\\
+{\ttfamily W} $\rightarrow$ {\ttfamily Z}\\
+{\ttfamily A} $\rightarrow$ {\ttfamily a A | b A | $\Lambda$}\\
+{\ttfamily B} $\rightarrow$ {\ttfamily B a | B b | $\Lambda$}\\
+\end{quote}
+The productions for both $A$ and $B$ include $\Lambda$, so cross out every occurrence of $A$ and $B$. This results in the following grammar:
+\begin{quote}
+{\ttfamily S} $\rightarrow$ {\ttfamily X Y}\\
+{\ttfamily X} $\rightarrow$ {\ttfamily Z b}\\
+{\ttfamily Y} $\rightarrow$ {\ttfamily b W}\\
+{\ttfamily Z} $\rightarrow$ {\ttfamily \sout{A} \sout{B}}\\
+{\ttfamily W} $\rightarrow$ {\ttfamily Z}\\
+{\ttfamily \sout{A}} $\rightarrow$ {\ttfamily a \sout{A} | b \sout{A} | $\Lambda$}\\
+{\ttfamily \sout{B}} $\rightarrow$ {\ttfamily \sout{B} a | \sout{B} b | $\Lambda$}\\
+\end{quote}
+Since $Z$ has a production where everything on the right hand side is crossed out, cross out all occurrences of $Z$. This results in the following grammar:
+\begin{quote}
+{\ttfamily S} $\rightarrow$ {\ttfamily X Y}\\
+{\ttfamily X} $\rightarrow$ {\ttfamily \sout{Z} b}\\
+{\ttfamily Y} $\rightarrow$ {\ttfamily b W}\\
+{\ttfamily \sout{Z}} $\rightarrow$ {\ttfamily \sout{A} \sout{B}}\\
+{\ttfamily W} $\rightarrow$ {\ttfamily \sout{Z}}\\
+{\ttfamily \sout{A}} $\rightarrow$ {\ttfamily a \sout{A} | b \sout{A} | $\Lambda$}\\
+{\ttfamily \sout{B}} $\rightarrow$ {\ttfamily \sout{B} a | \sout{B} b | $\Lambda$}\\
+\end{quote}
+Since $W$ has a production where everything on the right hand side is crossed out, cross out all occurrences of $W$. This results in the following grammar:
+\begin{quote}
+{\ttfamily S} $\rightarrow$ {\ttfamily X Y}\\
+{\ttfamily X} $\rightarrow$ {\ttfamily \sout{Z} b}\\
+{\ttfamily Y} $\rightarrow$ {\ttfamily b \sout{W}}\\
+{\ttfamily \sout{Z}} $\rightarrow$ {\ttfamily \sout{A} \sout{B}}\\
+{\ttfamily \sout{W}} $\rightarrow$ {\ttfamily \sout{Z}}\\
+{\ttfamily \sout{A}} $\rightarrow$ {\ttfamily a \sout{A} | b \sout{A} | $\Lambda$}\\
+{\ttfamily \sout{B}} $\rightarrow$ {\ttfamily \sout{B} a | \sout{B} b | $\Lambda$}\\
+\end{quote}
+This didn't result in any additional non-terminals being crossed out, so we are done. The nullables are $A, B, W, Z$.
+
+Now that we have a procedure for identifying all the nullables, we can give a procedure for eliminating $Lambda$ productions.
 
 zzz
+
+
 \part{Beyond Context Free Languages}
 \label{C.Beyond.Context.Free}
 \needswork{}
