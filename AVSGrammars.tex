@@ -2171,18 +2171,18 @@ Q\cfgprod{E}{$\Lambda$}Q
 Need to do a proof that this works.
 
 \section{Chompsky's Normal Form}
-In this section we show that all grammars (for languages that don't include the empty string) can be transformed into Chompsky's Normal Form. In this form, all productions either have exactly two non-terminals on the right hand side (and no terminals) or exactly one terminal.
+In this section we show that all grammars (for languages that don't include the empty string) can be transformed into Chompsky's Normal Form (CNF). In this form, all productions either have exactly two non-terminals on the right hand side (and no terminals) or exactly one terminal.
 
 \subsection {Eliminating Lambda Productions}
-CFG~\ref{C.with.lambda.1} shows a CFG that includes a $Lambda$ production. CFG~\ref{C.no.lambda.1} shows an equivalent CFG without the $Lambda$. There are two differences in the second CFG: the production for $L$ does not include the $Lambda$ option, and there is a second production for $S$, which does not include the $L$. This additional production is necessary because in the original CFG, $L$ can be replaced with $Lambda$ (nothing). Since that option was removed in the second CFG, we need an additional production that doesn't include $L$.
+CFG~\ref{C.with.lambda.1} shows a CFG that includes a $\Lambda$ production. CFG~\ref{C.no.lambda.1} shows an equivalent CFG without the $\Lambda$. There are two differences in the second CFG: the production for $L$ does not include the $\Lambda$ option, and there is a second production for $S$, which does not include the $L$. This additional production is necessary because in the original CFG, $L$ can be replaced with $\Lambda$ (nothing). Since that option was removed in the second CFG, we need an additional production that doesn't include $L$.
 %----------------------------------------------------------
-\begin{cfg}{CFG that includes a $Lambda$ production.}{C.with.lambda.1}
+\begin{cfg}{CFG that includes a $\Lambda$ production.}{C.with.lambda.1}
 Q\cfgprod{S}{STUFF L OTHER}Q
 Q...Q
 Q\cfgprod{L}{$\Lambda$ | a | b}Q
 \end{cfg}
 %----------------------------------------------------------
-\begin{cfg}{Equivalent CFG without a $Lambda$ production.}{C.no.lambda.1}
+\begin{cfg}{Equivalent CFG without a $\Lambda$ production.}{C.no.lambda.1}
 Q\cfgprod{S}{STUFF L OTHER}Q
 Q\cfgprod{S}{STUFF OTHER}Q
 Q...Q
@@ -2190,9 +2190,9 @@ Q\cfgprod{L}{a | b}Q
 \end{cfg}
 %----------------------------------------------------------
 
-This transformation seems easy enough, but there is a potential problem. What if removing the $Lambda$ from one production adds a $Lambda$ to another. Consider the grammar in CFG~\ref{C.with.lambda.2}. If we follow the pattern from the previous example using this grammar, when we eliminate the $Lambda$ from the $A$ production, we will introduce a $Lambda$ to the $B$ production. When we eliminate that $Lambda$, we will re-introduce the $Lambda$ to the $A$ production.
+This transformation seems easy enough, but there is a potential problem. What if removing the $\Lambda$ from one production adds a $\Lambda$ to another. Consider the grammar in CFG~\ref{C.with.lambda.2}. If we follow the pattern from the previous example using this grammar, when we eliminate the $\Lambda$ from the $A$ production, we will introduce a $\Lambda$ to the $B$ production. When we eliminate that $\Lambda$, we will re-introduce the $\Lambda$ to the $A$ production.
 %----------------------------------------------------------
-\begin{cfg}{CFG that includes recursive $Lambda$s.}{C.with.lambda.2}
+\begin{cfg}{CFG that includes recursive $\Lambda$s.}{C.with.lambda.2}
 Q\cfgprod{S}{STUFF}Q
 Q...Q
 Q\cfgprod{A}{$\Lambda$ | B}Q
@@ -2200,7 +2200,7 @@ Q\cfgprod{B}{STUFF | A}Q
 \end{cfg}
 %----------------------------------------------------------
 
-The solution to recursive $Lambda$s is to eliminate them all at once. The first step is to find all non-terminals that are nullable. That is, all non-terminals that can be replaced by a $Lambda$ either directly or indirectly. A non-terminal is nullible if either:
+The solution to recursive $\Lambda$s is to eliminate them all at once. The first step is to find all non-terminals that are nullable. That is, all non-terminals that can be replaced by a $\Lambda$ either directly or indirectly. A non-terminal is nullible if either:
 \begin{quote}
 {\ttfamily X} $\rightarrow \Lambda$\\
 or\\
@@ -2209,7 +2209,7 @@ or\\
 
 We can find all the nullables using the following procedure:
 \begin{enumerate}
-\item Mark all non-terminals with $Lambda$ productions.
+\item Mark all non-terminals with $\Lambda$ productions.
 \item If a production has only marked non-terminals on the right hand side, mark the non-terminal on the left hand side.
 \item If Step~2 resulted in marking a new non-terminal, mark that non-terminal throughout the grammar.
 \item Repeat steps 2 and 3 until no new non-terminals are marked.
@@ -2256,10 +2256,138 @@ Since $W$ has a production where everything on the right hand side is crossed ou
 \end{quote}
 This didn't result in any additional non-terminals being crossed out, so we are done. The nullables are $A, B, W, Z$.
 
-Now that we have a procedure for identifying all the nullables, we can give a procedure for eliminating $Lambda$ productions.
+Now that we have a procedure for identifying all the nullables, we can give a procedure for eliminating $\Lambda$ productions. The procedure is as follows:
+\begin{enumerate}
+\item Identify all nullables.
+\item Delete all $\Lambda$ productions.
+\item For all productions with a nullable on the right hand side, create new productions for all subsets of the nullables, but don't introduce any new $\Lambda$ productions nor duplicates.
+\end{enumerate}
+To illustrate this procedure, consider the following CFG:
+\begin{quote}
+{\ttfamily S} $\rightarrow$ {\ttfamily a | X b Y | a Y a}\\
+{\ttfamily X} $\rightarrow$ {\ttfamily Y | $\Lambda$}\\
+{\ttfamily Y} $\rightarrow$ {\ttfamily b | X}\\
+\end{quote}
+The nullables are $X$ and $Y$. The second and third $S$ productions include nullables, so we need to create subsets. Take the production that has $X\ b\ Y$ on the right hand side. We will need new productions without the $X$, without the $Y$, and with neither. The production with $a\ Y\ a$ on the right hand side will need a new production without the $Y$. This yields the following CFG:
+\begin{quote}
+{1. \ttfamily S} $\rightarrow$ {\ttfamily a}\\
+{2. \ttfamily S} $\rightarrow$ {\ttfamily X b Y | b Y | X b | b}\\
+{3. \ttfamily S} $\rightarrow$ {\ttfamily a Y a | a a}\\
+{4. \ttfamily X} $\rightarrow$ {\ttfamily Y}\\
+{5. \ttfamily Y} $\rightarrow$ {\ttfamily b | X}\\
+\end{quote}
+Production 2 shows the second $S$ production and the new ones created from the subsets. Production~3 shows the third $S$ production and the new one created from the subsets. Productions 4 and 5 contain nullables, but a subset from those productions would create new $\Lambda$ productions, so no new productions are created from these.
+
+Note that for Production~2, $b$ is not eliminated in the subset process because it is not nullable (as terminals never are).
+
+\subsection{Eliminating Unit Productions}
+A unit production is a production with a single non-terminal on the right hand side. Note: It must be a single non-terminal. A production with a single terminal is not considered a unit production.
+
+This procedure is similar the the procedure for eliminating $\Lambda$ productions, and like the $\Lambda$ procedure, we need to be aware of recursive unit productions. The procedure is as follows:
+\begin{quote}
+For every pair of terminals $A, B$ for which either:
+\begin{quote}
+{\ttfamily A} $\rightarrow$ {\ttfamily B}\\
+{\ttfamily A} $\rightarrow$ {\ttfamily X$_1$} $\rightarrow$ {\ttfamily X$_2$} ... $\rightarrow$ {\ttfamily B}\\
+\end{quote}
+and the non-unit productions of $B$ are
+\begin{quote}
+{\ttfamily B} $\rightarrow\ S_1 | S_2 | S_3$
+\end{quote}
+create new productions for $A$:
+\begin{quote}
+{\ttfamily A} $\rightarrow S_1 | S_2 | S_3$\\
+\end{quote}
+Do all pairs simultaneously, and don't create any new unit productions.
+\end{quote}
+
+To identify all the unit pairs, start by making a list of all unit productions. Then invoke unit productions on the right hand side. Eliminate duplicates and any productions of the form {\ttfamily A} $\rightarrow$ {\ttfamily A}. Repeat this until no new unit pairs are identified.
+
+This process is illustrated starting with the following CFG:
+\begin{quote}
+{1. \ttfamily S} $\rightarrow$ {\ttfamily EXPR}\\
+{2. \ttfamily EXPR} $\rightarrow$ {\ttfamily EXPR + TERM}\\
+{3. \ttfamily EXPR} $\rightarrow$ {\ttfamily TERM}\\
+{4. \ttfamily TERM} $\rightarrow$ {\ttfamily TERM * num}\\
+{5. \ttfamily TERM} $\rightarrow$ {\ttfamily num}\\
+\end{quote}
+Productions 1 and 3 are unit productions. Production~5 is not a unit production because even though the right hand side has only one symbol, it is a terminal, not a non-terminal. We can invoke production 3 on the right hand side of Production~1 yielding the following unit pairs:
+\begin{quote}
+{\ttfamily S} $\rightarrow$ {\ttfamily EXPR}\\
+{\ttfamily S} $\rightarrow$ {\ttfamily TERM}\\
+{\ttfamily EXPR} $\rightarrow$ {\ttfamily TERM}\\
+\end{quote}
+The non-unit productions are:
+\begin{quote}
+{\ttfamily EXPR} $\rightarrow$ {\ttfamily EXPR + TERM}\\
+{\ttfamily TERM} $\rightarrow$ {\ttfamily TERM * num}\\
+{\ttfamily TERM} $\rightarrow$ {\ttfamily num}\\
+\end{quote}
+Creating the new productions yields the following CFG:
+\begin{quote}
+{1. \ttfamily S} $\rightarrow$ {\ttfamily EXPR + TERM}\\
+{2. \ttfamily S} $\rightarrow$ {\ttfamily TERM * num}\\
+{3. \ttfamily S} $\rightarrow$ {\ttfamily num}\\
+{4. \ttfamily EXPR} $\rightarrow$ {\ttfamily EXPR + TERM}\\
+{5. \ttfamily EXPR} $\rightarrow$ {\ttfamily TERM * num}\\
+{6. \ttfamily EXPR} $\rightarrow$ {\ttfamily num}\\
+{7. \ttfamily TERM} $\rightarrow$ {\ttfamily TERM * num}\\
+{8. \ttfamily TERM} $\rightarrow$ {\ttfamily num}\\
+\end{quote}
+
+\subsection{Eliminating mixed productions}
+A mixed production is one that includes both terminals and non-terminals on the right hand side. To eliminate all mixed productions, create new non-terminals for each terminal then in each mixed production, replace the terminal with the corresponding non-terminal. 
+
+Starting with the CFG we had at the end of the previous section, we need new terminals for $+\ *\ num$. These are as follows:
+\begin{quote}
+{\ttfamily PLUS} $\rightarrow$ {\ttfamily +}\\
+{\ttfamily TIMES} $\rightarrow$ {\ttfamily *}\\
+{\ttfamily NUM} $\rightarrow$ {\ttfamily num}\\
+\end{quote}
+Substituting these into the previous grammar we get:
+\begin{quote}
+{1. \ttfamily S} $\rightarrow$ {\ttfamily EXPR PLUS TERM}\\
+{2. \ttfamily S} $\rightarrow$ {\ttfamily TERM TIMES NUM}\\
+{3. \ttfamily S} $\rightarrow$ {\ttfamily num}\\
+{4. \ttfamily EXPR} $\rightarrow$ {\ttfamily EXPR PLUS TERM}\\
+{5. \ttfamily EXPR} $\rightarrow$ {\ttfamily TERM TIMES NUM}\\
+{6. \ttfamily EXPR} $\rightarrow$ {\ttfamily num}\\
+{7. \ttfamily TERM} $\rightarrow$ {\ttfamily TERM TIMES NUM}\\
+{8. \ttfamily TERM} $\rightarrow$ {\ttfamily num}\\
+{9. \ttfamily PLUS} $\rightarrow$ {\ttfamily +}\\
+{10. \ttfamily TIMES} $\rightarrow$ {\ttfamily *}\\
+{11. \ttfamily NUM} $\rightarrow$ {\ttfamily num}\\
+\end{quote}
+Note that we did not perform the substitution in productions 3, 6, or 8 because they are not mixed. They contain only a terminal. If we had performed the substitution on these productions, we would have created new unit productions. We went through a bunch of trouble to eliminate them, so we don't want to create new ones.
+
+\subsection{Conversion to Chompsky's Normal Form}
+The final step in converting to Chompsky's Normal Form is to transform all productions with more than two non-terminals on the right hand side into productions with exactly two. Consider the following production:
+\begin{quote}
+{\ttfamily A} $\rightarrow$ {\ttfamily B C D E}\\
+\end{quote}
+We will take the first two non-terminals on the right hand side and create a new non-terminal to replace them. We'll then repeat this until we are left with just two non-terminals. The first two are $B\ C$, so we will create a new non-terminal $Z$ to replace them.
+\begin{quote}
+{\ttfamily A} $\rightarrow$ {\ttfamily Z D E}\\
+{\ttfamily Z} $\rightarrow$ {\ttfamily B C}\\
+\end{quote}
+We will then replace $Z\ D$ as follows:
+\begin{quote}
+{\ttfamily A} $\rightarrow$ {\ttfamily Y E}\\
+{\ttfamily Z} $\rightarrow$ {\ttfamily B C}\\
+{\ttfamily Y} $\rightarrow$ {\ttfamily Z D}\\
+\end{quote}
+
+It might be tempting to try to optimize the process by finding the minimum number of new non-terminals, but there is no need for this optimization. Simply start with the first production with three or more non-terminals and create a new non-terminal for the first two on the right hand side. Continue this process until all productions have exactly two non-terminals or a single terminal.
+
+\subsection{Why Chompsky's Normal Form?}
+The obvious question is, ``Why would we convert a grammar to Chompsky's Normal Form?'' The answer is that in practice we don't. We simply needed to prove that it could be done. The reason why this is interesting is that a grammar in Chompsky's Normal Form (CNF) will always produce binary parse trees. Since they are binary trees, we can define the relationship between the length of an input and the minimum tree depth needed to generate a string of that length.
+
+In the previous sections, we showed that any CFG (that didn't allow empty strings) could be converted to CNF. To eliminate the exception, we could simply add a production {\ttfamily S}~$\rightarrow \Lambda$ to our CNF grammar. Adding this production does not violate the binary tree nature of derivations.
+
+\section{The pumping lemma for CFGs}
+\needswork
 
 zzz
-
 
 \part{Beyond Context Free Languages}
 \label{C.Beyond.Context.Free}
