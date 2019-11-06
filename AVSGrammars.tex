@@ -2281,7 +2281,7 @@ Production 2 shows the second $S$ production and the new ones created from the s
 Note that for Production~2, $b$ is not eliminated in the subset process because it is not nullable (as terminals never are).
 
 \subsection{Eliminating Unit Productions}
-A unit production is a production with a single non-terminal on the right hand side. Note: It must be a single non-terminal. A production with a single terminal is not considered a unit production.
+A unit production is a production with just a single non-terminal on the right hand side. Note: It must be a single non-terminal. A production with a single terminal is not considered a unit production.
 
 This procedure is similar the the procedure for eliminating $\Lambda$ productions, and like the $\Lambda$ procedure, we need to be aware of recursive unit productions. The procedure is as follows:
 \begin{quote}
@@ -2290,7 +2290,7 @@ For every pair of terminals $A, B$ for which either:
 {\ttfamily A} $\rightarrow$ {\ttfamily B}\\
 {\ttfamily A} $\rightarrow$ {\ttfamily X$_1$} $\rightarrow$ {\ttfamily X$_2$} ... $\rightarrow$ {\ttfamily B}\\
 \end{quote}
-and the non-unit productions of $B$ are
+and the non-unit productions of $B$ 
 \begin{quote}
 {\ttfamily B} $\rightarrow\ S_1 | S_2 | S_3$
 \end{quote}
@@ -2379,13 +2379,122 @@ We will then replace $Z\ D$ as follows:
 
 It might be tempting to try to optimize the process by finding the minimum number of new non-terminals, but there is no need for this optimization. Simply start with the first production with three or more non-terminals and create a new non-terminal for the first two on the right hand side. Continue this process until all productions have exactly two non-terminals or a single terminal.
 
+Performing this substitution on the expression grammar we had in the previous section we get:
+\begin{quote}
+{1. \ttfamily S} $\rightarrow$ {\ttfamily EXPRPL TERM}\\
+{2. \ttfamily S} $\rightarrow$ {\ttfamily TERMTI NUM}\\
+{3. \ttfamily S} $\rightarrow$ {\ttfamily num}\\
+{4. \ttfamily EXPR} $\rightarrow$ {\ttfamily EXPRPL TERM}\\
+{5. \ttfamily EXPR} $\rightarrow$ {\ttfamily TERMTI NUM}\\
+{6. \ttfamily EXPR} $\rightarrow$ {\ttfamily num}\\
+{7. \ttfamily TERM} $\rightarrow$ {\ttfamily TERMTI NUM}\\
+{8. \ttfamily TERM} $\rightarrow$ {\ttfamily num}\\
+{9. \ttfamily PLUS} $\rightarrow$ {\ttfamily +}\\
+{10. \ttfamily TIMES} $\rightarrow$ {\ttfamily *}\\
+{11. \ttfamily NUM} $\rightarrow$ {\ttfamily num}\\
+{12. \ttfamily EXPRPL} $\rightarrow$ {\ttfamily EXPR PLUS}\\
+{13. \ttfamily TERMTI} $\rightarrow$ {\ttfamily TERM TIMES}\\
+\end{quote}
+
 \subsection{Why Chompsky's Normal Form?}
-The obvious question is, ``Why would we convert a grammar to Chompsky's Normal Form?'' The answer is that in practice we don't. We simply needed to prove that it could be done. The reason why this is interesting is that a grammar in Chompsky's Normal Form (CNF) will always produce binary parse trees. Since they are binary trees, we can define the relationship between the length of an input and the minimum tree depth needed to generate a string of that length.
+The obvious question is, ``Why would we convert a grammar to Chompsky's Normal Form?'' The grammar presented at the end of the last section seems much more cumbersome than the original grammar, so why do this? The answer is that in practice we don't. We simply needed to prove that it can be done. The reason why this is interesting is that a grammar in Chompsky's Normal Form (CNF) will always produce binary parse trees. Since they are binary trees, we can define a relationship between the length of an input and the minimum tree depth needed to generate a string of that length. This will be useful when we want to prove that a language isn't context free.
 
-In the previous sections, we showed that any CFG (that didn't allow empty strings) could be converted to CNF. To eliminate the exception, we could simply add a production {\ttfamily S}~$\rightarrow \Lambda$ to our CNF grammar. Adding this production does not violate the binary tree nature of derivations.
+In the previous sections, we showed that any CFG (that didn't allow empty strings) could be converted to CNF. To eliminate the exception, we could simply add a production {\ttfamily S}~$\rightarrow \Lambda$ to our CNF grammar if the original language included the empty string. Adding this production does not violate the binary tree nature of derivations. As a result, when we reason about grammars in CNF, the logic can be applied to any context free language.
 
-\section{The pumping lemma for CFGs}
-\needswork
+\section{The Pumping Lemma for CFGs}
+All productions for a CFG in Chompsky's Normal Form are in one of two forms: Live productions have exactly two non-terminals on the right hand side. They are ``live'' because when invoking one of these productions, the parse tree can continue to grow down that branch. Terminal productions (it's tempting to call them ``dead'') have exactly one terminal on the right hand side. These are terminal productions because the growth of the parse tree on this branch terminates when one of these productions is invoked.
+
+When thinking about the shape of parse trees for CNF grammars, several things can be said:
+\begin{enumerate}
+\item The trees are binary trees because all live productions have two children.
+\item All of the terminals are in leaf nodes of the tree.
+\item Each leaf node has exactly one terminal.
+\end{enumerate}
+
+For a binary tree with $N$ leaf nodes, the minimum depth of the tree is $log_2(N)+1$. If the tree isn't balanced, it might be deeper, but it must be at least this deep. Since parse trees for CNF grammars are binary trees, we can use this fact when reasoning about parse trees for CNF grammars.
+
+Suppose we have a grammar in CNF with $P$ live productions. Further suppose we have an input that is longer than $2^P$. For this input, the depth of the tree must be greater than $P$, and since we only have $P$ live productions, at least one of them must have been repeated on some path from the root to a leaf.
+
+Note: We aren't claiming that all paths are that long, only that at least one path is. Nor are we claiming that all productions get repeated, only that at least one of them is. 
+
+Consider the parse tree shown in Figure~\ref{F.CFG.pump.1}. Notice that the production $M$ was repeated on the path from the root to $X_1$. If the length of the input is greater than $2^P$, then this is required to have happened for some production $M$ on some path from the root to some leaf.
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[sibling distance=4em, 
+  every node/.style = {shape=circle, draw, align=center}]
+  \node {$S$}
+      child { node {$U$} } 
+		  child { node {$A$}
+		    child {node {$M$}
+				  child {node {$V$}}
+					child {node {$B$}
+					  child {node {$M$}
+						  child {node {$X_1$}}
+							child {node {$X_2$}}
+						}
+						child {node {$Y$}}
+					}
+			  }
+			  child {node {$Z$}}
+		};
+\end{tikzpicture}
+\caption[CNF Parse Tree]{A parse tree representing the derivation of some string based on a grammar in CNF. The nodes are labeled based on the production that was invoked to produce the children.}
+\label{F.CFG.pump.1}
+\end{figure}
+
+Since both occurences of $M$ in this derivation use the same production, anything we can derive from the upper $M$, could also be derived from the lower $M$. Graphically, this would involve selecting the subtree based at the upper $M$ and pasting that subtree in the place of the lower $M$. Figure~\ref{F.CFG.pump.2} shows the result of this operation.
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[sibling distance=4em, 
+  every node/.style = {shape=circle, draw, align=center}]
+  \node {$S$}
+      child { node {$U$} } 
+		  child { node {$A$}
+		    child {node {$M$}
+				  child {node {$V$}}
+					child {node {$B$}
+		        child {node {$M$}
+				      child {node {$V$}}
+					    child {node {$B$}
+					      child {node {$M$}
+						      child {node {$X_1$}}
+							    child {node {$X_2$}}
+						    }
+						    child {node {$Y$}}
+					    }
+			      }
+						child {node {$Y$}}
+					}
+			  }
+			  child {node {$Z$}}
+		};
+\end{tikzpicture}
+\caption[CNF Parse Tree]{A parse tree when the subtree based at the upper $M$ from Figure~\ref{F.CFG.pump.1} is replicated at the lower $M$.}
+\label{F.CFG.pump.2}
+\end{figure}
+
+Starting with the tree represented in Figure~\ref{F.CFG.pump.1}, if $u$ represents all terminals derived from the subtree based at $U$, and $v$ represents all the terminals derived from the subtree based at $V$, $x$ represents all the terminals derived from the subtrees based at $X_1$ and $X_2$, then likewise for $Y$ and $Z$, then the string represented by this tree is $uvxyz$. If we do the same substitutions for the tree in Figure~\ref{F.CFG.pump.2}, then the resulting string is $uv^2xy^2z$. If we do the copy and paste one more time, we will get $uv^3xy^3z$. We can continue to copy and paste to generate all strings $uv^nxy^nz$. This leads to the pumping lemma for context free languages.
+
+\begin{lemma}
+\label{T.CFL.pumping.lemma}
+If $G$ is any CFG in CNF with $P$ live productions and $w$ is a word derived from $G$ with length greater than $2^P$, then we can divide $w$ into five substrings $w=uvxyz$, where $x$ is not the empty string and where both $v$ and $y$ are not the empty strings, such that all strings $uv^nxy^nz$ can also be generated by $G$.
+\end{lemma}
+
+The pumping lemma for context free languages bears some similarity to the pumping lemma for regular languages: Given a word of sufficient length, it can be broken into pieces such that all words derived as some function of those pieces are also in the language. The number of pieces is different, and the function is different, but the general form is the same. And like the pumping lemma for regular languages, the pumping lemma for context free languages can be used to prove a language is NOT context free, but it cannot be used to prove a language IS context free.
+
+Consider the language $a^nb^nc^n$. Can we find assignments to $u,v,x,y,z$ such that all words of the form $uv^nxy^nz$ are in this language? Let's consider the possibilities:
+\begin{enumerate}
+\item If $v$ only has one type of letter (only $a$'s or only $b$'s or only $c$'s) and $y$ contains only that same letter (or is empty), then each time we pump the number of that letter will increase, but the number of the other letters will not change thus generating words not in the language.
+\item If $v$ only has one type of letter and $v$ contains only a different letter, then each time we pump the number of two letters will increase, but the number of the other letter not change thus generating words not in the language.
+\item If either $v$ or $y$ are strings containing different letters (for example, both $a$'s and $b$'s), then each time we pump we will generate extra transitions from one letter to another and thus strings not in the language.
+\end{enumerate}
+Since there is no way to assign $u,v,x,y,z$, such that all strings $uv^nxy^nz$ are in the language, $a^nb^nc^n$ must not be context free.
+
+Consider the language $a^nb^ma^nb^m$. If we do the assignment where $u=\Lambda$, $v$ is the first group of $a$'s, $x$ is the first group of $b$'s, $y$ is the second group of $a$'s and $z$ is the second group of $b$'s, then all words $uv^nxy^nz$ are in the language. It turns out that this language is not context free, so we need a different approach to prove this.
+
+There is a corollary to the pumping lemma that says that the length of the string $vxy$ must be less than $2^P$. To justify this corrollary, consider the parse tree given in Figure~\ref{F.CFG.pump.1}. The string $vxy$ is all the terminals generated by the subtree based at the upper $M$. By copying and pasting this subtree, we can generate any arbitrary length string. If we then took the upper most $M$ from the resulting tree and copied that, pasting it onto the lower most $M$, the resulting $vxy$ could be arbitrarily large. However, if we chose two $M$s that are closer to each other, the length of $vxy$ gets smaller. What the corrollary makes us do is choose two $M$s that are ``close'' rather than allowing us to choose two that are far apart.
+
+Applying this corrollary to the language $a^nb^ma^nb^m$, since we can choose any word with length greater than $2^P$, we will choose a word such that both $n$ and $m$ are greater than $2^P$. In this case, the assignment we chose above doesn't work. If $v$ consists of just the last $a$ in the first group and $y$ consists of just the first $a$ in the second group, while it is true that all $uv^nxy^nz$ are in the language, it is also true that the length of $uxy$ is greater than $2^P$ because it includes all $b$'s in the first group. Any assignment such that the length of $uxy$ is less than $2^P$ will generate words not in the language because this limitation prevents us from assigning $v$ to the first group of a letter and $y$ to the second group of that letter, and these are the only assignments that only generate words in the language. Therefore $a^nb^ma^nb^m$ is not context free.
 
 zzz
 
