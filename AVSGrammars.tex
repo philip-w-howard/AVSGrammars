@@ -1970,17 +1970,17 @@ Finite automata have no way of ``remembering'' what path they took. This is why 
 
 To illustrate how this could allow us to solve the balanced parenthesis problem, suppose each time we encountered an opening parenthesis in the input, we pushed it onto the stack. Each time we encountered a closing parenthesis, we popped an open from the stack. If we never attempted to pop an empty stack, and if at the end of the input, the stack was empty, then we must have only encountered balanced parenthesis.
 
-For pushdown automata (PDA), the input is viewed as residing on a tape. Each ``cell'' on the tape contains a single character (or token). The tape is infinite in length, and every call after the end of the input contains a $\Lambda$. Each time the tape is read, it advances to the next cell. Note that with this configuration, reading past the end of the input always returns a $\Lambda$.
+For pushdown automata (PDA), the input is viewed as residing on a tape. Each ``cell'' on the tape contains a single character (or token). The tape is infinite in length, and every cell after the end of the input contains a $\Lambda$. Each time the tape is read, it advances to the next cell. Note that with this configuration, reading past the end of the input always returns a $\Lambda$.
 
 The stack for a PDA is also viewed as a tape, infinite in both directions, with all cells initially holding a $\Lambda$. When a token is pushed onto the stack, it is written to the tape and the tape advances to the next cell. When a token is popped off the stack, the tape is advanced to the previous cell and the token at that location is read. Note that with this configuration, popping an empty stack always returns a $\Lambda$.
 
-It should be pointed out, that a $\Lambda$ in a PDA is very different from a $\Lambda$ in an FA. For an FA, a $\Lambda$ transition means you go to the next state without reading any input. For a PDA, it means you're read past the input of popped below the bottom of the stack.
+It should be pointed out, that a $\Lambda$ in a PDA is very different from a $\Lambda$ in an FA. For an FA, a $\Lambda$ transition means you go to the next state without reading any input. For a PDA, it means you've read past the input or popped below the bottom of the stack.
 
 The other difference between an FA and a PDA, is that with an FA, transitions imply reading input. For a PDA, each read is made explicit.
 
 Because of the differences between FA's and PDA's, we need a new set of symbols. Figure~\ref{F.pda.symbols} shows several of these. The start and end states are rounded rectangles. The end states make it clear whether the input is accepted or rejected. The explicit reads are diamonds, and the outbound edges are labeled with the token that was read from the input tape.
 
-\begin{figure}[hbt]
+\begin{figure}[htbp]
 \centering
 \begin{tikzpicture}
 
@@ -2008,9 +2008,9 @@ Because of the differences between FA's and PDA's, we need a new set of symbols.
 \label{F.pda.symbols}
 \end{figure}
 
-It is possible to draw an FA using the PDA symbols. An example is given in Figure~\ref{F.PDA.1}. It should be clear from this example that any DFA can be drawn using the new symbols. However, the purpose of the new symbols isn't simply to give us another wan to draw DFAs. Instead, the new format allows us to add memory in the form of a pushdown stack. Push operations are encoded in a rectangle. Pop operations use the same symbol as read, but with the word ``pop'' instead of ``read''.
+It is possible to draw an FA using the PDA symbols. An example is given in Figure~\ref{F.PDA.1}. It should be clear from this example that any DFA can be drawn using the new symbols. However, the purpose of the new symbols isn't simply to give us another way to draw DFAs. Instead, the new format allows us to add memory in the form of a pushdown stack. Push operations are encoded in a rectangle. Pop operations use the same symbol as read, but with the word ``pop'' instead of ``read''.
 %----------------------------------------------------------
-\begin{figure}[hbt]
+\begin{figure}[htbp]
 \centering
 \begin{subfigure}[b]{0.45\textwidth}
 \centering
@@ -2059,11 +2059,12 @@ It is possible to draw an FA using the PDA symbols. An example is given in Figur
 \end{figure}
 %----------------------------------------------------------
 
-Figure~\ref{F.PDA.2} shows a PDA for accepting $a^nb^n$. Each time an $a$ is read, it is pushed on the stack. Each time a $b$ is read, the stack is popped. If the stack is empty, the string is rejected because we had too many $b$'s. If we read an $a$ following a $b$, we also reject the string.
+Figure~\ref{F.PDA.2} shows a PDA for accepting $a^nb^n$. Each time an $a$ is read, it is pushed onto the stack. Each time a $b$ is read, the stack is popped. If the stack is empty, the string is rejected because we had too many $b$'s. If we read an $a$ following a $b$, we also reject the string.
 
 %----------------------------------------------------------
-\begin{figure}[hbt]
+\begin{figure}[htbp]
 \centering
+\scalebox{.7}{
 \begin{tikzpicture}
 
 \pdaterminal {0,8}{start}{start}
@@ -2096,14 +2097,153 @@ Figure~\ref{F.PDA.2} shows a PDA for accepting $a^nb^n$. Each time an $a$ is rea
 \pdaxthree {reada}{popfinal1}{popfinal}{$\Lambda$}
 \pdaxthree {popfinal}{popfinal2}{reject3}{a}
 \end{tikzpicture}
-
+} % scale
 \caption{PDA for accepting $a^nb^n$.}
 \label{F.PDA.2}
 \end{figure}
 %----------------------------------------------------------
 
-Since Figure~\ref{F.PDA.1} shows a solution to to $a^nb^n$, it is clear that PDAs are more powerful than FAs. 
-\needswork{}
+Since Figure~\ref{F.PDA.2} shows a solution to to $a^nb^n$, it is clear that PDAs are more powerful than FAs. Another example illustrates this. Figure~\ref{F.PDA.PAL.1} shows a PDA for accepting palindromes where the center letter is always an $x$. The reason for requiring the center $x$ is so the PDA knows when to transition from pushing input onto the stack to popping values off the stack.
+%----------------------------------------------------------
+\begin{figure}[htbp]
+\centering
+\scalebox{.7}{
+
+\begin{tikzpicture}
+
+\pdaterminal {0,8}{start}{start}
+\coordinate (start1) at (0, 7);
+\coordinate (start2) at (0, 6);
+
+\pdapush {-2, 6}{pusha}{push a}
+\pdatransition {pusha}{start2}{}
+
+\pdapush {-4, 6}{pushb}{push b}
+\coordinate (pushb1) at (-4,7);
+\pdaxthree {pushb}{pushb1}{start1}{}
+
+\pdaread {0,4}{read1}{read}
+\pdatransition {start}{read1}{}
+\coordinate (read1b1) at (0, 3);
+\coordinate (read1b2) at (-4, 3);
+\coordinate (read1a) at (-2, 4);
+\pdaxthree {read1}{read1a}{pusha}{a}
+\pdaxfour {read1}{read1b1}{read1b2}{pushb}{b}
+
+
+\pdaterminal {0.5,2}{reject1}{reject}
+\pdatransition {read1}{reject1}{$\Lambda$}
+
+\pdaread {3,4}{read2}{read}
+\coordinate (read2a) at (1.5,4);
+\pdaxthree {read1}{read2a}{read2}{x}
+
+\pdaread {3,7}{popa}{pop}
+\coordinate (popa1) at (1.5,7);
+\pdarighttransition {read2}{popa}{a}
+\pdaxthree {popa}{popa1}{read2a}{a}
+
+\pdaread {3,1}{popb}{pop}
+\coordinate (popb1) at (1.5,1);
+\pdarighttransition {read2}{popb}{b}
+\pdaxthree {popb}{popb1}{read2a}{b}
+
+\pdaterminal {6,1}{reject2}{reject}
+\pdatransition {popb}{reject2}{a,x,$\Lambda$}
+
+\pdaterminal {6,7}{reject3}{reject}
+\pdatransition {popa}{reject3}{b,x,$\Lambda$}
+
+\pdaread {6,4}{popL}{pop}
+\pdatransition {read2}{popL}{$\Lambda$}
+\pdarighttransition {popL}{reject2}{a,b,x}
+
+\pdaterminal {9,4}{accept}{accept}
+\pdatransition {popL}{accept}{$\Lambda$}
+
+\end{tikzpicture}
+} % scale
+\caption{PDA for accepting PALINDROME with a center $x$.}
+\label{F.PDA.PAL.1}
+\end{figure}
+%----------------------------------------------------------
+
+On the left part of the PDA, each time a value is read, it is pushed onto the stack. Once the center $x$ is read, each read requires a matching pop. If the value read doesn't match the value popped, the input is rejected. In order for the input to be accepted, the input and the stack have to become empty at the same time.
+
+The purpose for requiring the center $x$ was to indicate when the PDA switches from pushing to popping. What if we wanted to have PALINDROME without the center-$x$ requirement? With FAs, we introduced non-determinism to make it easier to create an FA that matched a given regular express. What if we allowed non-determinism in PDAs? Figure~\ref{F.PDA.PAL.2} shows a PDA that accepts even-lengthed palindromes. It uses non-determinism to decide when to transition from pushing to popping. 
+%----------------------------------------------------------
+\begin{figure}[htbp]
+\centering
+\scalebox{.7}{
+
+\begin{tikzpicture}
+
+\pdaterminal {0,8}{start}{start}
+\coordinate (start1) at (0, 7);
+\coordinate (start2) at (0, 6);
+
+\pdapush {-2, 6}{pusha}{push a}
+\pdatransition {pusha}{start2}{}
+
+\pdapush {-4, 6}{pushb}{push b}
+\coordinate (pushb1) at (-4,7);
+\pdaxthree {pushb}{pushb1}{start1}{}
+
+\pdaread {0,4}{read1}{read}
+\pdatransition {start}{read1}{}
+\coordinate (read1b1) at (0, 3);
+\coordinate (read1b2) at (-4, 3);
+\coordinate (read1a) at (-2, 4);
+\pdaxthree {read1}{read1a}{pusha}{a}
+\pdaxfour {read1}{read1b1}{read1b2}{pushb}{b}
+
+\pdaread {3,4}{read2}{read}
+\coordinate (read2a) at (1.5,4);
+\pdaxthree {read1}{read2a}{read2}{x}
+
+\pdaread {3,7}{popa}{pop}
+\coordinate (popa1) at (1.5,7);
+\pdarighttransition {read2}{popa}{a}
+\pdaxthree {popa}{popa1}{read2a}{a}
+\pdatransition {read1}{popa}{a}
+
+\pdaread {3,1}{popb}{pop}
+\coordinate (popb1) at (1.5,1);
+\pdarighttransition {read2}{popb}{b}
+\pdaxthree {popb}{popb1}{read2a}{b}
+\pdatransition {read1}{popb}{b}
+
+\pdaread {6,4}{popL}{pop}
+\pdatransition {read2}{popL}{$\Lambda$}
+
+\pdaterminal {9,4}{accept}{accept}
+\pdatransition {popL}{accept}{$\Lambda$}
+
+\end{tikzpicture}
+} % scale
+\caption{PDA for accepting even-lengthed PALINDROMEs. Nondeterminism is used to transition from the first half of the palindrome to the second half.}
+\label{F.PDA.PAL.2}
+\end{figure}
+%----------------------------------------------------------
+
+In addition to including non-determinism, Figure~\ref{F.PDA.PAL.2} does not include reject states. Instead, if the PDA reaches a read or pop state without a transition on the symbol acquired, the machine crashes and the string is rejected. This is analogous to FAs that don't include dead states. 
+
+With FAs we were able to show that DFAs and NFAs were equivalent. Anything you can do with one, you can do with the other. This is not true with PDAs. We will state without proof the non-deterministic PDAs are strictly more powerful than deterministic PDAs. Figure~\ref{F.machine.sizes.1} shows the relationship between the languages definable by the various machines we've encountered so far.
+\begin{figure}[htbp]
+\centering
+\scalebox{.7}{
+\begin{tikzpicture}
+\draw (0,0) ellipse (3 and 1);
+\draw (0,.5) ellipse (4 and 2);
+\draw (0,1) ellipse (5 and 3);
+\node at (0,0) {DFA, NFA, TG};
+\node at (0,1.5) {deterministic PDAs};
+\node at (0,2.75) {non-deterministic PDAs};
+\end{tikzpicture}
+} % scalebox
+\caption{Relationship between the languages definable by the various machines we've encountered.}
+\label{F.machine.sizes.1}
+\end{figure}
 
 \chapter{Theory of Context Free Languages}
 In this chapter we will examine various properties of context free languages.
