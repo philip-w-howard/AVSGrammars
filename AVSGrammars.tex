@@ -118,11 +118,14 @@ float=thbp,
 \newcommand{\fanonterminalnode}[2] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
 \newcommand{\fanolabel}[2] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {};}
 \newcommand{\fatransition}[3] {\draw [->] (#1) -- (#2) node [midway, above] {#3};}
+\newcommand{\fabelowtransition}[3] {\draw [->] (#1) -- (#2) node [midway, below] {#3};}
 \newcommand{\farighttransition}[3] {\draw [->] (#1) -- (#2) node [midway, right] {#3};}
 \newcommand{\faarctransition}[5] {\draw [->] (#1) to[out=#4, in=#5] node  [midway, above] {#3} (#2) ;}
+\newcommand{\faarcbelowtransition}[5] {\draw [->] (#1) to[out=#4, in=#5] node  [midway, below] {#3} (#2) ;}
 \newcommand{\faloopright}[2] {\draw (#1) edge [loop right] node {#2} ();}
 \newcommand{\faloopleft}[2] {\path (#1) edge [loop left] node {#2} ();}
 \newcommand{\falooptop}[2] {\path (#1) edge [loop above] node {#2} ();}
+\newcommand{\faloopbottom}[2] {\path (#1) edge [loop below] node {#2} ();}
 %---------------------------------------------------
 % commands for drawing PDAs
 \newcommand{\pdaterminal}[3] {\node at (#1) (#2) [rectangle, draw, rounded corners] {#3};}
@@ -2812,11 +2815,182 @@ The following are undecidable:
 \item Are there any words NOT in a CFL? (Is the language $(a+b)^*$?)
 \end{enumerate}
 
-While context free languages are more powerful than regular languages, they also have fewer closure properties, and there is less we can decide about them.
+While context free languages are more powerful than regular languages, they also have fewer closure properties, and there is less we can decide about them. Despite the added power of context free languages, they aren't powerful enough to describe algorithms. For that we need a new class of languages, which will be discussed in the next part of this book.
 
 \part{Beyond Context Free Languages}
 \label{C.Beyond.Context.Free}
-\needswork{}
+We saw that context free grammars could make use of a PDA's stack to define languages such as $a^nb^n$ that could not be defined with regular expressions. But the memory was limited: it consisted of a single stack. This limitation meant that context free grammars could not define a language such as $a^nb^nc^n$ because the stack could keep track of one set of letters, but not the next. It might be tempting to add another stack to keep track of a second group of letters, but what if we had more groups? We don't want a band-aid solution to solve a slightly more complex problem, we want a general solution for defining algorithms\footnote{It turns out that a second stack IS a general solution, but we'll get to that later.}. Alan Turing proposed a general purpose compute machine, and that machine forms the bases for general computability.
+
+\chapter{Turing Machines}
+When we introduced push down automata, we introduced the concept of a ``tape'' that contained the input and another tape that was used for the stack. Turing machines also make use of a read-write tape, but it is not limited to stack behavior. A Turing machine consists of the following:
+\begin{itemize}
+\item An infinite read-write tape that starts with the input and has $\Delta$ characters in all cells that don't have input characters.
+\item A finite number of states that define behavior. Each state (instruction) performs the following:
+\begin{enumerate}
+\item Reads the tape
+\item Writes the tape
+\item Moves the tape one space either forward or backwards
+\item Branches to the next instruction (state) based on the character read
+\end{enumerate}
+\end{itemize}
+Figure~\ref{F.TM.1} shows a Turing Machine.
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\pdaterminal{0,0}{START}{START}
+\fanonterminalnode {2, 0}{1}
+\fanonterminalnode {5, 0}{2}
+\pdaterminal{8,0}{HALT}{HALT}
+\faarctransition {START}{1}{(a,a,R)}{75}{135};
+\faarcbelowtransition {START}{1}{(b,b,R)}{285}{225};
+\falooptop{2}{(a,a,R)}
+\faloopbottom{2}{(b,b,L)}
+\fabelowtransition {1}{2}{(b,b,R)}
+\fabelowtransition {2}{HALT}{($\Delta$,$\Delta$,R)}
+\end{tikzpicture}
+\caption[Sample Turing Machine]{Sample Turing Machine. The labels on the transitions are in the following form: (read, write, movement direction). The movement direction specifies the movement of the tape head, not the tape, so that ``R'' means the cell to the right of the current cell is the next cell that will be read. The input is accepted if the machine makes it to the HALT state.}
+\label{F.TM.1}
+\end{figure}
+If this Turing Machine was given an input tape with ``$a,b,a,\Delta$'', the first $a$ would write the $a$ back to the tape, move the read/write head over the $b$, and transition to State~1. The $b$ would write the $b$ back to the tape, move the read/write head to the second $a$ and move to State~2. The next $a$ would leave us in State~2, and when we read the $\Delta$, we would reach the HALT state and accept the input.
+
+If the input tape had ``$a,a,a,\Delta$'', then once we reached State~1 and read the second $a$, the machine would crash because there are no out-bound transitions on $a$.
+
+If the input tape had ``$a,b,b,\Delta$'', when we reached State~2 and read the 2nd $b$, we would stay in State~2, but move the tape back to the first $b$. The next operation would leave us in State~2 and move the tape back to the $a$. The $a$ would move the tape to the first $b$, and then we would loop forever switching between the $a$ and the first $b$.
+
+These three inputs, and their resulting behaviors, illustrate the three possibilities with Turing Machines:
+\begin{enumerate}
+\item Reach a HALT state and accept the input
+\item Crash and reject the input
+\item Loop forever and never make a decision
+\end{enumerate}
+Turing Machines can be represented in table form (much like transition tables for DFA's). Figure~\ref{F.TM.2} show such a table.
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+State & Read & Write & Move & Next \\
+\hline
+1 & a & A & Right & 2 \\
+\hline
+2 & a & a & Right & 2 \\
+\hline
+2 & B & B & Right & 2 \\
+\hline
+2 & b & B & Left & 3 \\
+\hline
+3 & B & B & Left & 3 \\
+\hline
+3 & a & a & Left & 4 \\
+\hline
+3 & A & A & Right & 5 \\
+\hline
+4 & a & a & Left & 4 \\
+\hline
+4 & A & A & Right & 1 \\
+\hline
+5 & B & B & Right & 5 \\
+\hline
+5 & $\Delta$ & $\Delta$ & Right & HALT \\
+\hline
+\end{tabular}
+\caption[Turing Machine Table]{This Turing Machine accepts the language $a^nb^n$.}
+\label{F.TM.2}
+\end{figure}
+This machine accepts strings in the form $a^nb^n$. It does so by ``crossing out'' an $a$ and a matching $b$. The letters are crossed out by making them capital. State~1 crosses out the leftmost $a$. State~2 moves to the right looking for an un-crossed $b$. State~3 moves back to the left looking for an un-crossed $a$. If it finds one, State~4 looks for the right-most crossed $A$, which then goes back to State~1 to cross the next pair. If State~3 doesn't find an un-crossed $a$, it moves to State~5 looking for the end of tape. If there are too many $a$'s on the starting tape, the machine will crash in State~2 while looking for a uncrossed $b$ (it will reach the end of tape before finding an uncrossed $b$). If there are too many $b$'s on the tape, the machine will crash in State~5 while looking for the end of tape (it will find an uncrossed $b$ before getting to the end of tape).
+
+We could extend this machine to handle languages such as $a^nb^nc^n$ by adding states to handle the $c$'s (doing so is left as a problem). This shows that Turing Machines can do things that CFG's can't. But we aren't just interested in being able to define more complex algorithms, we want to be able to do general computation.
+
+\section{Computing with Turing Machines}
+In order to do computation with TM's, we need a way to represent numbers on the input tape. We could, of course, use decimal notation, but that would create a proliferation of states because we'd need states for each digit. The simplest notation for numbers in TM's is unary. In unary, if we want to represent the number $N$, we simply list $N$ $a$'s. Suppose we wanted to add two numbers. The first number would consist of a string of $a$'s. The first number would be followed by a single $b$ to mark the boundary between numbers. The second number would consist of another string of $a$'s. How could we add these numbers? If we replace the $b$ with an $a$ and then delete the last $a$ on the tape, the tape would contain the result in unary. Figure~\ref{F.TM.add} shows such a TM.
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+State & Read & Write & Move & Next \\
+\hline
+1 & a & a & Right & 1 \\
+\hline
+1 & b & a & Right & 2 \\
+\hline
+2 & a & a & Right & 2 \\
+\hline
+2 & $\Delta$ & $\Delta$ & Left & 3 \\
+\hline
+3 & a & $\Delta$ & Right & 3 \\
+\hline
+3 & $\Delta$ & $\Delta$ & Left & HALT \\
+\hline
+\end{tabular}
+\caption[Turing Machine for adding]{This Turing Machine adds two numbers in unary.}
+\label{F.TM.add}
+\end{figure}
+%----------------------------------------------------------
+
+A similar approach could be used for performing subtraction. The last $a$ in the second number could be crossed out (replaced with $\Delta$), then a matching $a$ from the first number could be crossed out. This continues until there are no more $a$'s in the second group.
+
+These two examples are hardly sufficient to argue that TM's are general purpose compute machines, but nevertheless, we will state (without proof) the following theorem:
+
+\begin{theorem}
+Everything that can be computed can be computed with a TM.
+\end{theorem}
+
+\chapter{Other Universal Compute Machines}
+Turing Machines come in different forms based on the attributes of the tape. TM's can be constructed with tapes that are infinite in one direction, but the machine will crash if an attempt is made to move the tape before the beginning. It is also possible to construct a TM with a tape that is infinite in both directions. Both of these forms are equally powerful.
+
+Another Universal Compute Machine is known as a Post Machine. These machines are just like PDA's except that instead of a stack, the ``push'' operation writes to the end of the tape. In other words, the tape is now a queue that is initialized with the input. There are proofs (by construction) that show that Post Machines and Turing Machines are equally powerful (either can be converted into the other).
+
+Finally, there is a 2PDA: A PDA that has two stacks instead of one. Just like with Post Machines, there are proofs (by construction) that show that 2PDA's are equally powerful as Turing Machines.
+
+\needswork Show constructions for TM=PM and TM=2PDA.
+
+\chapter{Language Families}
+We've already seen the following relationship between languages:
+\begin{quote}
+Regular Languages $\subset$ Deterministic Context Free Lanuages $\subset$ Non-deterministic Context Free Languages
+\end{quote}
+But we now have new families: those that can be defined by Turing Machines. How do these fit in this hierarchy?
+
+\section {Context Sensitive Languages}
+Context free languages are context free because, when building strings, anywhere a non-terminal appears it can be replaced using any production that has that non-terminal on the left-hand side. In other words, there is no context that says, ``You can replace A unless it is surrounded by $q$'s''. If we want to allow context, we can do so by relaxing the rules of what can go on the left hand side of a production. We can provide context by including more than just a non-terminal on the left-hand side. These grammars can take one of two forms. Consider the production:
+\begin{quote}
+$\alpha A \beta \rightarrow \alpha \gamma \beta$\\
+where 
+\begin{quote}
+$A$ is a non-terminal and\\
+$\alpha$, $\beta$, and $\gamma$ are strings of terminals and non-terminals such that $\gamma$ is not the empty string.
+\end{quote}
+\end{quote}
+This production says that the non-terminal $A$ can be replaced with $\gamma$ provided that the $A$ is surrounded by the strings represented by $\alpha$ and $\beta$. Grammars in this form are known as context sensitive grammars. These languages can be recognized by Turing Machines where the tape length is bounded by some constant times the input length. The limit on the tape length really is a limit as we'll see in the next section.
+
+\section{Recursive and Recursively Enumerable Languages}
+The following production form is less restrictive than that for context sensitive languages:
+\begin{quote}
+$\alpha A \beta \rightarrow \gamma$\\
+where 
+\begin{quote}
+$A$ is a non-terminal and\\
+$\alpha$, $\beta$, and $\gamma$ are strings of terminals and non-terminals such that $\gamma$ is not the empty string.
+\end{quote}
+\end{quote}
+The difference is that with this form, the entire left-hand side is replaced, not just the non-terminal. This form of grammar leads to recursively enumerable languages. To explain this set of languages, let's first consider recursive languages.
+
+Recall that Turing Machines can either halt, crash, or loop forever. If a TM can be constructed for a language such that all words in the language will cause the TM to halt and all words not in the language will cause the TM to crash, then this language is known as recursive. If a TM can be constructed which will halt on all words in the language, and will either crash or loop forever for words not in the language, then this languages is known as recursively enumerable. There are languages which are recursively enumerable, but not recursive. 
+
+Suppose we defined a language as all programs that terminate (we will restrict our programs to those who do not do any input so we don't have to worry about the input affecting whether or not the program terminates). To decide if a specific program was in the language, we could write a script that runs the program and if it terminates, prints the message ``This program is in the language.'' If we gave it a program in the language, we would get an answer. If we gave it a program not in the language (a program that loops forever), we would never get an answer. This is an example of the type of languages that are recursively enumerable, but not recursive.
+
+\section{Chompsky's Hierarchy}
+Given our set of languages, we can now present Chompsky's Hierarchy. Each language category in the hierarchy is a strict subset of the languages higher in the hierarchy. The hierarchy is as follows (from smallest language to largest)
+\begin{enumerate}
+\item Regular Languages
+\item Deterministic Context Free Languages
+\item Non-Deterministic Context Free Languages
+\item Context Sensitive Languages
+\item Recursive Languages (not part of Chompsky's original hierarchy)
+\item Recursively Enumerable Languages
+\end{enumerate}
+
 
 \appendix
 
