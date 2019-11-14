@@ -39,6 +39,7 @@
 \usepackage{amssymb}%
 \usepackage{graphicx}
 \usepackage{subcaption}
+\usepackage{tabulary}
 \usepackage[colorlinks=true,linkcolor=blue]{hyperref}
 %\hypersetup{pdfauthor={Philip Howard}, pdftitle={A Very Simple Compiler Book}}
 
@@ -2974,11 +2975,28 @@ $A$ is a non-terminal and\\
 $\alpha$, $\beta$, and $\gamma$ are strings of terminals and non-terminals such that $\gamma$ is not the empty string.
 \end{quote}
 \end{quote}
-The difference is that with this form, the entire left-hand side is replaced, not just the non-terminal. This form of grammar leads to recursively enumerable languages. To explain this set of languages, let's first consider recursive languages.
+The difference with this form is that the entire left-hand side is replaced, not just the non-terminal. This form of grammar leads to recursively enumerable languages. To explain this set of languages, let's first consider recursive languages.
 
 Recall that Turing Machines can either halt, crash, or loop forever. If a TM can be constructed for a language such that all words in the language will cause the TM to halt and all words not in the language will cause the TM to crash, then this language is known as recursive. If a TM can be constructed which will halt on all words in the language, and will either crash or loop forever for words not in the language, then this languages is known as recursively enumerable. There are languages which are recursively enumerable, but not recursive. 
 
-Suppose we defined a language as all programs that terminate (we will restrict our programs to those who do not do any input so we don't have to worry about the input affecting whether or not the program terminates). To decide if a specific program was in the language, we could write a script that runs the program and if it terminates, prints the message ``This program is in the language.'' If we gave it a program in the language, we would get an answer. If we gave it a program not in the language (a program that loops forever), we would never get an answer. This is an example of the type of languages that are recursively enumerable, but not recursive.
+\subsection{The Halting Problem}
+Suppose we defined a language as ``All programs that terminate''. We will restrict our programs to those that do not do any input so we don't have to worry about the input affecting whether or not the program terminates. To decide if a specific program was in the language, we could write a script that runs the program and if it terminates, prints the message ``This program is in the language.'' If we gave it a program in the language, we would get an answer. If we gave it a program not in the language (a program that loops forever), we would never get an answer. This is an example of the type of languages that are recursively enumerable, but not recursive.
+
+Perhaps the script solution to the halting problem is a bad solution. Is there some other way to determine if a program loops forever? Let's assume it is possible. Let's assume we have an algorithm (meaning we can write a program to implement it) that returns \code{true} if a specified program halts and \code{false} if it doesn't. If so, we could write the following function:
+\begin{quote}
+\code{bool halts(program p);}
+\end{quote}
+We could then use that function in the following program:
+\begin{lstlisting}[caption={Halting Problem program},label=L.halting]
+program me
+{
+   while (halts(me))
+	 {}
+}
+\end{lstlisting}
+What does this program do? It passes itself into the \code{halt()} function. If the program \code{me} halts, then the \code{while} will loop forever, meaning \code{me} won't halt. But if \code{me} doesn't halt, then the \code{halts} function will return \code{false} so the \code{while} won't loop, and the program will terminate.
+
+The result is that this program is self-contradicting. It is so because the \code{halts} function cannot, in fact, be written.
 
 \section{Chompsky's Hierarchy}
 Given our set of languages, we can now present Chompsky's Hierarchy. Each language category in the hierarchy is a strict subset of the languages higher in the hierarchy. The hierarchy is as follows (from smallest language to largest)
@@ -2990,50 +3008,137 @@ Given our set of languages, we can now present Chompsky's Hierarchy. Each langua
 \item Recursive Languages (not part of Chompsky's original hierarchy)
 \item Recursively Enumerable Languages
 \end{enumerate}
+There is yet another category: Those that are not recursively enumerable. But before we introduce that category, we need to talk about Universal Turing Machines.
 
+\section{Universal Turing Machines}
+\label{S.universal.TM}
+We have seen Turing Machines represented as diagrams, and we've seen them represented as tables. Is it possible to encode a Turing Machine onto a tape that can be used as the input to a Turing Machine? The answer is yes.
 
-\appendix
+Let's restrict ourselves to Turing Machines over the alphabet $\Sigma = \{a\ b\}$. If we arrange the rows of the table form of a Turing Machine as follows:
 
-\chapter{The First Appendix}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+State & Next & Read & Write & Move \\
+\hline
+$X_1$ & $X_2$ & $X_3$ & $X_4$ & $X_5$ \\
+\hline
+\end{tabular}
 
-The \verb"\appendix" command should be used only once. Subsequent appendices can
-be created using the Chapter command.
+We can then encode each row as follows:
+\begin{quote}
+State: string of $X_1$ $a$'s followed by a $b$.\\
+Next: string of $X_2$ $a$'s followed by a $b$.\\
+Read, Write: 
+\begin{quote}
+$a$ is encoded as $aa$\\
+$b$ is encoded as $ab$\\
+\# is encoded as $ba$\\
+$\Delta$ is encoded as $bb$
+\end{quote}
+Move: Left is encoded as $a$, and Right is encoded as $b$
+\end{quote}
+With this encoding, each row matches the regular expression $aa^*baa^*b(a+b)^5$. If we concatenate all rows together, it is always possible to determine where one row's encoding stops and the next row's encoding starts.
 
-\chapter{The Second Appendix}
+If we always use State~1 as the start state and State~2 as the HALT state, then we have a complete encoding suitable for any TM. What can we do with these encodings?
 
-Some text for the second Appendix.
+Recall that anything that can be computed can be computed by a TM. Clearly the behavior of a TM can be computed (we can build a machine - a TM - that can perform the calculation). So we should be able to create a TM that has as input:
+\begin{quote}
+\verb;<encoding of T>#<input word for T>;
+\end{quote}
+Where the behavior of the TM is as if T (encoded in the first part of the input) was run on the input (the second part of the input). This means that if T would halt on the input, the TM would also halt leaving the same characters on the tape. If T would crash, the TM would also crash. If T would loop forever, then the TM would also loop forever.
 
-This text is a sample for a short bibliography. You can cite a book by making use of
-the command \verb"\cite{KarelRektorys}": \cite{KarelRektorys}. Papers can be cited
-similarly: \cite{Bertoti97}. If you want multiple citations to appear in a single set
-of square brackets you must type all of the citation keys inside a single citation,
-separating each with a comma. Here is an example: \cite{Bertoti97, Szeidl2001,
-Carlson67}.
+What have we just done? This TM is known as a Universal Turing Machine because it can emulate any TM (and is thus universal). It is a programmable computer. Instead of creating a new machine each time we want to solve a problem, we simply encode the problem on tape and feed it into our Universal TM.
+
+This may not seem like a revolutionary thing to a modern reader (I assume you've been writing programs for a ``Universal'' machine prior to reading this), but it was revolutionary in its time. Not only is the Universal TM programmable, but it is even a Von Neumann machine: code and data are the same thing. 
+
+Since Turing Machines are formal languages, and now also programmable machines, we can use the machine to answer questions about the languages that can be represented by TM's. This is, in part, how we know the Halting Problem cannot be solved. But we can go farther. We can now show that there are languages that are not recursively enumerable. 
+
+\section{Non-Recursively Enumerable Languages}
+The encoding discussed in Section~\ref{S.universal.TM} is called the Code Word Language (CWL). Using that encoding, we can now define the language ALAN:
+\begin{quote}
+ALAN = the set of all words in CWL that are NOT accepted by the TM's they represent or that do not represent TM's.
+\end{quote}
+In other words, ALAN can be thought of as either:
+\begin{enumerate}
+\item All programs that do not accept themselves as input.
+\item All encodings \verb;<encoding of T>#<encoding of T>; where the Universal TM either crashes or loops.
+\end{enumerate}
+Let's consider some languages and figure out if the encoding for these languages are in ALAN.
+\begin{quote}
+L = \{all words with a double $a$\}
+\end{quote}
+Would the encoding for a machine that accepts all words with a double $a$ have a double $a$? Yes. The halt state is State~2 (which is encoded as a double $a$), and any machine that accepts any word must include the halt state, so the encoding would include a double $a$. Since the encoding would have a double $a$, the machine would accept itself, and so this word is not in ALAN.
+
+What about \verb;L = {};? A TM that rejects all inputs would reject itself, so this word IS in ALAN.
+
+What about PALINDROME? The CWL for PALINDROME almost certainly is not a palindrome, so this word is (most likely) in ALAN.
+
+What about CWL = ``aabbab''. This is not a valid TM, so this is in ALAN.
+
+But now we come to the interesting one. Is the CWL for a TM that accepts ALAN in ALAN? Let's assume ``yes''.
+
+\begin{center}
+\begin{tabular}{p{0.5\textwidth} l}
+1) T accepts ALAN & 1) Definition of T\\
+2) ALAN contains no cod word that is accepted by the machine it represents & 2) Definition of ALAN\\
+3) CWL(T) is in ALAN & 3) Hypothesis\\
+4) T accepts the word CWL(T) & 4) From 1 and 3\\
+5) CWL(T) is not in ALAN & 5) From 2 and 4\\
+6) Contradiction & 6) From 3 and 5
+\end{tabular}
+\end{center}
+
+Since our assumption resulted in a contradiction, our assumption must be false. Let's try assuming the opposite: The CWL for a TM that accepts ALAN is not in ALAN.
+\begin{center}
+\begin{tabular}{p{0.5\textwidth} l}
+1) T accepts ALAN & 1) Definition of T\\
+2) If a word is not accepted by the machine it represents, it is in ALAN & 2) Definition of ALAN\\
+3) CWL(T) is not in ALAN & 3) Hypothesis\\
+4) T does not accept the word CWL(T) & 4) From 1 and 3\\
+5) CWL(T) is in ALAN & 5) From 2 and 4\\
+6) Contradiction & 6) From 3 and 5
+\end{tabular}
+\end{center}
+
+What do we do now? Both the true and false assumptions resulted in contradictions. The problem is that there was another assumption we ignored. We assumed that there was a TM that accepts ALAN. It turns out that assumption was false. ALAN is not a recursively enumerable language, so there is no TM that accepts it. ALAN is not computable.
+
+So now we have another category of language: those which are not computable. We will call this category ``Outer Space''. It includes language such as ALAN. I think poetry also fits this category (for a proof, read a few poems by ee cummings). We can't say much about languages in this category. We can't prove properties on this category because they are, by their very nature, not computable.
+
+But there is one thing we can say about at least some of these languages. They come about if a language has the ability to be reflexive. That is, if the language can refer to itself. Consider the statement, 
+\begin{quote}
+This statement is a lie.
+\end{quote}
+This statement refers to itself (it is reflexive), and it uses that self-reference to be self-contradicting. The Halting Problem program did the same thing. Universal Turing Machines allow us to do the same thing. ALAN is example of a self-referential language, and it is this self-referentialness that makes in not computable.
+
+Self referential statements are OK and interesting in the study of logic as a branch of philosophy. A philosophy class could spend hours of delight discussing whether ``This statement is a lie'' is true or not. However, these kinds of statements are anathema in mathematics. Mathematics used to be this pure scientific field where everything was either clearly true or clearly false (see \url{https://www.xkcd.com/435/}). Unfortunately, set theory is reflexive: you can have sets of sets. That's why set theory ``broke'' mathematics. Turing Machines are also reflexive. That's part of what makes computability (and programming in general) so interesting. 
+
+\chapter{Conclusion}
+Why study Computer Grammars (other than the fact that they're cool)? Some things that should be gained from this study:
+
+You've learned about problem hardness in terms other that Big-O. Chompsky's Hierarchy describes language classes, but it also in some sense describes problem hardness. Consider the difference between a cellphone camera app that tags pictures taken in national parks vs. an app that tags pictures with birds in them (see \url{https://xkcd.com/1425/}). One problem is in the domain of regular languages. The other is probably at least recursive.
+
+You've learned about problem transformations. For example, we can transform a regular expression problem into a DFA problem, which is much easier to write code for. In the field of software development, there are many transformations that can make writing software for a particular problem easier. If you can recognize such possible transformations, it will make it easier for you to solve problems.
+
+You've learned new ways to express things. Some of your colleagues may not share the lingo, but if you know different ways to express things, you also know different ways to think about things. And this is really the point of this study: It should make you better at thinking about things than you used to be.
+
+Returning to problem hardness, what problem domain (language category) would each of the following be in:
+\begin{enumerate}
+\item Design and build a steel girder bridge.
+\item Design and build a power supply for a computer.
+\item Design and build a compiler (or operating system or ...)
+\end{enumerate}
+I suspect the first two are in the domain of either regular or context free languages. There are known, almost turn-the-crank solutions to the first two. The third is at least context sensitive if not recursively enumerable. Some practitioners might argue that if we add the qualifier ``bug free'' to our compiler or operating system problem, that might put it in the outer space category.
+
+A great deal of effort has been expended in trying to make software development resemble most other engineering disciplines, where many of the problems have known solutions (or at least procedures for finding solutions). Progress has been made, but software development is still a much fuzzier discipline. It remains, at least in part, an art not a science. I strongly suspect it will continue to be difficult to nail down (or engineer) because of the nature of the problems we are trying to solve. 
+
+I hope this book has been valuable to you, and I hope you have gained at least some of the intended benefits of this study.
 
 \begin{thebibliography}{9}
-\bibitem {KarelRektorys}Rektorys, K., \textit{Variational methods in Mathematics,
-Science and Engineering}, D. Reidel Publishing Company,
-Dordrecht-Hollanf/Boston-U.S.A., 2th edition, 1975
+\bibitem {xkcd} \textsc{Munroe, Randal}: \textit{xkcd comics}, \url{xkcd.com}
 
-\bibitem {Bertoti97} \textsc{Bert\'{o}ti, E.}:\ \textit{On mixed variational formulation
-of linear elasticity using nonsymmetric stresses and displacements}, International
-Journal for Numerical Methods in Engineering., \textbf{42}, (1997), 561-578.
+\bibitem {comptheory} \textsc{Cohen, Daniel I.A.}: \textit{Introduction to Computer Theory}, John Wiley \& Sons, Inc., (1997).
 
-\bibitem {Szeidl2001} \textsc{Szeidl, G.}:\ \textit{Boundary integral equations for
-plane problems in terms of stress functions of order one}, Journal of Computational and
-Applied Mechanics, \textbf{2}(2), (2001), 237-261.
-
-\bibitem {Carlson67}  \textsc{Carlson D. E.}:\ \textit{On G\"{u}nther's stress functions
-for couple stresses}, Quart. Appl. Math., \textbf{25}, (1967), 139-146.
+\bibitem {FoundComp} \textsc{Carol Critchlow and David Eck}:\ \textit{Fundations of Computation}, \url{https://open.umn.edu/opentextbooks/textbooks/foundations-of-computation} (2011).
 \end{thebibliography}
 
-\backmatter
-
-\chapter{Afterword}
-
-The back matter often includes one or more of an index, an afterword,
-acknowledgments, a bibliography, a colophon, or any other similar item. In
-the back matter, chapters do not produce a chapter number, but they are
-entered in the table of contents. If you are not using anything in the back
-matter, you can delete the back matter TeX field and everything that follows it.
 \end{document}
