@@ -101,6 +101,16 @@ float=thbp,
 \renewcommand{\lstlistingname}{Listing}
 }
 
+\lstnewenvironment{cfgh}
+{
+\lstset{float=ht,stepnumber=1,escapechar=Q}
+\renewcommand{\lstlistingname}{CFG}
+}
+{
+\lstset{numbers=left,stepnumber=5}
+\renewcommand{\lstlistingname}{Listing}
+}
+
 \newcommand{\code}[1] {\lstinline[breaklines=yes,breakatwhitespace=yes]{#1}}
 
 \newcommand{\cfgprod}[2] {{\ttfamily #1} $\rightarrow$ {\ttfamily #2}}
@@ -458,7 +468,7 @@ The most common enhancements to this syntax are as follows:
 indicates zero or one of an item so that \code{a?} 
 means the same as ($\Lambda$ \code{+ a}).
 \item[one or more] The plus sign (\code{+}) is similar to Kleene Closure, but it is one-or-more not zero-or-more so that \code{a+} means the same as $aa^*$.
-\item[character range] Square brackets (\code{[]}) can be used to specify a character range so that \code{[a-m]} means any single character in the range '\code{a}' through '\code{m}'. This could be represented long-hand as '\code{(a + b + c + d + ...)}'.
+\item[character range] Square brackets (\code{[ ]}) can be used to specify a character range so that \code{[a-m]} means any single character in the range '\code{a}' through '\code{m}'. This could be represented long-hand as '\code{(a + b + c + d + ...)}'.
 \end{mydesc}
 
 These enhancements will be used in a few examples, and they are allowed in homework problems provided their use is clear. Note that the one-or-more enhancement uses the plus sign that can also be used for concatenation so any regular expression that uses \textbf{any} of these enhancements must use the vertical bar for alternation.
@@ -472,7 +482,7 @@ This fixes the leading zero problem, but it does not allow the number zero. This
 If we want to allow negative numbers, we could add an optional minus sign:
 \begin{quote}\code{0 | (-?[1-9][0-9]*)}\end{quote}
 
-There are exercises at the end of the chapter that can be used to practice writing regular expressions. You use the enhanced syntax or the minimal syntax for these exercises.
+There are exercises at the end of the chapter that can be used to practice writing regular expressions. You can use the enhanced syntax or the minimal syntax for these exercises.
 
 \section{Manipulating Regular Expressions}
 
@@ -483,7 +493,7 @@ $a(b+c) = ab + ac$
 but the following have no algebraic equivalent:
 \begin{quote}
 $(a^*)^* = a^*$\\
-$(a+b^*)^* = (a+b)*$\\
+$(a+b^*)^* = (a+b)^*$\\
 $(a^*b^*)^* = (a+b)^*$
 \end{quote}
 
@@ -504,11 +514,11 @@ We can also think of the set of all regular expressions. This is yet another lan
 \end{enumerate}
 
 So we now have three separate but related languages:
-\begin{itemize}
+\begin{enumerate}
 \item The language (set of all strings) defined by a particular regular expression.
 \item The set of all languages definable by regular expressions.
 \item The set of all regular expressions.
-\end{itemize}
+\end{enumerate}
 
 It is important to keep these three languages separate. Consider the following questions, one for each category of language:
 \begin{itemize}
@@ -1637,7 +1647,7 @@ Each of these nesting problems boils down to the language $a^nb^n$, which we've 
 
 This suggests that languages defined recursively are more powerful (in the sense that they can define more languages) than regular expressions. We want to formalize the structure of recursive definitions so that we can prove properties of these languages much as we did for regular languages in Chapter~\ref{C.RL.theory}. Context Free Grammars are one such formalization.
 
-A Context Free Grammar (CFG) is made up a a list of productions of the general form:
+A Context Free Grammar (CFG) is made up a a list of productions (or rules) of the general form:
 \begin{quote}
 X can be replaced by A B C
 \end{quote}
@@ -1731,7 +1741,7 @@ if (expr)
 3   if ( expr ) { assignment_stmt assignment_stmt }
 \end{derivation}
 
-The derivation in Derivation~\ref{D.derive.1} is what's known as a left-most derivation because each time there were multiple non-terminals, the left-most one was replaced. It is also possible to do right-most derivations, and you can also do neither: sometimes pick the left-most non-terminal, sometimes the right-most, and sometimes one in the middle.
+Derivation~\ref{D.derive.1} is what's known as a left-most derivation because each time there were multiple non-terminals, the left-most one was replaced. It is also possible to do right-most derivations, and you can also do neither: sometimes pick the left-most non-terminal, sometimes the right-most, and sometimes one in the middle.
 
 \subsection{Derivation forms}\label{S.derive.forms}
 The left-most nature of Derivation~\ref{D.derive.1} wasn't that obvious because there were never more than two non-terminals in any line of the derivation. For a better example, consider the the CFG for expressions in postfix notation given in CFG~\ref{CFG.postfix}. Using that grammar, Derivation~\ref{D.post.top.down} shows a derivation of the expression
@@ -1786,8 +1796,8 @@ One last thing to note: If you were asked to give a derivation of an expression 
 The only-one-right-derivation property is true of this grammar because it is non-ambiguous. Ambiguous grammars will be described in Section~\ref{S.ambiguous.grammars}.
 
 \subsection{Syntax Trees}\label{S.syntax.trees}
-Derivations can be represented graphically as syntax trees. In a syntax tree, the children of each non-terminal are the items from the right hand side of the production that was used to replace the non-terminal. Figure~\ref{F.syntax.tree.1} shows the syntax tree for the derivation in Derivation~\ref{D.derive.1}.
-\begin{figure}[htb]
+Derivations can be represented graphically as syntax trees (also known as parse trees or derivation trees). In a syntax tree, the children of each non-terminal are the items from the right hand side of the production that was used to replace the non-terminal. Figure~\ref{F.syntax.tree.1} shows the syntax tree for the derivation in Derivation~\ref{D.derive.1}.
+\begin{figure}[htbp]
 \begin{tikzpicture}[sibling distance=4em, 
   level 5/.style={sibling distance=10em},
   level 6/.style={sibling distance=6em},
@@ -1827,9 +1837,9 @@ Derivations can be represented graphically as syntax trees. In a syntax tree, th
 Note that if the derivation is given in tree form, there is no sense of left-most or right-most because the tree gives no indication of what order the productions were invoked. For the derivation represented in Figure~\ref{D.derive.1}, it would not matter what order the productions were invoked. All derivations would produce an identical tree. The only-one-tree property is true because the grammar used for this derivation is non-ambiguous. Ambiguous grammars are discussed in the next section.
 
 \section{Ambiguous Grammars}\label{S.ambiguous.grammars}
-English, and I presume all spoken languages, is ambiguous. A single statement can be interpreted different ways. Consider the two statements
+English is ambiguous (as I presume all spoken languages are). A single statement can be interpreted different ways. Consider the two statements
 \begin{quote}
-Fruit flies like an apple.
+Fruit flies like an apple.\\
 Time flies like an arrow.
 \end{quote}
 Both statements appear structurally the same; only a couple of words were changed. However, with the normal interpretations, ``flies'' is the subject in the first sentence, but the verb in the second (unless the second sentence is referring to flies native to the Tardis). If we are sufficiently familiar with the English language, we come up with the correct interpretation of each sentence without even consciously thinking about it. But what if you tried to write a program to understand English? How would it distinguish betweeen the two.
@@ -1839,38 +1849,43 @@ Consider the statement, ``I shot the man with the gun.'' When the police show up
 A grammar is ambiguous when a single input can produce multiple different meanings. For CFGs, the ``meanings'' are defined by the syntax tree produced by parsing a statement. The grammar in CFG~\ref{F.GR.ambiguous} illustrates this. The expression $3+4*5$ can be derived two different ways. One has the multiplication happening first and the other with the addition happening first. These two derivations are illustrated by the trees in Figure~\ref{D.derive.2}.
 %----------------------------------------------------------
 \begin{cfg}{An ambiguous expression grammar.}{F.GR.ambiguous}
-Q\cfgprod{EXPR}{EXPR + num}Q
-Q\cfgprod{EXPR}{EXPR * num}Q
+Q\cfgprod{EXPR}{EXPR + EXPR}Q
+Q\cfgprod{EXPR}{EXPR * EXPR}Q
 Q\cfgprod{EXPR}{num}Q
 \end{cfg}
 %----------------------------------------------------------
 %----------------------------------------------------------
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
-%\scalebox{.7}{
 \begin{subfigure}[b]{0.95\textwidth}
 \centering
+\scalebox{.65}{
 \begin{tikzpicture}[sibling distance=4em, 
   every node/.style = {shape=rectangle, rounded corners,
     draw, align=center,
     top color=white, bottom color=blue!20}]]
   \node {EXPR}
     child { node {EXPR} 
-		  child { node {3}}
+		  child { node {EXPR}
+			  child { node{3} } }
 			child { node {+}}
       child { node {EXPR}
-        child { node {4} }
+			  child { node {EXPR}
+          child { node {4} } }
 				child { node {*} }
-				child { node {5} }
+			  child { node {EXPR}		
+				  child { node {5} }}
 			}
 		};
 \end{tikzpicture}
+} % scalebox
 \caption{Derivation showing multiplication happening first.}
 \end{subfigure}
 %%%%%%
 
 \begin{subfigure}[b]{0.95\textwidth}
 \centering
+\scalebox{.65}{
 \begin{tikzpicture}[sibling distance=4em, 
   every node/.style = {shape=rectangle, rounded corners,
     draw, align=center,
@@ -1878,14 +1893,18 @@ Q\cfgprod{EXPR}{num}Q
   \node {EXPR}
     child { node {EXPR} 
       child { node {EXPR}
-  		  child { node {3}}
+        child { node {EXPR}
+    		  child { node {3}} }
 	  		child { node {+}}
-        child { node {4} }
+        child { node {EXPR}
+          child { node {4} } }
 			}
 			child { node {*} }
-			child { node {5} }
+      child { node {EXPR}
+			  child { node {5} } }
 		};
 \end{tikzpicture}
+} % scalebox
 \caption{Derivation showing addition happening first.}
 \end{subfigure}
 %%%%%%
@@ -1910,9 +1929,9 @@ These grammars are related as follows.
 \begin{quote}
 $LL(1) \subset LR(1) \subset CFG$
 \end{quote}
-Note that these are strict subsets. There are things that can be done with an LR(1) grammar that cannot be done with an LL(1) grammar. An there are things that can be done with CFGs that cannot be done with an LR(1) grammar.
+Note that these are strict subsets. There are things that can be done with an LR(1) grammar that cannot be done with an LL(1) grammar. And there are things that can be done with CFGs that cannot be done with an LR(1) grammar.
 
-To illustrate what causes difficulties with the top-down algorithm (and therefore the restrictions placed on LL(1) grammars), consider the grammar given in CFG~\ref{C.paren.expr}. %----------------------------------------------------------
+%----------------------------------------------------------
 \begin{cfg}{This CFG defines a fully parenthesized expression.}{C.paren.expr}
 Q\cfgprod{EXPR}{number}Q
 Q\cfgprod{EXPR}{(EXPR + EXPR)}Q
@@ -1921,7 +1940,8 @@ Q\cfgprod{EXPR}{(EXPR / EXPR)}Q
 Q\cfgprod{EXPR}{(EXPR * EXPR)}Q
 \end{cfg}
 %----------------------------------------------------------
-This grammar defines fully parenthesized expressions. Since they are fully parenthesized, the grammar is unambiguous. However, with this grammar, how many tokens of look-ahead are required to determine which production to invoke first? If the first token is a number, then clearly Production~1 must be invoked. But if the first token is an open parenthesis, then how many additional tokens must be read to determine which of the productions 2-5 should be invoked? Three is not enough because expressions can be nested as in 
+
+To illustrate what causes difficulties with the top-down algorithm (and therefore the restrictions placed on LL(1) grammars), consider the grammar given in CFG~\ref{C.paren.expr}. This grammar defines fully parenthesized expressions. Since they are fully parenthesized, the grammar is unambiguous. However, with this grammar, how many tokens of look-ahead are required to determine which production to invoke first? If the first token is a number, then clearly Production~1 must be invoked. But if the first token is an open parenthesis, then how many additional tokens must be read to determine which of the productions 2-5 should be invoked? Three is not enough because expressions can be nested as in 
 \begin{quote}
 (((5-3)-3)*2)
 \end{quote}
@@ -1936,6 +1956,7 @@ For the following problems, assume $\Sigma = \{a\ b\}$ unless specified otherwis
 \item Write a CFG for the language defined by the regular expression $a^*b$.
 \item Write a CFG for arithmetic expressions in postfix notation (where the operators come after the operands).
 \item Give a derivation for the program in Listing~\ref{L.nested.ifs}. Be sure to list the production number used in each step.
+\item Is the language defined by CFG~\ref{F.cfg.2} ambiguous? If so, show two syntax trees for the same input. If not, you must argue that it is not possible to create two different syntax trees for the same input.
 \item Provide derivations for the following two statements given the following CFG. Be sure to list the production numbers for each step.
 \begin{quote}
 $3+4*5+7$\\
@@ -1952,7 +1973,7 @@ Q\cfgprod{AE}{number}Q
 %----------------------------------------------------------
 \item Use the following CFG and show derivations for the two expressions from the previous problem. Be sure to list the production numbers for each step.
 %----------------------------------------------------------
-\begin{cfg}{}{}
+\begin{cfgh}
 Q\cfgprod{START}{EXPR}Q
 Q\cfgprod{EXPR}{EXPR + TERM}Q
 Q\cfgprod{EXPR}{TERM}Q
@@ -1960,12 +1981,14 @@ Q\cfgprod{TERM}{TERM * FACT}Q
 Q\cfgprod{TERM}{FACT}Q
 Q\cfgprod{FACT}{(EXPR)}Q
 Q\cfgprod{FACT}{number}Q
-\end{cfg}
+\end{cfgh}
 %----------------------------------------------------------
-\item Is the language defined by CFG~\ref{F.cfg.2} ambiguous? If so, show two syntax trees for the same input. If not, you must argue that it is not possible to create two different syntax trees for the same input.
-\item Is the grammar in Question 5 ambiguous? Explain.
 \item Is the grammar in Question 6 ambiguous? Explain.
-\item Do the grammars in Questions 5 and 6 define the same language? Explain.
+\item Is the grammar in Question 7 ambiguous? Explain.
+\item Do the grammars in Questions 6 and 7 define the same language? Explain.
+\item Write a CFG for a language that consists of zero or more statements, where each statement is either an assignment statement or a C style \code{while} statement. Be sure that loops can nest and that you handle curly braces correctly. You can use \code{var} as a terminal that represents any valid variable identifier. You can use \code{EXPR} without definition to represent any expression.
+\item Write a CFG for a language that consists of zero or more statements, where each statement is either an assignment statement or a C style \code{if} statement (including optional \code{else} clauses). Be sure that \code{if} statements can nest and that you handle curly braces correctly. You can use \code{var} as a terminal that represents any valid variable identifier. You can use \code{EXPR} without definition to represent any expression. Be certain that your grammar allows all valid programs and that it does not allow any invalid programs.
+
 \end{enumerate}
 
 \chapter{Pushdown Automata}
