@@ -3257,7 +3257,39 @@ $P(A) = \{ \varnothing \quad \{a\} \quad \{b\} \quad \{c\} \quad \{a \ b\} \quad
 Note that the power set is always a set of sets.
 
 \section{Operation Properties}
-\needswork
+Much like with arithmetic, set operations can be considered for commutative, associative, and distributed properties. Let's start with the commutative property. Which of the following are true?
+\begin{quote}
+$A \cup B = B \cup A$\\
+$A \cap B = B \cap A$\\
+$A - B = B - A$
+\end{quote}
+
+Since a union consists of all the elements from either set, and since order does not matter, it should be clear that the union of sets is commutative. Likewise for intersection. But for subtraction, the order does matter. Consider the following:
+\begin{quote}
+$\{a \ b \ c\} - \{c \ d \ e\} = {a \ b}$\\
+but\\
+$\{c \ d \ e\} - \{a \ b \ c\} = {d \ e}$\\
+\end{quote}
+This counter example is sufficient to prove that subtraction of sets is not commutative.
+
+For the associative property, which of the following are true?
+\begin{quote}
+$(A \cup B) \cup C = A \cup (B \cup C)$\\
+$(A \cap B) \cap C = A \cap (B \cap C)$\\
+$(A - B) - C = A - (B - C)$
+\end{quote}
+
+Much like with commutativity, the property holds with union and intersection but not subtraction. The union of three sets is the collection of the elements from all three. Order does not matter. For intersection, it is the elements that are common to all three. It doesn't matter which pair of sets is considered first.
+
+For subtraction, the following counter example is sufficient to prove the property does not hold for subtraction:
+\begin{quote}
+$(\{a \ b \ c\} - \{c \ d \ e\}) - \{c \ d\} = \{a \ b\} - \{c \ d\} = \{a \ b\}$\\
+but\\
+$\{a \ b \ c\} - (\{c \ d \ e\} - \{c \ d\}) = \{a \ b \ c\} - \{e\} = \{a \ b \ c\}$\\
+\end{quote}
+
+The distributive properties are left as an exercise.
+
 
 \chapter{Logic and Proofs}
 \needswork
