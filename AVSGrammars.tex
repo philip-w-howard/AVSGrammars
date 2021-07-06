@@ -3192,6 +3192,8 @@ When the set contains strings (multiple characters instead of a single character
 Empty sets can be represented as empty curly braces $\{\}$ or using the special symbol $\varnothing$.
 
 \section{Operations}
+\subsection{Containment}
+
 The symbols $\in$ and $\notin$ are used to indicate that an item is (or is not) an element of a set. So, for example,
 \begin{quote}
 $a \in \{ a \ b \ c\}$
@@ -3201,29 +3203,13 @@ and
 $x \notin \{ a \ b \ c\}$
 \end{quote}
 
+\subsection{Comparison}
 Two sets are equal if they contain the same elements (recall that order is not important) so:
 \begin{quote}
 $\{ c \ b \ a\} = \{ a \ b \ c\}$
 \end{quote}
 
-There are three binary operations on sets: union (represented by the $\cup$ operator), intersection (represented by the $\cap$ symbol), and difference (represented by the $-$ symbol). 
-
-For union, list all the elements in either set, and remove the duplicates:
-\begin{quote}
-$\{ a \ b \ c\} \cup \{ c \ d \ e\rbrace = \lbrace a \ b \ c \ d \ e\}$
-\end{quote}
-
-For intersection, take all the elements that are common to both sets:
-\begin{quote}
-$\{ a \ b \ c\} \cap \{ c \ d \ e\} = \{ c \}$
-\end{quote}
-
-For difference, take all the elements that are in the first set, but not the second:
-\begin{quote}
-$\{ a \ b \ c\} - \{ c \ d \ e\} = \{ a \ b \}$
-\end{quote}
-
-In addition to equality, there are two other set comparison operations: subset ($\subset$) and subset-or-equal ($\subseteq$). Just like with equals, these operations can be inverted (`not'ed) by placing a slash through them ($\neq \ \not \subset \ \nsubseteq$). The subset operators can also be reversed to get the reverse meaning (much like $<$ and $>$).
+In addition to equality, there are two other set comparison operations: subset ($\subset$) and subset-or-equal ($\subseteq$). Just like with equals, these operations can be inverted (`not'ed) by placing a slash through them ($\neq \ \not \subset \ \nsubseteq$). The subset operators can also be reversed to get the reverse meaning (much like $<$ and $>$ for numeric comparisons).
 
 Subset means that all the elements in the first set are also in the second. A strict subset implies that the set on the right has elements not in the left set:
 \begin{quote}
@@ -3246,13 +3232,45 @@ $\{ a \ b \ c\} \subseteq \{ a \ b \ c \}$
 
 It should be noted that the empty set is considered a subset (or equal) to any set.
 
+\subsection{Binary Operations}
+There are three binary operations on sets: union (represented by the $\cup$ operator), intersection (represented by the $\cap$ symbol), and difference (represented by the $-$ symbol). 
+
+For union, list all the elements in either set, and remove the duplicates:
+\begin{quote}
+$\{ a \ b \ c\} \cup \{ c \ d \ e\rbrace = \lbrace a \ b \ c \ d \ e\}$
+\end{quote}
+
+Or in pictures, the red circle contains $a$, $b$, and $c$. The blue circle contains $c$, $d$, and $e$. The union of the two contains all five letters.
+\begin{center}
+\begin{tikzpicture}
+\filldraw[color=red, fill=red, fill opacity=0.5, very thick] (-1,0) circle (1.5);
+\filldraw[color=blue, fill=blue, fill opacity=0.5, very thick] (1,0) circle (1.5);
+\draw (-1,0) node {a b};
+\draw (0,0) node {c};
+\draw (1,0) node {d e};
+\end{tikzpicture}
+\end{center}
+
+For intersection, take all the elements that are common to both sets:
+\begin{quote}
+$\{ a \ b \ c\} \cap \{ c \ d \ e\} = \{ c \}$
+\end{quote}
+
+Using the picture above, the only letter in both circles is $c$, so that is the only letter in the intersection of the red and blue circles.
+
+For difference, take all the elements that are in the first set, but not the second:
+\begin{quote}
+$\{ a \ b \ c\} - \{ c \ d \ e\} = \{ a \ b \}$
+\end{quote}
+
+\subsection{Power Sets}
 There is one final set operation that needs to be mentioned: the power set. $P(A)$ is the power set of $A$, and it consists of all subsets of $A$ including the empty set. If
 \begin{quote}
 $A = \{ a \ b \ c \}$
 \end{quote}
 Then:
 \begin{quote}
-$P(A) = \{ \varnothing \quad \{a\} \quad \{b\} \quad \{c\} \quad \{a \ b\} \quad \{a \ c\} \quad \{b\ c\} \quad \{a b c\}\}$
+$P(A) = \{ \varnothing \quad \{a\} \quad \{b\} \quad \{c\} \quad \{a \ b\} \quad \{a \ c\} \quad \{b\ c\} \quad \{a \ b \ c\}\}$
 \end{quote}
 Note that the power set is always a set of sets.
 
@@ -3264,11 +3282,32 @@ $A \cap B = B \cap A$\\
 $A - B = B - A$
 \end{quote}
 
-Since a union consists of all the elements from either set, and since order does not matter, it should be clear that the union of sets is commutative. Likewise for intersection. But for subtraction, the order does matter. Consider the following:
+Since a union consists of all the elements from either set, and since order does not matter, it should be clear that the union of sets is commutative. Likewise for intersection. This can be seen from the following two diagrams. Drawing the diagram in the reverse order does not change the union nor intersection.
+
+\begin{center}
+\begin{tikzpicture}
+\filldraw[color=red, fill=red, fill opacity=0.5, very thick] (-1,0) circle (1.5);
+\filldraw[color=blue, fill=blue, fill opacity=0.5, very thick] (1,0) circle (1.5);
+\draw (-1,0) node {a b};
+\draw (0,0) node {c};
+\draw (1,0) node {d e};
+\end{tikzpicture}
+\begin{tikzpicture}
+\filldraw[color=blue, fill=blue, fill opacity=0.5, very thick] (-1,0) circle (1.5);
+\filldraw[color=red, fill=red, fill opacity=0.5, very thick] (1,0) circle (1.5);
+\draw (1,0) node {b a};
+\draw (0,0) node {c};
+\draw (-1,0) node {e d};
+\end{tikzpicture}
+\end{center}
+
+For subtraction, the order does matter. Consider the following:
 \begin{quote}
-$\{a \ b \ c\} - \{c \ d \ e\} = {a \ b}$\\
+$\{a \ b \ c\} - \{c \ d \ e\} = \{a \ b\}$\\
+\\
 but\\
-$\{c \ d \ e\} - \{a \ b \ c\} = {d \ e}$\\
+\\
+$\{c \ d \ e\} - \{a \ b \ c\} = \{d \ e\}$\\
 \end{quote}
 This counter example is sufficient to prove that subtraction of sets is not commutative.
 
@@ -3284,12 +3323,81 @@ Much like with commutativity, the property holds with union and intersection but
 For subtraction, the following counter example is sufficient to prove the property does not hold for subtraction:
 \begin{quote}
 $(\{a \ b \ c\} - \{c \ d \ e\}) - \{c \ d\} = \{a \ b\} - \{c \ d\} = \{a \ b\}$\\
+\\
 but\\
+\\
 $\{a \ b \ c\} - (\{c \ d \ e\} - \{c \ d\}) = \{a \ b \ c\} - \{e\} = \{a \ b \ c\}$\\
 \end{quote}
 
 The distributive properties are left as an exercise.
 
+\section{Exercises}
+\begin{enumerate}
+\item Given the universal set $U = \{ a \ b \ c \  \ldots \ z\}$, list the elements of the following sets. Which, if any, are equal?
+
+\begin{quote}
+$A = \{x \ | \  x $ is a vowel $\}$\\
+$B = \{x \ | \  x $ is a letter in the word ``little'' $\}$\\
+$C = \{x \ | \  x $ precedes $f$ in the alphabet $\}$\\
+$D = \{x \ | \  x $ is a letter in the word ``title'' $\}$\\
+$E = \{a \ b \ c \ d \ e\}$\\
+\end{quote}
+Notation note: The vertical bar is read ``such that'' so that the definition of $A$ should be read, ``The set of all letters such that the letter is a vowel.'' The others should be read similarly.
+
+\item Consider the following sets:
+\begin{quote}
+$\varnothing$\\
+$A = \{a \ b \ c \ d \ e\}$\\
+$B = \{b \ c \ d \ e\}$\\
+$C = \{a \ b \ d \ f \ g\}$\\
+$D = \{a \ b \}$\\
+$E = \{d \ e \ f \ g \ h\}$\\
+\end{quote}
+Insert the correct symbol $\subseteq$ or $\not \subseteq$ between each pair of sets:
+\begin{enumerate}
+\item $\varnothing \ \ \ A$
+\item $D \ \ \ E$
+\item $A \ \ \ B$
+\item $D \ \ \ A$
+\item $B \ \ \ C$
+\item $D \ \ \ C$
+\item $C \ \ \ D$
+\item $B \ \ \ D$
+\end{enumerate}
+
+\item Given the following sets:
+\begin{quote}
+$A = \{a \ b \ c \ d \ e\}$\\
+$B = \{a \ b \ d \ f \ g\}$\\
+$C = \{b \ c \ e \ g \ h\}$\\
+$D = \{d \ e \ f \ g \ h\}$\\
+\end{quote}
+Find
+\begin{enumerate}
+\item $A \cup B$
+\item $B \cap C$
+\item $C - D$
+\item $A \cap (B \cup D)$
+\item $B - (C \cup D)$
+\item ($A \cap D) \cup B$
+\end{enumerate}
+
+\item Let $A$ and $B$ be any sets. Are the following true? Justify your answers. Note: you can't show that it is true for some particular pair of sets, you need to argue that it is true for all sets, or give a particular example to show it is not true.
+\begin{enumerate}
+\item $A \cup B = B \cup (A - B)$
+\item $B \cap (B - A) = \varnothing$
+\item $A = (A - B) \cup (A \cap B)$
+\end{enumerate}
+\item Let $A = \{a \ b \ c \ d\}$. List all the elements in the power set of A.
+\item Given $A = \{\{a \ b\} \ \{c\} \ \{d \ e \ f\}\}$, state whether each of the following is true or false. Justify your answer.
+\begin{enumerate}
+\item $a \in A$
+\item $\{c\} \subset A$
+\item $\{d \ e \ f\} \in A$
+\item $\{\{a \ b\}\} \subset A$
+\item $\varnothing \subset A$
+\end{enumerate}
+\end{enumerate}
 
 \chapter{Logic and Proofs}
 \needswork
