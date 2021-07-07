@@ -259,16 +259,16 @@ Figure~\ref{F.formal.language.processor} illustrates what a formal language proc
 \draw [->] (b) -- (c) node [midway, above] {answer} ;
 %\draw [->] (b) -- (c) node [midway, above, text width=3cm, align=center] {improved\\code} ;
 \end{tikzpicture}
- \caption[Formal language processor]{A formal language process is fed some input and it returns one of two answers: The input is a valid statement in the language or The input is not a valid statement in the language.}
+ \caption[Formal language processor]{A formal language process is fed some input and it returns one of two answers: ``The input is a valid statement in the language'' or ``The input is not a valid statement in the language''.}
   \label{F.formal.language.processor}
 \end{figure}
 %----------------------------------------------------------
 
-If you attempted to create a Language Processor for English, it should probably reject statements like, ``Cup sky red Perl''. Rejecting that statement might be easy enough, but could you create a processor that accepts all valid English (including English poetry), and rejects all non-English. To get a sense of the difficulty of this challenge, I refer you to poetry by ee cummings (capitalization is correct). The poetry of ee cummings is considered valid (and even good) English poetry by those who get to decide such things, but it would likely be rejected my any sensible English language validity checker.
+If you attempted to create a Language Processor for English, it should probably reject statements like, ``Cup sky red Perl''. Rejecting that statement might be easy enough, but could you create a processor that accepts all valid English (including English poetry), and rejects all non-English. To get a sense of the difficulty of this challenge, I refer you to poetry by ee cummings (capitalization is correct). The poetry of ee cummings is considered valid (and even good) English poetry by those who get to decide such things, but it would likely be rejected by any sensible English language validity checker.
 
 Those who study formal languages usually restrict themselves to very simple languages. As an example, consider the language of all strings consisting of any combination of the letters ``a'' and ``b''. This language includes strings such as ``aaaa'' and ``abababbbb''. It isn't useful for anything outside the study of formal languages, but it is an example of a formal language.
 
-The study of formal languages is tightly coupled with mathematical sets. In particular, a formal language is a set of strings. Specifically, the set of all strings that meet the definition of the language.  This book assumes you are familiar with mathematical sets including the operations union, intersection, and subtraction. If you aren't familiar with these operations, I'm sure there's a Wikipedia page that can help you out.
+The study of formal languages is tightly coupled with mathematical sets. In particular, a formal language is a set of strings. Specifically, the set of all strings that meet the definition of the language.  This book assumes you are familiar with mathematical sets including the operations union, intersection, and subtraction. If you aren't familiar with these operations, you can consult Appendix~\ref{C.Sets}.
 
 Formal languages consist of the following:
 \begin{enumerate}
@@ -284,7 +284,7 @@ $\Sigma = \{ a \ b \}$
 All strings of five letters.
 \end{quote}
 
-Given this definition, the string ``aaxbb'' would be rejected because 'x' is not in the alphabet. The string ``aabb'' would likewise be rejected because it consists of four letters, not five. However, the strings, ``aaaaa'', ``aabbb'', and ``ababa'' would all be included in the language (along with many others).
+Given this definition, the string ``aaxbb'' would be rejected because `x' is not in the alphabet. The string ``aabb'' would likewise be rejected because it consists of four letters, not five. However, the strings, ``aaaaa'', ``aabbb'', and ``ababa'' would all be included in the language (along with many others).
 
 Formal languages can be broken into categories based on the mechanism used to specify the language. We will initially be interested in three types of definitions, which are discussed in the following chapters.
 \begin{enumerate}
@@ -304,7 +304,7 @@ Recursion is a useful technique in writing some computer programs. It is also a 
 \end{enumerate}
 \end{enumerate}
 
-Which of these two definitions is the most useful? Probably the first one. If you wanted to prove the 96 is in EVEN using the first definition, a simple division by 2 suffices. If you wanted to prove this using the second definition, it would take a bit longer. But there are other instances where a recursive definition is quite elegant.
+Which of these two definitions is the most useful? Probably the first one. If you wanted to prove that 96 is in EVEN using the first definition, a simple division by 2 suffices. If you wanted to prove this using the second definition, it would take a bit longer. But there are other instances where a recursive definition is quite elegant.
 
 Consider the following non-recursive definition of arithmetic expressions:
 \begin{enumerate}
@@ -363,7 +363,7 @@ The construction is as follows:
 \end{enumerate}
 Having constructed the desired expression using the rules, we have proven that it is a valid arithmetic expression. (More formally, we have proven that it is in the language AE as defined above).
 
-How do we prove that an expression is not in AE? This is a bit more complicated. Take the expression given above:
+How do we prove that an expression is not in AE? This is a bit more complicated. Let's reconsider an erroneous expression:
 \begin{quote}
 $()()(2+7)/3-(((4+5)*(6)-1)*3 + 4)$
 \end{quote}
@@ -383,12 +383,12 @@ The proof is as follows:
 \item Since there is no way to construct a string that starts with a close parenthesis or ends with an open parenthesis, such a string does not exist in AE.
 \end{enumerate}
 
-Back to empty parenthesis: We could prove this using a similar mechanism to what we just used. However, we will use proof by contradiction just to illustrate this mechanism. With this style of proof, you assume the opposite of what you want to prove and then reason until you encounter a contradiction. Since you got to a contradiction, your assumption must have been false. Note: as we will see later, it is important that you only make a single assumption. The contradiction means \textbf{at least one} of your assumptions was false. If you've made multiple assumptions, you don't know which one is false.
+Back to empty parenthesis: We could prove this using a similar mechanism to what we just used. However, we will use proof by contradiction just to illustrate this mechanism. With this style of proof, you assume the opposite of what you want to prove and then reason until you encounter a contradiction. Since you reasoned to a contradiction, your assumption must have been false. Note: as we will see later, it is important that you only make a single assumption. The contradiction means \textbf{at least one} of your assumptions was false. If you've made multiple assumptions, you don't know which one is false.
 
 Let's assume that a string in AE can contain empty parenthesis. Let's define $s$ as the shortest string that contains empty parenthesis. The string $s$ must be constructed using one of the rules. Which one? Let's consider them one at a time:
 \begin{enumerate}
 \item Numbers do not contain parenthesis, so $s$ cannot be constructed using Rule~1.
-\item The empty string is not a valid number. Rules 2a-2e add characters to the string, and no rules subtract characters from the string. Therefore, it is not possible to have an empty string in AE.
+\item It is not possible to have and empty string in AE. This is because the empty string is not a valid number, and no rules subtract characters from the string so the smallest\footnote{Here (as with all sets of strings), ``smallest'' means the shortest string, not the smallest numeric value} AE is non-empty. 
 \item Rules 2a-2d do not add parenthesis to the string so they cannot create $s$.
 \item Rule 2e will create an empty set of parenthesis if either:
 \begin{enumerate}
@@ -399,6 +399,7 @@ However, we've already proven that neither of these can happen.
 \item Since there is no way to construct $s$, our assumption must be false and we can conclude that a string in AE cannot contain empty parenthesis.
 \end{enumerate}
 
+Why did we require $s$ to be the smallest string that contained empty parenthesis? This was necessary so that the rule that created $s$ was the rule that introduced the empty parenthesis. If we allowed $s$ to be any string with empty parenthesis, then we couldn't reason about how the empty parenthesis were created.
 \section{Constructing Recursive Definitions}
 We've seen several recursive definitions. What do they have in common? A recursive definition is always composed of two parts:
 \begin{itemize}
@@ -406,7 +407,7 @@ We've seen several recursive definitions. What do they have in common? A recursi
 \item Recursive Rules of the form, ``If $x$ is in L, then so is $f(x)$''. Rules 2a-2e for AE are the recursive rules. Recursive rules can use multiple variables as illustrated in the definition of AE.
 \end{itemize}
 
-When constructing recursive definitions, it is important to keep in mind what the language is. For example, the language AE was a set of strings. As a result, rules 2a-2e were adding characters to the string, they were not performing arithmetic operations. The language EVEN was a set of numbers, so Rule~b was performing an arithmetic operation to create a new number.
+When constructing recursive definitions, it is important to keep in mind what the language is. For example, the language AE was a set of strings. As a result, rules 2a-2e were adding characters to the string, they were not performing arithmetic operations. The language EVEN was a set of numbers, so Rule~b was performing an arithmetic operation to create a new number. It is important not to mix and match these: recursive rules for languages of strings must perform string operations; recursive rules for languages of numbers must perform numeric operations.
 
 If the language is a set of strings, then the recursive rules always extend or combine strings. That is, they always make longer strings, they never remove characters from the string. In other words, you should never have a rule of the form, ``If $x$ is in L, then so is $x$ without the trailing semicolon.''
 
@@ -428,7 +429,7 @@ Note 1: In Rule~3c, $f g$ is used to represent the multiplication of $f$ and $g$
 
 Note 2: like AE, this is a set of strings so the arithmetic operators in Rule~3 are simply characters, no arithmetic operations are performed. 
 
-Given this definition, it should be easy enough to show that $(24/4/2)$ is in Polynomial (note that it is also in AE). What is the meaning of this expression? is it $3$ or $12$ (based on which operation is performed first). It turns out this is an erroneous question. Both Polynomial and AE are sets of strings. We can answer the question, ``Is this string in the language?'', but the question ``What does this string mean?'' is not relevant to these languages.
+Given this definition, it should be easy enough to show that $(24/4/2)$ is in Polynomial (note that it is also in AE). What is the meaning of this expression? is it $3$ or $12$ (based on which operation is performed first). It turns out this is an erroneous question. Both Polynomial and AE are sets of strings. We can answer the question, ``Is this string in the language?'', but the question ``What is the numeric value of this string?'' is not relevant to these languages.
 
 In programming languages, there is syntax and semantics. One way of thinking of these two is that syntax deals with the question, ``Is this a valid statement in the formal language?'' Semantics deals with the question, ``What is the meaning of this statement?'' or even, ``Does this statement have a valid meaning in the language?''. At this point, we are only concerned with syntax, not semantics.
 
@@ -455,10 +456,10 @@ Many programmers are familiar with regular expressions from non-compiler context
 
 Regular expressions include the following features:
 \begin{mydesc}[10em]
-	\item[Concatenation] Concatenation is gluing two strings end-to-end. For example, concatenating ``\code{ab}'' with ``\code{bc}'' yields the string ``\code{abcd}''.
+	\item[Concatenation] Concatenation is gluing two strings end-to-end. For example, concatenating ``\code{ab}'' with ``\code{cd}'' yields the string ``\code{abcd}''.
   \item[Alternation] Alternation means to choose exactly one from a set of alternatives. Regular expressions use either the vertical bar (\code{|}) or the plus sign (\code{+}) to mean alternation. So the expression \code{a + b + c} means to choose either an '\code{a}', a '\code{b}', or a '\code{c}'. 
 	\item[Grouping] Parenthesis can be used for grouping operations much as they can in algebraic expressions.
-	\item[Kleene Closure] Kleene Closure means to take zero or more instances of a string. Kleene Closure is denoted by an asterisk ($^*$). So, for example, $x^*$ means zero or more '$x$' characters. Kleene Closure has higher precedence than concatenation so that $ab^*$ means $a(b^*)$ not $(ab)^*$.
+	\item[Kleene Closure] Kleene Closure means to take zero or more instances of a string. Kleene Closure is denoted by an asterisk (\code{*}). So, for example, \code{x*} means zero or more `\code{x}' characters. Kleene Closure has higher precedence than concatenation so that \code{ab*} means \code{a(b*)} not \code{(ab)*}.
 \end{mydesc}
 
 In addition to these operations, the $\Lambda$ symbol is used to represent an empty string (a string with no characters in it).
@@ -469,7 +470,7 @@ The most common enhancements to this syntax are as follows:
  (\code{?}) 
 indicates zero or one of an item so that \code{a?} 
 means the same as ($\Lambda$ \code{+ a}).
-\item[one or more] The plus sign (\code{+}) is similar to Kleene Closure, but it is one-or-more not zero-or-more so that \code{a+} means the same as $aa^*$.
+\item[one or more] The plus sign (\code{+}) is similar to Kleene Closure, but it is one-or-more not zero-or-more so that \code{a+} means the same as \code{aa*}.
 \item[character range] Square brackets (\code{[ ]}) can be used to specify a character range so that \code{[a-m]} means any single character in the range '\code{a}' through '\code{m}'. This could be represented long-hand as '\code{(a + b + c + d + ...)}'.
 \end{mydesc}
 
@@ -500,7 +501,7 @@ $(a^*b^*)^* = (a+b)^*$
 \end{quote}
 
 \section{Language Families}
-Each regular expression defines a language.\footnote{These languages are not unique; it is possible to write multiple regular expressions for the same language.} Remember that a formal language is a set of strings. Also recall that it is possible to have a set of sets, so what can we say about the set of all languages that can be defined by regular expressions? This set is known as Regular Languages. They are ``regular'' in the sense that they can be defined by a regular expression. Regular languages have a set of properties that they share. We will eventually explore what these properties are. 
+Each regular expression defines a language.\footnote{These languages are not unique; it is possible to write multiple regular expressions for the same language.} Remember that a formal language is a set of strings. Also recall that it is possible to have a set of sets, so what can we say about the set of all languages that can be defined by regular expressions (this is a set of sets)? This set is known as Regular Languages. They are ``regular'' in the sense that they can be defined by a regular expression. Regular languages have a set of properties that they share. We will eventually explore what these properties are. 
 
 We can also think of the set of all regular expressions. This is yet another language (set of strings). We can give a recursive definition of this language, but we cannot give a regular expression for it because, as we shall see, it is not regular.
 
@@ -541,7 +542,7 @@ would not be proof that it was. All strings generated by this regular expression
 $(a+b)^*a(a+b)^*b(a+b)^* \subset L$
 \end{quote}
 
-This is not sufficient proof that L is regular. It is always possible to give a regular subset of any language. This can be done by giving a alternation of a finite list of words from the language. The ability to show there is a regular subset of the language is not sufficient proof that the language is regular.
+Giving a regular expression for a subset of a language is not a proof that the language is regular. This is because it is always possible to give a regular subset of any language. A regular subset can be generated by giving a alternation of a finite list of words from the language. As a result, the ability to show there is a regular subset of the language is not sufficient proof that the language is regular.
 
 A regular expression that generates a language is adequate proof that the language is regular (provided the regular expression actually corresponds to the language). How can we prove a language isn't regular? An inability to write a regular expression for the language is not sufficient proof. The statement, ``I can't write a regular expression for that language'' might be because the language isn't regular or it might be because you simply aren't creative (or smart or persistent) enough to come up with one. Chapter~\ref{C.RL.theory} provides a mechanism to prove a language isn't regular. 
 
@@ -559,9 +560,9 @@ The proof is quite simple. If a language is finite, every word in the language c
 Before proving other properties of regular languages, we have a question to answer.
 
 \section{Why Regular Languages?}
-We've identified a class of languages known as ``Regular Languages'' --- namely, those languages that can be defined by regular expressions. Why is this class of languages interesting? From a theory point of view, they are interesting because they form the smallest class of languages in what's known as the Chompsky Hierarchy of languages. Later parts of the text will deal with the larger classes of languages in the hierarchy, all of which are supersets of regular languages. 
+We've identified a class of languages known as ``Regular Languages'' --- namely, those languages that can be defined by regular expressions. Why is this class of languages interesting? From a theory point of view, they are interesting because they form the smallest class of languages in what's known as the Chompsky Hierarchy of Languages. Later parts of the text will deal with the larger classes of languages in the hierarchy, all of which are supersets of regular languages. 
 
-From a practical point of view, regular languages are useful because they are fast and efficient to process. By ``process'', we mean answering the question, ``Is this input a member of a particular regular language?'' A common application of this is the \code{grep} utility included with most Linux distributions. With \code{grep}, you specify a regular expression and an input file, and \code{grep} identifies all lines of the file that include a match for the regular expression\footnote{This is a simplification of what \code{grep} does, but it is accurate for the purposes of this illustration}. Most uses of regular expressions include ``scanning'' for a match. A text string (often the contents of a text file) is read looking for a match to the regular expression. How efficient are regular expressions scanners? Theorem~\ref{TH.O.N.for.res}, which won't be proven until later, gives a bound on their efficiency.
+From a practical point of view, regular languages are useful because they are fast and efficient to process. By ``process'', we mean answering the question, ``Is this input a member of a particular regular language?'' A common application of this is the \code{grep} utility included with most Linux distributions. With \code{grep}, you specify a regular expression and an input file, and \code{grep} identifies all lines of the file that include a match for the regular expression\footnote{This is a simplification of what \code{grep} does, but it is accurate for the purposes of this illustration.}. Most uses of regular expressions include ``scanning'' for a match. A text string (often the contents of a text file) is read looking for a match to the regular expression. How efficient are regular expressions scanners? Theorem~\ref{TH.O.N.for.res}, which won't be proven until later, gives a bound on their efficiency.
 \begin{theorem}
 \label{TH.O.N.for.res}
 Any regular expression can be scanned for in $O(N)$ with small time constant where $N$ is the length of the input string.
@@ -596,7 +597,7 @@ There is a well-known children's game called Chutes and Ladders. The goal is to 
 
 What does this game have to do with regular expressions or finite automata? If we assume that the spinner only generates numbers less than ten (single digit numbers), then we could spin the spinner a bunch of times and write down each result. The result would be a string of digits. We could then ask the question, ``Does this sequence of moves result in someone winning the game?'' That still doesn't sound like a regular expression question (although scanning a string sounds familiar), so let's think of a Finite Automaton\footnote{``Automaton is the singular of the plural ``Automata''.} (aka state machine).
 
-A finite automaton consists of a finite number of states (or configurations) and transitions from state to state. How could we turn Chutes and Ladders into a state machine? Suppose there were three players. Each player's marker could be on any of the squares on the board. Each configuration of markers (each player on each valid square in every combination) could be considered a state. There would be a large number of states, but the number would be finite. Transitions consist of moves such as ``Player~2 moves forward three spaces''. Each state would have an outbound transition for each possible spinner result for each player. The finite automaton representation of the game makes it clear that there is no strategy involved. The machine process the input (the sequence of spins) without any human involvement. The outcome is determined solely by the sequence of spins. But the question still remains, ``What does this have to do with regular expressions?''
+A finite automaton consists of a finite number of states (or configurations) and transitions from state to state. How could we turn Chutes and Ladders into a state machine? Suppose there were three players. Each player's marker could be on any of the squares on the board. Each configuration of markers (each player on each valid square in every combination) could be considered a state. There would be a large number of states, but the number would be finite. Transitions consist of moves such as ``Player~2 moves forward three spaces''. Each state would have an outbound transition for each possible spinner result for each player. The finite automaton representation of the game makes it clear that there is no strategy involved. The machine processes the input (the sequence of spins) without any human involvement. The outcome is determined solely by the sequence of spins. But the question still remains, ``What does this have to do with regular expressions?''
 
 Before we answer that question (through some other examples), lets define a standardized way of graphically representing finite automata. Finite automata consist of a finite number of states and transitions between states. One state is defined as the start state, and any number of states can be defined as final states. The start state in an FA is signified by an inbound arrow that doesn't originate from another state. Processing always starts in the start state. Final states are signified by a double circle. Transitions are labeled by the letter that is used to move from one state to another. This format is illustrated in Figure~\ref{F.FA_1}.
 
@@ -639,7 +640,7 @@ Figure~\ref{F.FA_2} gives another FA. This FA shows a slightly different format.
 \item State 3: A $b$ not preceded by a $b$.
 \item State 4: Have read a double letter.
 \end{enumerate}
-Note that once a double letter has been found, the FA remains in the final state no matter what other letters are read.
+Note that once a double letter has been found, the FA remains in the final state no matter what other letters are read. This FA is equivalent to the regular expression $(a+b)^*(aa + bb)(a+b)^*$, which is all strings with a double letter.
 
 %----------------------------------------------------------
 \begin{figure}[hbt]
@@ -688,7 +689,7 @@ Current State & a & b \\
 
 \section{Non-deterministic Finite Automata}
 
-The FA illustrated in Figure~\ref{F.FA_1} is a Deterministic Finite Automaton (DFA). It is deterministic in the sense that for each character that is processed, the FA has exactly one choice on what to do. There is another class of FA's known as Non-deterministic Finite Automata (NFA's). With NFA's, for a given input, there is the potential for multiple choices on what to do. The choices can take two forms:
+The FA illustrated in Figure~\ref{F.FA_1} is a Deterministic Finite Automaton (DFA). It is deterministic in the sense that for each character that is processed, the FA has exactly one choice on what to do. It is also Complete because each state has an outbound transition for each letter in the alphabet. There is another class of FA's known as Non-deterministic Finite Automata (NFA's). With NFA's, for a given input, there is the potential for multiple choices on what to do. The choices can take two forms:
 \begin{enumerate}
 \item Multiple outbound edges labeled with the same letter. If that letter is read, any of the outbound edges labeled with that letter can be taken. This is illustrated by the edges from Node~$a$ labeled $z$ in Figure~\ref{F.NFA_1}.
 \item Edges labeled $\Lambda$. These edges can be taken without consuming an input character. Node~$a$ has a $\Lambda$ transition meaning you can leave Node~$a$ without consuming any characters.
@@ -729,9 +730,9 @@ The NFA in Figure~\ref{F.NFA_1} accepts the following stings:
 	\item[$zy$] This string is accepted by using the $z$ to transition to Node~$d$ and then using the $y$ to transition to Node~$e$.
 \end{mydesc}
 
-NFA's aren't any more powerful than DFA's--anything you can do with an NFA you can also do with a DFA\footnote{Section~\ref{S.Subset.Construction} gives a construction that can turn any NFA into an equivalent DFA. This is sufficient to argue that anything that can be done with an NFA can also be done with a DFA.}. The reason for introducing NFA's is that converting from a regular expression to code that accepts strings matching that regular expression makes use of NFA's.
+NFA's aren't any more powerful than DFA's: anything you can do with an NFA you can also do with a DFA\footnote{Section~\ref{S.Subset.Construction} gives a construction that can turn any NFA into an equivalent DFA. This is sufficient to argue that anything that can be done with an NFA can also be done with a DFA.}. The reason for introducing NFA's is that converting from a regular expression to code that accepts strings matching that regular expression makes use of NFA's.
 
-\section{Thompson's}
+\section{Thompson's Construction}
 
 The first step in converting a regular expression to executable code is to convert it to an equivalent NFA. For this conversion, we are going to use Thompson's Construction\footnote{Credited to Ken Thompson, the originator of the Unix operating system.}. The beauty of Thompson's construction is that it is a mechanical process -- one that doesn't require any creative thought. In other words, it can be automated. A computer program can be written to perform this conversion.
 
@@ -816,7 +817,7 @@ If two FA's each have a single start state and a single final state, and if the 
 \caption{Kleene Closure}\label{F.Thompsons.KleeneClosure}
 \end{subfigure}
 
- \caption[Thompson's Construction]{Thompson's Construction method makes use of these three diagrams. For each diagram, the FA(s) being composed are represented as two nodes (the start and end nodes) labeled $FA$, $FA 1$, or $FA 2$.}
+ \caption[Thompson's Construction]{Thompson's Construction method makes use of these three diagrams. For each diagram, the FA(s) being composed are represented as two nodes (the start and end nodes) with a transition labeled as FA, FA~1, or FA~2.}
   \label{F.Thompsons}
 \end{figure}
 %----------------------------------------------------------
@@ -952,7 +953,8 @@ Finally, we drop this into the concatenation construction:
 \begin{center}
 \scalebox{.7}{
 \begin{tikzpicture}
-\fastart {0, 0};
+\fastart {-2, 0};
+\fanonterminalnode {0,0} {r}
 \fanonterminalnode {2,0} {s}
 \fanonterminalnode {4,0} {t}
 \fanonterminalnode {6,0} {x};
@@ -963,8 +965,9 @@ Finally, we drop this into the concatenation construction:
 \fanonterminalnode {12,0} {y};
 \faterminalnode {14,0} {u};
 
-\fatransition{start}{s}{};
-\fatransition{s}{t}{$a$};
+\fatransition{start}{r}{};
+\fatransition{r}{s}{$a$};
+\fatransition{s}{t}{$\Lambda$};
 \fatransition{t}{x}{$\Lambda$};
 \fatransition{x}{b1}{$\Lambda$};
 \fatransition{b1}{b2}{b};
@@ -1032,7 +1035,7 @@ It should be clear that Thompson's construction creates lots of $\Lambda$ transi
 \section{Subset Construction}\label{S.Subset.Construction}
 
 To illustrate how an NFA could be processed, let's consider again the NFA for $a^* (b + c)$ presented in the last section, but presented again in Figure~\ref{F.subsetNFA}. In this figure, each node is labeled so they can be explicitly referred to. For each state, we can ask the question, ``What states could I wind up in if I encounter a particular letter in the input?''. For example, suppose we haven't consumed any input yet, what states could we be in? Clearly we could be in State~$1$, the start state, but because of the $\Lambda$ transitions, we could also be in states $2, 4, 5, 6, 8$. This set of states ($=\{1, 2, 4, 5, 6, 8\}$)\footnote{When specifying sets of characters,  it is often easier to read the list of items if each item is separated with a comma. This works unless the set included a comma (as sets of characters for a compiler often do). I will generally included commas for readability unless the set of characters includes punctuation (commas or other punctuation marks). I hope this will improve readability.}
-forms a meta-state (let's call it $A$). From the meta-state~$A$, where could we wind up if we read an $a$. Since the meta-state~$A$ includes state~$2$, we can follow the $a$ to state~$3$. From there we can follow $\Lambda$s to $2, 4, 5, 6, 8$. This gives another meta-state. Let's call it $B = \{2, 3, 4, 5, 6, 8\}$. 
+forms a meta-state (let's call it $A$). From the Meta-state~$A$, where could we wind up if we read an $a$. Since the meta-state~$A$ includes State~$2$, we can follow the $a$ to State~$3$. From there we can follow $\Lambda$s to $2, 4, 5, 6, 8$. This gives another meta-state. Let's call it $B = \{2, 3, 4, 5, 6, 8\}$. 
 
 \begin{figure}[hbt]
 \centering
@@ -1073,26 +1076,18 @@ forms a meta-state (let's call it $A$). From the meta-state~$A$, where could we 
   \label{F.subsetNFA}
 \end{figure}
 
-We could continue to find new meta-states by enumerating all possible outbound inputs from each meta-state and then following the $\Lambda$s from the resulting states. The results are presented in Table~\ref{T.subsetTable1}.
+We could continue to find new meta-states by enumerating all possible outbound inputs from each meta-state and then following the $\Lambda$s from the resulting states. The results are presented in Table~\ref{T.subsetTable1}. The first column gives the name of the meta-state. The second column gives the list of NFA states that make up the meta-state. The remaining columns, one per possible input, indicates what NFA states can result by following one instance of the input character (then $\Lambda$s).
 
 \begin{table}[hbt]
 \center
-\begin{tabular}{l|l|l|l}
+\begin{tabular}{l|l|l|l|l}
 \hline
-\textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\textbf{meta-state} & \textbf{NFA states} & \textbf{a} & \textbf{b}  & \textbf{c}\\
 \hline
-A & 1, 2, 4, 5, 6, 8 & a & 2, 4, 5, 6, 8 \\
-A & 1, 2, 4, 5, 6, 8 & b & 7, 10 \\
-A & 1, 2, 4, 5, 6, 8 & c & 9, 10 \\
-B & 2, 4, 5, 6, 8 & a & 2, 4, 5, 6, 8 \\
-B & 2, 4, 5, 6, 8 & b & 7, 10 \\
-B & 2, 4, 5, 6, 8 & c & 9, 10 \\
-C & 7, 10 & a & - \\
-C & 7, 10 & b & - \\
-C & 7, 10 & c & - \\
-D & 9, 10 & a & - \\
-D & 9, 10 & b & - \\
-D & 9, 10 & c & - \\
+A & 1, 2, 4, 5, 6, 8 & 2, 4, 5, 6, 8 & 7, 10 & 9, 10\\
+B & 2, 4, 5, 6, 8 & 2, 4, 5, 6, 8 & 7, 10 & 9, 10\\
+C & 7, 10 & - & - & -\\
+D & 9, 10 & - & - & -\\
 \hline
 \end{tabular}
 \caption[Result of subset construction]{The results of performing the subset construction on the NFA in Figure~\ref{F.subsetNFA}. An input of ``-'' means there are no valid inputs starting from this state. Resulting states of ``-'' mean there are no valid destinations from this state.}
@@ -1101,11 +1096,11 @@ D & 9, 10 & c & - \\
 
 We need a formal algorithm for producing these tables. The steps are as follows:
 \begin{enumerate}
+\item Create the empty table with columns as shown in Table~\ref{T.subsetTable1}.
 \item From the start state, follow all $\Lambda$s. Follow as many as you can, not just one. This is known as the $\Lambda$ closure of a state: all states reachable from a given state following only $\Lambda$s. This set of states is labeled $A$ in the table.
-\item Make multiple rows, one for each character in the source-language, for each meta-state not already in the table. Initially this is only meta-state~$A$, and for the example NFA in Figure~\ref{F.subsetNFA}, the characters in the source language are $a, b, c$ meaning three rows for each meta-state.
-\item For each NFA state in the meta-state, if there is an outbound transition on the input, write down the destination state in the resulting states column.
-\item Extend the list of states in the resulting states column by forming the $\Lambda$ closure of each state already in the column.
-\item If there are any new unique sets of states in the resulting states column, give them a unique label and return to Step~2.
+\item For each NFA state in the meta-state, if there is an outbound transition on the input, write down the destination state in the column for that input.
+\item Extend the list of states by forming the $\Lambda$ closure of each state already in the cell.
+\item If there are any new unique sets of states in the resulting states column, give them a unique label and return to Step~3.
 \end{enumerate}
 The process will stop once all existing rows are filled in and no new rows get generated.
 
@@ -1139,184 +1134,138 @@ Let's use these rules to derive a table for the NFA below. Note: this NFA was \t
 } % end scaled box
 \end{center}
 
-Step~1 yields states 1 and 2, so this set becomes meta-state-$A$. There are three letters in the source language (a, b, c), so this yields the following rows:
+Step~2 yields states 1 and 2, so this set becomes meta-state-$A$. There are three letters in the source language (a, b, c), so this yields the following table:
 
 \begin{center}
 \small
-\begin{tabular}{l|l|l|l}
+\begin{tabular}{|c|l|l|l|l|}
 \hline
-\textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\textbf{meta-state} & \textbf{NFA states} & \textbf{a} & \textbf{b} & \textbf{c}\\
 \hline
-A & 1, 2 & a &  \\
-A & 1, 2 & b &  \\
-A & 1, 2 & c &  \\
+A & 1, 2 & & &  \\
 \hline
 \end{tabular}
 \end{center}
 
-Completing the first row, we can follow an $a$ from state 1 to 5, and from state 2 to 3. Add these two states to the resulting states column, and then follow the $\Lambda$s adding state 6. Label the set \code{ \{3, 5, 6\}} as meta-state~$B$ and add rows to the table:
+Completing the first row, we can follow an $a$ from state 1 to 5, and from state 2 to 3. Add these two states to the $a$s column, and then follow the $\Lambda$s adding state 6. Label the set \code{ \{3, 5, 6\}} as meta-state~$B$. 
+Completing row 1, there are no $b$ nor $c$ transitions out of any of the states in meta-state~$A$, so the resulting states for both of these columns are empty.
 
 \begin{center}
 \small
-\begin{tabular}{c|l|l|l|l}
+\begin{tabular}{|c|l|l|l|l|}
 \hline
-& \textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\textbf{meta-state} & \textbf{NFA states} & \textbf{a} & \textbf{b} & \textbf{c}\\
 \hline
-1 & A & 1, 2 & a & B = 3, 5, 6 \\
-2 & A & 1, 2 & b &  \\
-3 & A & 1, 2 & c &  \\
-4 & B & 3, 5, 6 & a &  \\
-5 & B & 3, 5, 6 & b &  \\
-6 & B & 3, 5, 6 & c &  \\
-
+A & 1, 2 & B = 3, 5, 6 & - & -\\
+B & 3, 5, 6 & & &  \\
 \hline
 \end{tabular}
 \end{center}
 
-Completing rows 2 and 3, there are no $b$ nor $c$ transitions out of any of the states in meta-state~$A$, so the resulting states for both of these rows are empty.
 
-Moving on to row 4, we can follow an $a$ from state 6 to state 4. We can then follow $\Lambda$s from 4 to 1 and 1 to 2 yielding meta-state $C$ containing states 1, 2, 4.
+Moving on to row 2, we can follow an $a$ from state 6 to state 4. We can then follow $\Lambda$s from 4 to 1 and 1 to 2 yielding meta-state $C$ containing states 1, 2, 4.
 
-For row 5, we can follow a $b$ from 3 to 4 and from 5 to 2. We can then follow a $\Lambda$s from 4 to 1 and from there to 2 (which we've already reached), so this meta-state contains 1, 2 and 4, which we've already labeled $C$.
+Wwe can follow a $b$ from 3 to 4 and from 5 to 2. We can then follow a $\Lambda$s from 4 to 1 and from there to 2 (which we've already reached), so this meta-state contains 1, 2 and 4, which we've already labeled $C$.
 
-For row 6, we can follow a $c$ from 5 to 6. There are no $\Lambda$s from 6, so meta-state~$D$ contains only 6. Adding these new rows to the table, we have:
+We can follow a $c$ from 5 to 6. There are no $\Lambda$s from 6, so meta-state~$D$ contains only 6. Adding these to the table, we have:
 
 \begin{center}
 \small
-\begin{tabular}{c|l|l|l|l}
+\begin{tabular}{|c|l|l|l|l|}
 \hline
-& \textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\textbf{meta-state} & \textbf{NFA states} & \textbf{a} & \textbf{b} & \textbf{c}\\
 \hline
-1 & A & 1, 2 & a & B = 3, 5, 6 \\
-2 & A & 1, 2 & b & - \\
-3 & A & 1, 2 & c & - \\
-4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
-5 & B & 3, 5, 6 & b & C \\
-6 & B & 3, 5, 6 & c & D = 6 \\
-7 & C & 1, 2, 4 & a & \\
-8 & C & 1, 2, 4 & b & \\
-9 & C & 1, 2, 4 & c & \\
-10 & D & 6 & a & \\
-11 & D & 6 & b & \\
-12 & D & 6 & c & \\
+A & 1, 2 & B = 3, 5, 6 & - & -\\
+B & 3, 5, 6 & C = 1, 2, 4 & C & D = 6 \\
+C & 1, 2, 4 & & & \\
+D & 6 & & &\\
 \hline
 \end{tabular}
 \end{center}
 
-Completing row 7, we can follow an $a$ from 1 to 5 and 2 to 3. The $\Lambda$ closure adds 6. This set of states is already labeled $B$, so we don't need to add any rows to the table.
+Completing row 3, we can follow an $a$ from 1 to 5 and 2 to 3. The $\Lambda$ closure adds 6. This set of states is already labeled $B$, so we don't need to add any rows to the table.
 
-For Row 8, there are no outbound edges on $b$ so the resulting states is empty.
+There are no outbound edges on $b$ so the resulting states is empty.
 
-For Row 9, we can follow a $c$ from 4 to 7. This new meta-state is labeled $E$.
+We can follow a $c$ from 4 to 7. This new meta-state is labeled $E$.
 
 \begin{center}
 \small
-\begin{tabular}{c|l|l|l|l}
+\begin{tabular}{|c|l|l|l|l|}
 \hline
-& \textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\textbf{meta-state} & \textbf{NFA states} & \textbf{a} & \textbf{b} & \textbf{c}\\
 \hline
-1 & A & 1, 2 & a & B = 3, 5, 6 \\
-2 & A & 1, 2 & b & - \\
-3 & A & 1, 2 & c & - \\
-4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
-5 & B & 3, 5, 6 & b & C \\
-6 & B & 3, 5, 6 & c & D = 6 \\
-7 & C & 1, 2, 4 & a & B\\
-8 & C & 1, 2, 4 & b & -\\
-9 & C & 1, 2, 4 & c & E = 7 \\
-10 & D & 6 & a & \\
-11 & D & 6 & b & \\
-12 & D & 6 & c & \\
-13 & E & 7 & a & \\
-14 & E & 7 & b & \\
-15 & E & 7 & c & \\
+A & 1, 2 & B = 3, 5, 6 & - & -\\
+B & 3, 5, 6 & C = 1, 2, 4 & C & D = 6 \\
+C & 1, 2, 4 & B & - & E =  7\\
+D & 6 & & &\\
+E & 7 & & &\\
 \hline
 \end{tabular}
 \end{center}
 
-For row 10, we can follow the a from 6 to 4 and then the $\Lambda$ to 1 and 2. This is already labeled~$C$.
+For D, we can follow the $a$ from 6 to 4 and then the $\Lambda$ to 1 and 2. This is already labeled~$C$.
 
-For row 11, there are no outbound transitions on $b$, so the resulting states is empty.
+There are no outbound transitions on $b$, so the resulting states is empty.
 
-For row 12, there are no outbound transitions on $c$, so the resulting states is empty.
+There are no outbound transitions on $c$, so the resulting states is empty.
 
 \begin{center}
 \small
-\begin{tabular}{c|l|l|l|l}
+\begin{tabular}{|c|l|l|l|l|}
 \hline
-& \textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\textbf{meta-state} & \textbf{NFA states} & \textbf{a} & \textbf{b} & \textbf{c}\\
 \hline
-1 & A & 1, 2 & a & B = 3, 5, 6 \\
-2 & A & 1, 2 & b & - \\
-3 & A & 1, 2 & c & - \\
-4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
-5 & B & 3, 5, 6 & b & C \\
-6 & B & 3, 5, 6 & c & D = 6 \\
-7 & C & 1, 2, 4 & a & B\\
-8 & C & 1, 2, 4 & b & -\\
-9 & C & 1, 2, 4 & c & E = 7 \\
-10 & D & 6 & a & C\\
-11 & D & 6 & b & -\\
-12 & D & 6 & c & -\\
-13 & E & 7 & a & \\
-14 & E & 7 & b & \\
-15 & E & 7 & c & \\
+A & 1, 2 & B = 3, 5, 6 & - & -\\
+B & 3, 5, 6 & C = 1, 2, 4 & C & D = 6 \\
+C & 1, 2, 4 & B & - & E = 7\\
+D & 6 & C & - & -\\
+E & 7 & & &\\
 \hline
 \end{tabular}
 \end{center}
 
-For Rows 13-15, there are no outbound edges from 7, so the resulting states are empty. This gives us the following table:
+For E, there are no outbound edges from 7, so the resulting states are empty. This gives us the following table:
 
 \begin{center}
 \small
-\begin{tabular}{c|l|l|l|l}
+\begin{tabular}{|c|l|l|l|l|}
 \hline
-& \textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\textbf{meta-state} & \textbf{NFA states} & \textbf{a} & \textbf{b} & \textbf{c}\\
 \hline
-1 & A & 1, 2 & a & B = 3, 5, 6 \\
-2 & A & 1, 2 & b & - \\
-3 & A & 1, 2 & c & - \\
-4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
-5 & B & 3, 5, 6 & b & C \\
-6 & B & 3, 5, 6 & c & D = 6 \\
-7 & C & 1, 2, 4 & a & B\\
-8 & C & 1, 2, 4 & b & -\\
-9 & C & 1, 2, 4 & c & E = 7 \\
-10 & D & 6 & a & C\\
-11 & D & 6 & b & -\\
-12 & D & 6 & c & -\\
-13 & E & 7 & a & -\\
-14 & E & 7 & b & -\\
-15 & E & 7 & c & -\\
+A & 1, 2 & B = 3, 5, 6 & - & -\\
+B & 3, 5, 6 & C = 1, 2, 4 & C & D = 6 \\
+C & 1, 2, 4 & B & - & E = 7\\
+D & 6 & C & - & -\\
+E & 7 & - & - & -\\
 \hline
 \end{tabular}
 \end{center}
 
 All rows are filled in, so we are done.
 
-\textbf{Important note:} The procedure is to follow the input out of the NFA states and then follow the $\Lambda$s. A common mistake is to follow the $\Lambda$s out of the NFA states. For example, when filling out the last row, even though there is a $\Lambda$ from state 3, we don't follow it because we are only looking for transitions on $c$.
+\textbf{Important note:} The procedure is to follow the input out of the NFA states and then follow the $\Lambda$s. A common mistake is to follow the $\Lambda$s out of the NFA states. For example, when filling out the B row, even though there is a $\Lambda$ from state 3, we don't follow it because we are only looking for transitions on $a$, $b$, or $c$.
 
 The subset construction was supposed to turn an NFA into a DFA, but it appears to have just produced a table. We can take the information in our final table from the example we just completed and summarize it in Figure~\ref{F.transitionTable}.
 
 %----------------------------------------------------------
 \begin{figure}[hbt]
 \centering
-
+\begin{center}
 \small
-\begin{tabular}{l|l|l}
+\begin{tabular}{|c|l|l|l|l|}
 \hline
-\textbf{From} & \textbf{transition on} & \textbf{To} \\
+\textbf{From} & \textbf{a} & \textbf{b} & \textbf{c}\\
 \hline
-A & a & B \\
-B & a & C \\
-B & b & C \\
-B & c & D \\
-C & a & B\\
-C & c & E \\
-D & a & C \\
+A & B & - & -\\
+B & C & C & D\\
+C & B & - & E\\
+D & C & - & -\\
+E & - & - & -\\
 \hline
 \end{tabular}
-\caption[Transition table for DFA]{A summary of the table derived in this section. Each row contains the start state, and input character, and the resulting state if that character is found while in the start state.}
+\end{center}
+\caption[Transition table for DFA]{A summary of the table derived in this section. Each row contains the start state, and for each input character, the resulting state if that character is found while in the start state.}
   \label{F.transitionTable}
 \end{figure}
 %----------------------------------------------------------
@@ -1356,8 +1305,8 @@ This is known as a transition table. It is fairly straight forward to convert th
 
 Does the subset construction always result in a DFA, or might it result in another NFA? The answer is that it always results in a DFA for the following two reasons:
 \begin{enumerate}
-\item The \emph{input} column never has $\Lambda$s, so the resulting FA will not have any $\Lambda$ transitions.
-\item When generating rows, each meta-state has exactly one row for each input character. As a result, there will never be multiple outbound transitions for the same character.
+\item The transition columns don't include transitions on $\Lambda$s, so the resulting FA will not have any $\Lambda$ transitions.
+\item Each meta-state has at most one destination state for each possible input character. As a result, there will never be multiple outbound transitions for the same character.
 \end{enumerate}
 The consequence is that the resulting FA has no non-determinism and is therefore a DFA.
 
@@ -1392,7 +1341,7 @@ $L($regular expressions$) = L($NFA$) = L($DFA$)$
 \end{quote}
 In other words, regular expressions, NFAs and DFAs are all equally powerful. They can be used to define exactly the same set of languages. This relation is known as Kleene's Theorem. It can be used to prove interesting properties of regular languages. Some properties are easier to prove using DFA's, some are easier to prove using regular expressions, but since these mechanisms are equivalent (can be used to define the same set of languages), then proving a property using one mechanism means the property applies to all languages in the family.
 
-\begin{theorem}
+\begin{theorem}\label{T.u.of.r.is.r}
 The union of two regular languages is regular.
 \end{theorem}
 This can be proved by construction. Consider two languages $L_1$ and $L_2$ both of which are regular. Since they are regular, there is a DFA that corresponds to each of them. If we construct a new NFA by creating a new start state that is connected to the start states of both $L_1$ and $L_2$, we would have an NFA that accepts any word in $L_1$ or any word in $L_2$. Since we have an NFA for this language, the language must be regular. Figure~\ref{F.union.re} illustrates this in picture form.
@@ -1420,12 +1369,12 @@ This can be proved by construction. Consider two languages $L_1$ and $L_2$ both 
 %----------------------------------------------------------
 This could also be proved using regular expressions. If $RE_1$ is a regular expression that defines $L_1$, and $RE_2$ is a regular expression that defines $L_2$, then $RE_1 + RE_2$ defines the language $FA_1 \cup FA_2$.
 
-\begin{theorem}
+\begin{theorem}\label{T.comp.r.is.r}
 The complement of any regular language is regular.
 \end{theorem}
-First, what do we mean by the complement of a language. If a regular language $L$ is defined over the alphabet $\Sigma$, then the complement of $L$, which we will call $L'$, is the set of all strings that are in $\Sigma ^*$, but not in $L$.
+First, what do we mean by the complement of a language. If a regular language $L$ is defined over the alphabet $\Sigma$, then the complement of $L$, which we will call $L'$, is the set of all strings that are in $\Sigma ^*$, but not in $L$. In other words, any word you can generate from $\Sigma$ that is not in $L$.
 
-We can again prove this by construction. If $L$ is regular, then there is a complete DFA that generates the language. By ``complete'', we mean that every state has an outbound transition for every letter in $\Sigma$. If we take that DFA and reverse the ``plusness'' of each state (that is, every state that was a final state in the original becomes a non-final state in the result, and any state that was non-final in the original becomes final in the result) then any string accepted by the original will be rejected in the final and any string regected by the original will be accepted in the final. Since the DFA is complete, it will never ``crash'' - that is, for each input letter, it will always have a transition it can follow. Since it is a deterministic FA, a given input can only wind up in a single state. That one an only state has opposite implications in the two FAs. If it accepts the string in one, it rejects the string in the other. As a result, the two FAs represent languages that are complements of each other.
+We can again prove this by construction. If $L$ is regular, then there is a complete DFA that generates the language. By ``complete'', we mean that every state has an outbound transition for every letter in $\Sigma$. If we take that DFA and reverse the ``plusness'' of each state (that is, every state that was a final state in the original becomes a non-final state in the result, and any state that was non-final in the original becomes final in the result) then any string accepted by the original will be rejected in the result and any string rejected by the original will be accepted in the result. Since the DFA is complete, it will never ``crash'' - that is, for each input letter, it will always have a transition it can follow. Since it is a deterministic FA, a given input can only wind up in a single state. That one an only state has opposite implications in the two FAs. If it accepts the string in one, it rejects the string in the other. As a result, the two FAs represent languages that are complements of each other.
 
 %----------------------------------------------------------
 \begin{figure}[htb]
@@ -1486,8 +1435,7 @@ We can again prove this by construction. If $L$ is regular, then there is a comp
 \begin{theorem}
 The intersection of two regular languages is regular.
 \end{theorem}
-
-DeMorgan's Law for sets states that $L_1 \cap L_2 = (L_1' \cup L_2')'$. In other words, the intersection of two sets is equal to the complement of the union of the complement of the two sets. If $L_1$ and $L_2$ are regular then so are their complements ($L_1'$ and $L_2'$). Since these are regular, then so is their union ($L_1' \cup L_2'$). And finally, so is the complement of that language ($(L_1' \cup L_2')'$). Since this is equivalent of the intersection of the two languages, then the intersection must also be regular.
+DeMorgan's Law for sets states that $L_1 \cap L_2 = (L_1' \cup L_2')'$. In other words, the intersection of two sets is equal to the complement of the union of the complement of the two sets. If $L_1$ and $L_2$ are regular then so are their complements ($L_1'$ and $L_2'$) (Theorem~\ref{T.comp.r.is.r}). Since these are regular, then so is their union ($L_1' \cup L_2'$)(Theorem~\ref{T.u.of.r.is.r}). And finally, so is the complement of that language ($(L_1' \cup L_2')'$). Since this is equivalent of the intersection of the two languages, then the intersection must also be regular.
 
 \begin{theorem}
 There is an algorithm to determine if two regular expressions are equivalent.
@@ -1547,7 +1495,7 @@ By ``loop in the FA'', what we mean is that there is some set of states which ca
 \label{F.FA.loop}
 \end{figure}
 %----------------------------------------------------------
-Consider any infinite regular language $L$. The language $L$ can be generated by some DFA. The DFA is finite, so let's say it has $N$ states, where $N$ is some finite number. The longest string that can be generated by this DFA without visiting the same state more than once is $\le (N-1)$. Clearly the length can't be $\ge N$ because if you make $N$ transitions between $N$ states, then at least one of those states must be repeated. The maximum length might be $< (N-1)$ because there might not be any path that touches each state exactly once. Since the maximum length without repeating states is $\le (N-1)$, then any string longer than this must visit the same state at least twice. In other words, there must be a path from State $S_i$ back to State $S_i$ and from there to a final state. This path constitutes a loop. As a result, the FA for any infinite regular language must contain a loop.
+Consider any infinite regular language $L$. The language $L$ can be generated by some DFA. The DFA is finite (The ``F'' in ``DFA''), so let's say it has $N$ states, where $N$ is some finite number. The longest string that can be generated by this DFA without visiting the same state more than once is $\le (N-1)$. Clearly the length can't be $\ge N$ because if you make $N$ transitions between $N$ states, then at least one of those states must be repeated. The maximum length might be $< (N-1)$ because there might not be any path that touches each state exactly once. Since the maximum length without repeating states is $\le (N-1)$, then any string longer than this must visit the same state at least twice. In other words, there must be a path from State $S_i$ back to State $S_i$ and from there to a final state. This path constitutes a loop. As a result, the FA for any infinite regular language must contain a loop.
 
 \begin{lemma}
 \label{T.RL.pumping.lemma}
@@ -1579,7 +1527,7 @@ Since there are an infinte number of words in $L$, any FA that generates $L$ mus
 Lemma~\ref{T.RL.pumping.lemma} is known as the Pumping Lemma for Regular Languages. It can be used to prove that a language is NOT regular. Before giving some examples, it is important to make several clarifications:
 \begin{enumerate}
 \item The Lemma states that all strings $x y^n z$ are in $L$. It does NOT say that all strings in $L$ are in the form $x y^n z$.
-\item The Lemma can be used to prove that a language is NOT regular. It cannot be used to prove that a language IS regular. In other words, there are some non-regular languages the fit the form of the pumping lemma, but any language that is infinite that does NOT fit the pumping lemma must not be regular.
+\item The Lemma can be used to prove that a language is NOT regular. It cannot be used to prove that a language IS regular. In other words, there are some non-regular languages that fit the form of the pumping lemma, but any language that is infinite that does NOT fit the pumping lemma must not be regular.
 \end{enumerate}
 
 Consider the language $ab^*c$. This is an infinite language and it is regular, so it must conform to the pumping lemma. To show this, take $x=a$, $y=b$, $z=c$. With this assignment, it should be clear that all strings $xy^n z$ are in the language.
@@ -1597,12 +1545,12 @@ Possibility 1: $y$ consists only of $a$'s. In this case, increasing $n$ in $xy^n
 
 Possibility 2: $y$ consists only of $b$'s. In this case, increasing $n$ in $xy^nz$ would increase the number of $b$'s without increasing the number of $a$'s thus generating words not in the language.
 
-Possibility 3: $y$ consists of both $a$'s and $b$'s. In this case, increasing $n$ in $xy^nz$ would increase the number of $a$-$b$ transitions. Since the language only allows one $a-b$ transition, this would generate words not in the language.
+Possibility 3: $y$ consists of both $a$'s and $b$'s. In this case, increasing $n$ in $xy^nz$ would increase the number of $a$-$b$ transitions. Since the language only allows one $a$-$b$ transition, this would generate words not in the language.
 
 Since $y$ cannot be the empty string, we've enumerated all possible choices for $y$ and none of them meet the requirements of the pumping lemma. We can therefore conclude that $a^nb^n$ is not regular.
 \end{quote}
 
-This language is of more than passing concern. Consider the substitution where instead of $a$ we have an open parenthesis and instead of $b$ we have a closing parenthesis. The language is now $(^n )^n$, which is the set of nested parenthesis. The ability to have an arbitrary number of nested parenthesis (or curly braces) is an artifact of many programming languages. The fact that you cannot generate this language with a regular expression means that the syntax of most programming languages is not regular. It also means that the syntax for regular expressions is not itself regular.
+This language is of more than passing concern. Consider the substitution where instead of $a$ we have an open parenthesis and instead of $b$ we have a closing parenthesis. The language is now $(^n )^n$, which is the set of nested parenthesis. The ability to have an arbitrary number of nested parenthesis (or curly braces) is an artifact of many programming languages. The fact that you cannot generate this language with a regular expression means that the syntax of most programming languages is not regular. It also means that the syntax for regular expressions is not itself regular (because regular expressions can have any number of nested parenthesis).
 
 If we assume that the syntax for programming languages is formal (and it would be difficult to write a compiler if it was not: how could you decide if a source file was a valid program if the language was not formal?), then we need another class of languages to express the syntax of programming languages. This other set of languages is the subject of the next part of this book.
 
@@ -3164,6 +3112,7 @@ I hope this book has been valuable to you, and I hope you have gained at least s
 \part{Appendixes}
 
 \chapter{Sets}
+\label{C.Sets}
 The study of formal languages is closely connected with set theory. This is because formal languages are sets of words (or statements), and operations on formal languages are often set operations. Rather than assuming my readers had a basic understanding of sets, I decided to include a very basic introduction to sets. Instead of cluttering the main flow of the book, it seemed appropriate to place this material in an appendix, so here it is.
 
 \section{What is a set}
