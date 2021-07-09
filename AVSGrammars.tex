@@ -1608,7 +1608,7 @@ X can be replaced by A X C
 
 More formally, a production in a CFG consists of a left hand side and a right hand side. The left hand side gives the symbol that can be replaced. The right hand side gives the list of symbols that can replace that symbol. The two sides are typically separated 
 either by an arrow ( $\rightarrow$ ) 
-or sometimes a colon-colon-equals ( ::= ). 
+or a colon-colon-equals ( ::= ). 
 A sample production that indicates that the symbol \code{A} 
 can be replaced by \code{X Y Z} is given below:
 
@@ -1623,7 +1623,7 @@ Q\cfgprod{S}{$\Lambda$}Q
 \end{cfg}
 %----------------------------------------------------------
 
-Figure~\ref{F.cfg.1} shows a complete CFG. The productions have been numbered for easy reference. There are only two productions. The first one says that the start symbol (\code{S}) can be replaced with ``\code{a S b}''. Note that this is a recursive rule because the \code{S} appears on both sides. The second production says that \code{S} can be replaced with nothing.
+CFG~\ref{F.cfg.1} shows a complete CFG. The productions have been numbered for easy reference. There are only two productions. The first one says that the start symbol (\code{S}) can be replaced with ``\code{a S b}''. Note that this is a recursive rule because the \code{S} appears on both sides. The second production says that \code{S} can be replaced with nothing.
 
 What can we do with this CFG? Let's do some derivations. Starting with the start symbol and Production 1, we can get the string \code{aSb}. If we then use Production 2, we are left with the string \code{ab}. Since there are no more non-terminals, we are done.
 
@@ -1631,7 +1631,7 @@ What if we invoked Production 1 more than once? The first invocation produces \c
 
 While not the most complex illustration, this CFG illustrates that CFGs are more powerful than regular expressions\footnote{Technically, we've only shown that CFGs can solve one problem that regular expressions can't. It remains to be shown that everything you can do with a regular expression you can also do with a CFG. Once we show that, we can conclude that CFGs are strictly more powerful than regular expressions.}. Regular expressions are not able to generate balanced parenthesis. A regular expression such as $(^*)^*$ allows any number of opening parenthesis and any number of closing parenthesis, but there is no way to guarantee that the number of closing parenthesis match the number of opening parenthesis. If we substituted parenthesis for the \code{a} and \code{b} in Figure~\ref{F.cfg.1}, we would have a solution to the balanced parenthesis problem.
 
-Figure~\ref{F.cfg.2} presents a more interesting CFG. This language defines a program as zero or more statements. An individual statement can be an assignment statement (in this language, an assignment statement is a terminal, so the assumption is that they are defined elsewhere), an \code{if} statement, or a compound statement (curly braces surrounding any number of statements). 
+CFG~\ref{F.cfg.2} presents a more interesting CFG. This language defines a program as zero or more statements. An individual statement can be an assignment statement (in this language, an assignment statement is a terminal, so the assumption is that they are defined elsewhere), an \code{if} statement, or a compound statement (curly braces surrounding any number of statements). 
 
 %----------------------------------------------------------
 \begin{cfg}{This CFG defines a program as being zero or more statements, where each statement is either an \code{if} statement, an assignment statement or a compound statement.}{F.cfg.2}
@@ -1666,7 +1666,7 @@ if (expr)
 
 \section{Derivations}
 
-Listing~\ref{L.nested.ifs} claims to be a program in the language defined in Figure~\ref{F.cfg.2}. How can we substantiate this claim? This is normally done by showing a derivation of the program given the CFG. Each line of a derivation substitutes a single non-terminal for the right-hand-side of a production for that non-terminal. 
+Listing~\ref{L.nested.ifs} claims to be a program in the language defined in CFG~\ref{F.cfg.2}. How can we substantiate this claim? This is normally done by showing a derivation of the program given the CFG. Each line of a derivation substitutes a single non-terminal for the right-hand-side of a production for that non-terminal. 
 
 Derivations start with the start symbol and continue until there are only terminals. Each step other than the first should list the production number that was invoked to make the substitution. Rather than starting with the longer program in Listing~\ref{L.nested.ifs}, let's start with the shorter program in Listing~\ref{L.short.prog}.
 
@@ -1678,7 +1678,7 @@ if (expr)
 }
 \end{lstlisting}
 
-\begin{derivation}{Derivation of the program in Listing~\ref{L.short.prog}}{D.derive.1}
+\begin{derivation}{Derivation of the program in Listing~\ref{L.short.prog}. Note: for brevity, they line breaks in the program were left off of the derivation. Since the CFG didn't explicitly mention line breaks, they are not formally part of the language, so they can be left off.}{D.derive.1}
     PROGRAM
 1   STMTS
 4   IF_STMT
@@ -1721,9 +1721,11 @@ Q\cfgprod{OP}{+ | - | * | /}Q
 4   3 4 + 5 6 - OP
 4   3 4 + 5 6 - *
 \end{derivation}
+Note that when presenting derivations, the name of a terminal is never given. Instead, the actual terminal is given. So in Derivation~\ref{D.post.top.down}, the terminal \code{number} is never listed. Instead, the actual numbers are given instead of the terminal \code{number}.
+
 Derivation~\ref{D.post.top.down} is both top-down and left-most. It is top-down because it begins with the start symbol and progresses to all terminals. When a derivation is represented graphically (see Section~\ref{S.syntax.trees}), this derivation starts at the top of the diagram and progresses to the bottom. This derivation is also left-most because in each step, the left-most non-terminal is the one that was replaced.
 
-Derivation~\ref{D.post.bottom.up} shows a bottom-up right-most derivation of the same expression. It is bottom up because it begins with all terminals and combines them using productions until the terminals have been reduced to the start symbol. Note that if these steps were reversed, the derivation would be top-down. In this sense, top-down and bottom-up derivations are inverses of each other. Note also that if this derivation was inverted to its top-down form, it would be a right-most derivation. In each step it is the right-most non-terminal that gets replaced. The left-most or right-most nature of a derivation is always from the top-down perspective.
+Derivation~\ref{D.post.bottom.up} shows a bottom-up right-most derivation of the same expression. It is bottom up because it begins with all terminals and combines them using productions until the terminals have been reduced to the start symbol. Note that if these steps were reversed, the derivation would be top-down. In this sense, top-down and bottom-up derivations are inverses of each other. Note also that if this derivation was inverted to its top-down form, it would be a right-most derivation. In each step (in the top-down order) it is the right-most non-terminal that gets replaced. The left-most or right-most nature of a derivation is always from the top-down perspective.
 \begin{derivation}{Bottom-up right-most Derivation of the expression 3 4 + 5 6 - *}{D.post.bottom.up}
     3 4 + 5 6 - *
 3   POST 4 + 5 6 - *
@@ -1743,11 +1745,13 @@ We now have four derivation forms: top-down left-most, top-down right-most, bott
 
 One last thing to note: If you were asked to give a derivation of an expression using our postfix grammar, there would be many correct answers. You could chose which order to invoke productions and which non-terminal to replace in each step. But if any of the four flavors mentioned in the previous paragraph were requested, there would be exactly one correct answer. There would be no choice as to which non-terminal to replace or which production to invoke. 
 
-The only-one-right-derivation property is true of this grammar because it is non-ambiguous. Ambiguous grammars will be described in Section~\ref{S.ambiguous.grammars}.
+For some grammars, even after specifying one of the four derivation orders (for example, top-down left-most), there are multiple derivations. Grammars that allow multiple specific-order derivations are know ans ambiguous grammars. Ambiguous grammars are described in Section~\ref{S.ambiguous.grammars}.
 
 \subsection{Syntax Trees}\label{S.syntax.trees}
 Derivations can be represented graphically as syntax trees (also known as parse trees or derivation trees). In a syntax tree, the children of each non-terminal are the items from the right hand side of the production that was used to replace the non-terminal. Figure~\ref{F.syntax.tree.1} shows the syntax tree for the derivation in Derivation~\ref{D.derive.1}.
 \begin{figure}[htbp]
+\scalebox{.75}{
+\centering
 \begin{tikzpicture}[sibling distance=4em, 
   level 5/.style={sibling distance=10em},
   level 6/.style={sibling distance=6em},
@@ -1781,10 +1785,12 @@ Derivations can be represented graphically as syntax trees (also known as parse 
 			}
 		};
 \end{tikzpicture}
-\caption[Syntax tree]{A syntax tree representing the derivation in Figure~\ref{D.derive.1}.}
+} % scalebox
+\caption[Syntax tree]{A syntax tree representing the derivation in Derivation~\ref{D.derive.1}.}
 \label{F.syntax.tree.1}
 \end{figure}
-Note that if the derivation is given in tree form, there is no sense of left-most or right-most because the tree gives no indication of what order the productions were invoked. For the derivation represented in Figure~\ref{D.derive.1}, it would not matter what order the productions were invoked. All derivations would produce an identical tree. The only-one-tree property is true because the grammar used for this derivation is non-ambiguous. Ambiguous grammars are discussed in the next section.
+
+Note that if the derivation is given in tree form, there is no sense of left-most or right-most because the tree gives no indication of what order the productions were invoked. For the grammar in CFG~\ref{CFG.postfix}, all derivations of an expression produce identical trees. The only-one-tree property is true because the grammar used for this derivation is non-ambiguous. Ambiguous grammars are discussed in the next section.
 
 \section{Ambiguous Grammars}\label{S.ambiguous.grammars}
 English is ambiguous (as I presume all spoken languages are). A single statement can be interpreted different ways. Consider the two statements
@@ -1869,7 +1875,7 @@ Note that the ambiguity of a grammar is defined by the existence of multiple tre
 For programming languages, ambiguous grammars are clearly bad. The expression $3+4*5$ should not evaluate to a different value simply because the compiler did a left-most derivation versus a right-most derivation. There are expression grammars that resolve the ambiguity of the grammar in Figure~\ref{F.GR.ambiguous}, but since this is a theory book, we will leave that topic for a compiler book.
 
 \section {Grammar Forms}
-One of the tasks of a compiler is to find a derivation of the input (the source code being compiled) given the definition of the language (typically expressed as a CFG). This part of a compiler is known as a parser. In order for a parser to be efficient, there needs to be turn-the-crank algorithms for finding a derivation. The algorithms should not require a guess-and-check process. In particular, given the next $N$ input symbols, the parser should always know what production to use next in the derivation.
+One of the tasks of a compiler is to find a derivation of the input (the source code being compiled) given the definition of the language (typically expressed as a CFG). This part of a compiler is known as a parser. In order for a parser to be efficient, there needs to be a turn-the-crank algorithm for finding a derivation. The algorithms should not require a guess-and-check process. In particular, given the next $N$ input symbols, the parser should always know what production to use next in the derivation.
 
 There are two primary algorithms used by parsers. One is a top-down algorithm, the other is a bottom-up algorithm. The top-down algorithm starts with the start symbol and based on the next input token invokes a production. This continues until all input is exhausted and only terminals remain. The bottom-up algorithm reads tokens and periodically reduces some collection of symbols that match the right hand side of a production to the symbol on the left hand side of that production. This continues until all input is exhausted and only the start symbol remains.
 
@@ -1881,6 +1887,11 @@ $LL(1) \subset LR(1) \subset CFG$
 \end{quote}
 Note that these are strict subsets. There are things that can be done with an LR(1) grammar that cannot be done with an LL(1) grammar. And there are things that can be done with CFGs that cannot be done with an LR(1) grammar.
 
+To illustrate what causes difficulties with the top-down algorithm (and therefore the restrictions placed on LL(1) grammars), consider the grammar given in CFG~\ref{C.paren.expr}. This grammar defines fully parenthesized expressions. Since they are fully parenthesized, the grammar is unambiguous. However, with this grammar, how many tokens of look-ahead are required to determine which production to invoke first? If the first token is a number, then clearly Production~1 must be invoked. But if the first token is an open parenthesis, then how many additional tokens must be read to determine which of the productions 2-5 should be invoked? Three is not enough because expressions can be nested as in 
+\begin{quote}
+\code{(((5-3)-3)*2)}
+\end{quote}
+As a result, this grammar is not an LL(1) grammar.
 %----------------------------------------------------------
 \begin{cfg}{This CFG defines a fully parenthesized expression.}{C.paren.expr}
 Q\cfgprod{EXPR}{number}Q
@@ -1890,12 +1901,6 @@ Q\cfgprod{EXPR}{(EXPR / EXPR)}Q
 Q\cfgprod{EXPR}{(EXPR * EXPR)}Q
 \end{cfg}
 %----------------------------------------------------------
-
-To illustrate what causes difficulties with the top-down algorithm (and therefore the restrictions placed on LL(1) grammars), consider the grammar given in CFG~\ref{C.paren.expr}. This grammar defines fully parenthesized expressions. Since they are fully parenthesized, the grammar is unambiguous. However, with this grammar, how many tokens of look-ahead are required to determine which production to invoke first? If the first token is a number, then clearly Production~1 must be invoked. But if the first token is an open parenthesis, then how many additional tokens must be read to determine which of the productions 2-5 should be invoked? Three is not enough because expressions can be nested as in 
-\begin{quote}
-(((5-3)-3)*2)
-\end{quote}
-As a result, this grammar is not an LL(1) grammar.
 
 The specifics of the top-down and bottom-up algorithms are left to a course on compilers. Also, the algorithms for transforming a grammar into LL(1) or LR(1) form are left to a course on compilers. Later, we will look at other grammar forms and transformations to convert a grammar into a particular form, but we will be interested in a form that is useful for proving properties of grammars, not a form that is useful to a compiler.
 
@@ -1946,9 +1951,11 @@ When talking about regular languages, we found that an existing concept, state m
 
 Finite automata have no way of ``remembering'' what path they took. This is why they were unable to solve the balanced parenthesis problem. They had no way to remember how many opening parenthesis they encountered, so they couldn't enforce that there be the same number of closing parenthesis. To solve this problem, we propose that a push-down stack be added to finite automata thus making a new machine called a pushdown automata.
 
-To illustrate how this could allow us to solve the balanced parenthesis problem, suppose each time we encountered an opening parenthesis in the input, we pushed it onto the stack. Each time we encountered a closing parenthesis, we popped an open from the stack. If we never attempted to pop an empty stack, and if at the end of the input, the stack was empty, then we must have only encountered balanced parenthesis.
+To illustrate how this could allow us to solve the balanced parenthesis problem, suppose each time we encountered an opening parenthesis in the input, we pushed it onto the stack. Each time we encountered a closing parenthesis, we popped an open from the stack. If we never attempted to pop an empty stack, and if at the end of the input, the stack was empty, then we must have encountered balanced parenthesis.
 
 For pushdown automata (PDA), the input is viewed as residing on a tape. Each ``cell'' on the tape contains a single character (or token). The tape is infinite in length, and every cell after the end of the input contains a $\Lambda$. Each time the tape is read, it advances to the next cell. Note that with this configuration, reading past the end of the input always returns a $\Lambda$.
+
+The infinite-tape-with-$\Lambda$s assumption allows the machine reading the tape to not have to worry about how to handle the end-of-tape. This condition is handled just like any other read.
 
 The stack for a PDA is also viewed as a tape, infinite in both directions, with all cells initially holding a $\Lambda$. When a token is pushed onto the stack, it is written to the tape and the tape advances to the next cell. When a token is popped off the stack, the tape is advanced to the previous cell and the token at that location is read. Note that with this configuration, popping an empty stack always returns a $\Lambda$.
 
@@ -1956,7 +1963,7 @@ It should be pointed out, that a $\Lambda$ in a PDA is very different from a $\L
 
 The other difference between an FA and a PDA, is that with an FA, transitions imply reading input. For a PDA, each read is made explicit.
 
-Because of the differences between FA's and PDA's, we need a new set of symbols. Figure~\ref{F.pda.symbols} shows several of these. The start and end states are rounded rectangles. The end states make it clear whether the input is accepted or rejected. The explicit reads are diamonds, and the outbound edges are labeled with the token that was read from the input tape.
+Because of the differences between FA's and PDA's, we need a new set of symbols. Figure~\ref{F.pda.symbols} shows several of these. The start and end states are rounded rectangles. The end states make it clear whether the input is accepted or rejected. The explicit reads are diamonds, and the outbound edges are labeled with the token that was read from the input tape. The start symbol is only allowed to have outbound arrows. The accept and reject symbols are only allowed to have inbound arrows. The is no requirement on where the arrows enter or leave the symbols, only that the diagram be neat. When the PDA enters a read symbol, the input tape is read and the outbound arrow corresponding to the read symbol is followed.
 
 \begin{figure}[htbp]
 \centering
@@ -1982,7 +1989,7 @@ Because of the differences between FA's and PDA's, we need a new set of symbols.
 
 \end{tikzpicture}
 
-\caption[Symbols for PDAs]{Symbols for PDAs. The start symbol is only allowed to have outbound arrows. The accept and reject symbols are only allowed to have inbound arrows. The is no requirement on where the arrows enter or leave the symbols, only that the diagram be neat. When the PDA enters a read symbol, the input tape is read and the outbound arrow corresponding to the read symbol is followed.}
+\caption[Symbols for PDAs]{Symbols for PDAs.}
 \label{F.pda.symbols}
 \end{figure}
 
@@ -2032,7 +2039,7 @@ It is possible to draw an FA using the PDA symbols. An example is given in Figur
  \caption{PDA for accepting $(a+b)^*a$.}
 \end{subfigure}
 
-\caption{Both an FA and a PDA for accepting all strings that contain a double letter.}
+\caption{Both an FA and a PDA for accepting $(a+b)^*a$}
 \label{F.PDA.1}
 \end{figure}
 %----------------------------------------------------------
@@ -2176,8 +2183,10 @@ The purpose for requiring the center $x$ was to indicate when the PDA switches f
 \pdaxfour {read1}{read1b1}{read1b2}{pushb}{b}
 
 \pdaread {3,4}{read2}{read}
-\coordinate (read2a) at (1.5,4);
-\pdaxthree {read1}{read2a}{read2}{x}
+
+\pdaconnect  {1.5,4} {read2a}
+\pdatransition {read2a}{read2}{}
+
 
 \pdaread {3,7}{popa}{pop}
 \coordinate (popa1) at (1.5,7);
@@ -2206,7 +2215,7 @@ The purpose for requiring the center $x$ was to indicate when the PDA switches f
 
 In addition to including non-determinism, Figure~\ref{F.PDA.PAL.2} does not include reject states. Instead, if the PDA reaches a read or pop state without a transition on the symbol acquired, the machine crashes and the string is rejected. This is analogous to FAs that don't include dead states. 
 
-With FAs we were able to show that DFAs and NFAs were equivalent. Anything you can do with one, you can do with the other. This is not true with PDAs. We will state without proof the non-deterministic PDAs are strictly more powerful than deterministic PDAs. Figure~\ref{F.machine.sizes.1} shows the relationship between the languages definable by the various machines we've encountered so far.
+With FAs we were able to show that DFAs and NFAs were equivalent. Anything you can do with one, you can do with the other. This is not true with PDAs. We will state without proof that non-deterministic PDAs are strictly more powerful than deterministic PDAs. Figure~\ref{F.machine.sizes.1} shows the relationship between the languages definable by the various machines we've encountered so far.
 \begin{figure}[htbp]
 \centering
 \scalebox{.7}{
@@ -2298,7 +2307,7 @@ There is a form of PDA known as a ``central pop PDA'' that makes it easy to show
 %----------------------------------------------------------
 The PDA starts by pushing the start symbol. The central pop then has one branch for each production as well as one branch for each terminal. If a non-terminal is popped off the stack, the right hand side of one of the productions for that non-terminal are pushed onto the stack from right to left. If a terminal is popped off the stack, then that terminal is read from the input. The central pop loop continues until the stack is empty. If the input is also empty, then the input is accepted as a word in the language.
 
-Central pop PDAs have the property of producing top-down left-most derivations of the corresponding CFG. Since the right hand side of a production is pushed right to left, the top of the stack is either a terminal or the left-most non-terminal in the working string. The non-determinism in the PDA corresponds to the decision of which production to invoke in the derivation. Every valid left-most derivation is represented by a path through the PDA. Each time a terminal is encountered on the stack, the input is read to validate that the correct terminal is in the input stream. For this reason, only valid derivations are allowed. Since every valid left-most derivation is allowed and only valid derivations are allowed, the language represented by the central pop PDA exactly corresponds to the language represented by the corresponding CFG. Since a central pop PDA can be constructed for and CFG, this construction proves $L(CFG) \subseteq L(PDA)$
+Central pop PDAs have the property of producing top-down left-most derivations of the corresponding CFG. Since the right hand side of a production is pushed right to left, the top of the stack is either a terminal or the left-most non-terminal in the working string. The non-determinism in the PDA corresponds to the decision of which production to invoke in the derivation. Every valid left-most derivation is represented by a path through the PDA. Each time a terminal is encountered on the stack, the input is read to validate that the correct terminal is in the input stream. For this reason, only valid derivations are allowed. Since every valid left-most derivation is allowed and only valid derivations are allowed, the language represented by the central pop PDA exactly corresponds to the language represented by the corresponding CFG. Since a central pop PDA can be constructed for any CFG, this construction proves $L(CFG) \subseteq L(PDA)$
 
 \section{Converting a PDA to a CFG}
 There is another construction that allows us to convert any PDA into a CFG. In outline, there are steps to convert the PDA into a standard form. From that form, it is possible to construct a CFG that accepts the same language as the PDA. It would be analogous to showing a construction to convert an arbitrary FA into the form created by Thompson's Construction, and then showing how to go from that form into a regular expression.
@@ -2329,6 +2338,7 @@ Take any FA, and give each state a unique name. To build an equivalent CFG, crea
   \label{F.FA.2.CFG}
 \end{figure}
 %----------------------------------------------------------
+
 For a complete example of using this construction, consider the FA in Figure~\ref{F.FA.to.CFG.example}. This FA is represented by the following CFG.
 %----------------------------------------------------------
 \begin{cfg}{}{}
@@ -2351,8 +2361,8 @@ Q\cfgprod{E}{$\Lambda$}Q
 \fanonterminalnode {0,0}{S-};
 \fanonterminalnode {2,2}{B};
 \fanonterminalnode {2,0}{C+};
-\fanonterminalnode {4,2}{D};
-\fanonterminalnode {4,0}{E+};
+\fanonterminalnode {5,2}{D};
+\fanonterminalnode {5,0}{E+};
 
 
 \fatransition{S-}{B}{a};
@@ -2367,8 +2377,28 @@ Q\cfgprod{E}{$\Lambda$}Q
   \label{F.FA.to.CFG.example}
 \end{figure}
 %----------------------------------------------------------
-\needswork
-Need to do a proof that this works.
+
+Using the CFG, the working string (each step in a derivation) always consists of a sequence of zero or more terminals followed by a single non-terminal. This can be seen because each production replaces a non-terminal with zero or one terminal followed by a non-terminal. Since you start with one non-terminal (the start symbol), and each production replaces a non-terminal with a string with zero or one non-terminals, there will always be exactly one non-terminal in the working string. Since the non-terminal in every production is the right-most element, if the working string has a non-terminal, it will always be the right-most element.
+
+The only productions that don't have a non-terminal on the right-hand side have a $\Lambda$ on the right-hand side. Invoking one of these productions will terminate the derivation (because there are no more non-terminals). These productions correspond to accept states in the FA, so all productions that complete a derivation (thus generating a string accepted by the CFG) correspond with accept states in the FA (and thus strings that are accepted by the FA).
+
+Each edge in the FA is represented by a production in the CFG, and all such edges are represented. Thus all paths through the FA are represented by the CFG.
+
+Since all paths are represented, and only valid paths (those that end in an accept state) will terminate a derivation, the CFG and FA represent the same languages.
+
+This construction went from an FA to a CFG. There is an even easier proof: Since all regular languages can be expressed as an FA, and since an FA is simply a PDA without any pushes or pops, clearly any FA can be written as a PDA. Finally, all PDAs can be converted to a CFG, so all regular languages are context free.
+
+\subsection{Regular Grammars}
+Grammars in which the right-hand side of all productions consists of a string of zero or more terminals followed by zero or one non-terminals are called Regular Grammars. CFGs created by the construction in the previous section are special cases of Regular Grammars (they are limited to zero or one terminals in each production).
+
+All regular grammars produce regular languages (as explained in the previous section), and all regular languages can be expressed as a regular grammar (using the construction in the previous section). However, it is not true that only regular grammars produce regular languages. To prove this, the following grammar is not regular (the first production contains two non-terminals), but it only produces the single string $ab$, and since all finite language are regular, the resulting language is regular.
+%----------------------------------------------------------
+\begin{cfg}{}{}
+Q\cfgprod{S}{AB}Q
+Q\cfgprod{A}{a}Q
+Q\cfgprod{B}{b}Q
+\end{cfg}
+%----------------------------------------------------------
 
 \section{Chompsky's Normal Form}
 In this section we show that all grammars (for languages that don't include the empty string) can be transformed into Chompsky's Normal Form (CNF). In this form, all productions either have exactly two non-terminals on the right hand side (and no terminals) or exactly one terminal.
