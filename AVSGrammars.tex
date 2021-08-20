@@ -505,6 +505,9 @@ Each regular expression defines a language.\footnote{These languages are not uni
 
 We can also think of the set of all regular expressions. This is yet another language (set of strings). We can give a recursive definition of this language, but we cannot give a regular expression for it because, as we shall see, it is not regular.
 
+\begin{quote}
+Recursive definition of regular expressions:
+
 \begin{enumerate}
 \item Every letter in $\Sigma$ is in RE
 \item If $r_1$ and $r_2$ are in RE, then so are:
@@ -515,6 +518,7 @@ We can also think of the set of all regular expressions. This is yet another lan
 \item $(r_1)$
 \end{enumerate}
 \end{enumerate}
+\end{quote}
 
 So we now have three separate but related languages:
 \begin{enumerate}
@@ -527,7 +531,7 @@ It is important to keep these three languages separate. Consider the following q
 \begin{itemize}
 \item What is the language defined by $(a + b)^*a(a + b)^*$? This question is asking you to enumerate (or otherwise describe) a particular regular language.
 \item Is the language L regular? This is asking whether the specific language L is in the set of all languages definable by regular expressions.
-\item Is the statement, $a + (b + c)+$ a regular expression? This is asking ``Is it a well-formed regular expression?'' or ``Is it in the language for regular expressions that we gave a recursive definition for?''
+\item Is the statement, ``$a + (b + c)+$'' a regular expression? This is asking ``Is it a well-formed regular expression?'' or ``Is it in the language for regular expressions that we gave a recursive definition for?''
 \end{itemize}
 
 In the coming sections we want to examine properties of regular languages (properties of the entire family of regular languages, not of a particular regular language). We will do a couple of them now.
@@ -595,8 +599,9 @@ Assume $\Sigma = \{a\ b\}$ unless otherwise specified.
 \chapter{Finite Automata}
 There is a well-known children's game called Chutes and Ladders. The goal is to be the first player to move their piece from the beginning (bottom) to the ending (top) of the board. On a player's turn, they spin a spinner which lands on a number. The player advances their piece the specified number of squares on the board. If their piece lands on the bottom of a ladder, they climb the ladder thus making extra progress towards their goal. If their piece lands on the top of a chute, they slide down the chute winding up closer to the beginning. This game is considered a ``children's'' game because it involves no strategy. The outcome of the game is completely determined by the sequence of numbers generate by the spinner (assuming the players don't cheat).
 
-What does this game have to do with regular expressions or finite automata? If we assume that the spinner only generates numbers less than ten (single digit numbers), then we could spin the spinner a bunch of times and write down each result. The result would be a string of digits. We could then ask the question, ``Does this sequence of moves result in someone winning the game?'' That still doesn't sound like a regular expression question (although scanning a string sounds familiar), so let's think of a Finite Automaton\footnote{``Automaton is the singular of the plural ``Automata''.} (aka state machine).
+What does this game have to do with regular expressions or finite automata? If we assume that the spinner only generates numbers less than ten (single digit numbers), then we could spin the spinner a bunch of times and write down each result. The result would be a string of digits. We could then ask the question, ``Does this sequence of moves result in someone winning the game?'' That still doesn't sound like a regular expression question (although scanning a string sounds familiar), so let's think of a Finite Automaton\footnote{``Automaton is the singular of the plural ``Automata''.} (aka state machine) that represents the gave.
 
+\section{Deterministic Finite Automata}
 A finite automaton consists of a finite number of states (or configurations) and transitions from state to state. How could we turn Chutes and Ladders into a state machine? Suppose there were three players. Each player's marker could be on any of the squares on the board. Each configuration of markers (each player on each valid square in every combination) could be considered a state. There would be a large number of states, but the number would be finite. Transitions consist of moves such as ``Player~2 moves forward three spaces''. Each state would have an outbound transition for each possible spinner result for each player. The finite automaton representation of the game makes it clear that there is no strategy involved. The machine processes the input (the sequence of spins) without any human involvement. The outcome is determined solely by the sequence of spins. But the question still remains, ``What does this have to do with regular expressions?''
 
 Before we answer that question (through some other examples), lets define a standardized way of graphically representing finite automata. Finite automata consist of a finite number of states and transitions between states. One state is defined as the start state, and any number of states can be defined as final states. The start state in an FA is signified by an inbound arrow that doesn't originate from another state. Processing always starts in the start state. Final states are signified by a double circle. Transitions are labeled by the letter that is used to move from one state to another. This format is illustrated in Figure~\ref{F.FA_1}.
@@ -628,12 +633,12 @@ Using the FA in Figure~\ref{F.FA_1}, and the input $ytx$, the processing starts 
 Two conditions can cause a string to be rejected: 
 \begin{enumerate}
 \item If the input is exhausted and the current state isn't a final state. The input $yty$ illustrates this case.
-\item If there is no outbound transition on the current letter. The input $yx$ illustrates this case.
+\item If there is no outbound transition on the current letter. In this case, we say the machine ``crashed'', and the string is rejected. The input $yx$ illustrates this case.
 \end{enumerate}
 
 Given these rules for processing FA's, it can be shown that the FA in Figure~\ref{F.FA_1} is equivalent to the regular expression $(yt)^* (x + yz)$. It is no coincidence that there is a regular expression that corresponds to the FA. It turns out that every FA is equivalent to some regular expression, and that each regular expression has an FA that is equivalent to it. We will prove this in a later section.
 
-Figure~\ref{F.FA_2} gives another FA. This FA shows a slightly different format. The start state has a '-' in the label. Final states have a '$+$' in them. The states can be thought of as follows:
+Figure~\ref{F.FA_2} gives another FA. This FA shows a slightly different format. The start state has a `-' in the label. Final states have a `$+$' in them. The states can be thought of as follows:
 \begin{enumerate}
 \item State 1: the start state.
 \item State 2: An $a$ not preceded by an $a$.
@@ -687,14 +692,99 @@ Current State & a & b \\
 \label{T.FA.2}
 \end{figure}
 
+\subsection{Hints on drawing FAs}
+It was claimed that any regular expression can be turned into an FA (to be proven later). So questions of the form, ``Given the following regular expression, create a complete DFA that represents the same language'' would seem to be fair game. We will eventually give a formal procedure for doing this, but for now we'll present hints to help your human brain create a complete DFA without a formal procedure.
+
+Let's consider the regular expression $a^* b^*$. This language consists of any number (zero or more) $a$'s followed by any number (zero or more) $b$'s. Let's start by creating a state for assembling the $a$'s and a state for assembling $b$'s. The transition from the $a$ state to the $b$ state is a $b$ because once we get a $b$, we can't accept any more $a$'s. This is illustrated in Figure~\ref{F.FA_ab1}
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+
+\fanonterminalnode {-2,0}{A-};
+\fanonterminalnode {2,0}{B+};
+
+\fatransition{A-}{B+}{b};
+\end{tikzpicture}
+ \caption[Step 1 in drawing an FA for $a^* b^*$]{This FA has two states: the first is intended for accepting $a$'s, the second is intended for accepting $b$'s}
+  \label{F.FA_ab1}
+\end{figure}
+%----------------------------------------------------------
+
+Clearly this FA is not yet finished (nor Complete). It only accepts the string consisting of a single $b$. To allow any number of $a$'s or $b$'s we will add loops to both states that allow more of the appropriate letter to be added. This is show in Figure~\ref{F.FA_ab2}.
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+
+\fanonterminalnode {-2,0}{A-};
+\fanonterminalnode {2,0}{B+};
+
+\fatransition{A-}{B+}{b};
+\falooptop {A-}{a};
+\falooptop {B+}{b};
+
+\end{tikzpicture}
+ \caption[Step 2 in drawing an FA for $a^* b^*$]{This FA has two states: the first allows any number of $a$'s; the second allows any number of $b$'s}
+  \label{F.FA_ab2}
+\end{figure}
+%----------------------------------------------------------
+We are getting closer. This FA accepts any number (zero or more) $a$'s followed by any number (one or more) $b$'s. The problem is that we need a $b$ to get to the final state. To fix this, we can simply make the first state both a start and an end state. Doing so would yield a DFA that accepts $a^* b^*$, but the DFA would not be complete. To make it complete, we need to add outbound transitions for each letter of the alphabet. The extra transitions will go to a ``dead'' state. Once the machine makes it to the dead state, it stays there regardless of what input is seen. The final Complete DFA is shown in Figure~\ref{F.FA_ab3}.
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+
+\fanonterminalnode {-2,0}{A-+};
+\fanonterminalnode {2,0}{B+};
+\fanonterminalnode {0,-2}{D}
+
+\fatransition{A-+}{B+}{b};
+\fatransition{A-+}{D}{b};
+\fatransition{B+}{D}{a};
+\falooptop {A-+}{a};
+\falooptop {B+}{b};
+\faloopbottom {D}{a,b};
+
+\end{tikzpicture}
+ \caption[A Complete DFA for $a^* b^*$]{This FA has two states: the first allows any number of $a$'s; the second allows any number of $b$'s. Since the start state is also and end state, this FA allows zero $b$'s.}
+  \label{F.FA_ab3}
+\end{figure}
+%----------------------------------------------------------
+
+The processed we used was to first create a simple FA that represents some aspect of the regular expression (often the smallest non-empty word included in the language). We then added features to the FA until it accepted the entire language. Finally, we added transitions to make the FA complete. This procedure is usually helpful in creating an FA for a regular expression.
+
+Now let's consider an FA for $(a+b)^*a(a+b)^*$. Following the above procedure might yield an FA such as the one in Figure~\ref{F.FA_ab_a_ab1}. But there is a problem with this FA: If we are in State~1 and receive an $a$, which transition do we follow? Both transitions allow an $a$. It turns out that this is a valid FA for $(a+b)^*a(a+b)^*$, it just happens to be non-deterministic. In other words, it is an NFA instead of a DFA. As long as we know how to handle the non-determinism, these are perfectly acceptable FAs. They are the topic of the next section.
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+
+\fanonterminalnode {-2,0}{1-};
+\fanonterminalnode {2,0}{2+};
+
+\fatransition{1-}{2+}{a};
+\falooptop {1-}{a,b};
+\falooptop {2+}{a,b};
+
+\end{tikzpicture}
+\caption[Attempt at drawing an FA for $(a+b)^*a(a+b)^*$]{This FA accepts the correct language, but it is non-deterministic because there are two transitions out of State~1 on $a$ so that if an $a$ is encountered in this state, there are multiple paths that can be followed.}
+  \label{F.FA_ab_a_ab1}
+\end{figure}
+%----------------------------------------------------------
+
 \section{Non-deterministic Finite Automata}
 
-The FA illustrated in Figure~\ref{F.FA_1} is a Deterministic Finite Automaton (DFA). It is deterministic in the sense that for each character that is processed, the FA has exactly one choice on what to do. It is also Complete because each state has an outbound transition for each letter in the alphabet. There is another class of FA's known as Non-deterministic Finite Automata (NFA's). With NFA's, for a given input, there is the potential for multiple choices on what to do. The choices can take two forms:
+The FA illustrated in Figure~\ref{F.FA_2} is a Deterministic Finite Automaton (DFA). It is deterministic in the sense that for each character that is processed, the FA has exactly one choice on what to do. It is also Complete because each state has an outbound transition for each letter in the alphabet. There is another class of FA's known as Non-deterministic Finite Automata (NFA's). With NFA's, for a given input, there is the potential for multiple choices on what to do. The choices can take two forms:
 \begin{enumerate}
 \item Multiple outbound edges labeled with the same letter. If that letter is read, any of the outbound edges labeled with that letter can be taken. This is illustrated by the edges from Node~$a$ labeled $z$ in Figure~\ref{F.NFA_1}.
 \item Edges labeled $\Lambda$. These edges can be taken without consuming an input character. Node~$a$ has a $\Lambda$ transition meaning you can leave Node~$a$ without consuming any characters.
 \end{enumerate}
-
+NFA's usually are not drawn as Complete. There is no requirement to have an outbound transition on each letter in the alphabet. If it is not possible to make progress due to the lack of a transition on the next letter from the current state, then the machine ``crashes'' and the input string is rejected.
 %----------------------------------------------------------
 \begin{figure}[hbt]
 \centering
